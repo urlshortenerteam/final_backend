@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d545f9b3-cb88-4439-a9cf-c466a928be92" name="Default Changelist" comment="" />
+    <list default="true" id="d545f9b3-cb88-4439-a9cf-c466a928be92" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -28,6 +32,9 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
@@ -37,6 +44,7 @@
     </option>
   </component>
   <component name="ProjectId" id="1azLovjWn5tctxL2AI8SWqz8ytO" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showExcludedFiles" value="true" />
@@ -49,6 +57,7 @@
     <property name="RequestMappingsPanelWidth0" value="75" />
     <property name="RequestMappingsPanelWidth1" value="75" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
@@ -131,6 +140,7 @@
       <workItem from="1593839440566" duration="1118000" />
       <workItem from="1594021952887" duration="141000" />
       <workItem from="1594033325118" duration="1914000" />
+      <workItem from="1594083861231" duration="1588000" />
     </task>
     <servers />
   </component>
@@ -151,10 +161,10 @@
       <screen x="0" y="0" width="1440" height="860" />
     </state>
     <state x="312" y="91" key="#SQL_Dialects/0.0.1440.860@0.0.1440.860" timestamp="1589083893497" />
-    <state x="312" y="91" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1594035807460">
+    <state x="312" y="91" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1594083981998">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
-    <state x="312" y="91" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1440.860@0.0.1440.860" timestamp="1594035807460" />
+    <state x="312" y="91" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1440.860@0.0.1440.860" timestamp="1594083981998" />
     <state x="525" y="138" key="#com.intellij.ide.util.MemberChooser" timestamp="1587803682195">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
@@ -167,6 +177,10 @@
       <screen x="0" y="0" width="1440" height="860" />
     </state>
     <state x="450" y="179" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1440.860@0.0.1440.860" timestamp="1589097441073" />
+    <state x="192" y="27" key="CommitChangelistDialog2" timestamp="1594084594254">
+      <screen x="0" y="0" width="1440" height="860" />
+    </state>
+    <state x="192" y="27" key="CommitChangelistDialog2/0.0.1440.860@0.0.1440.860" timestamp="1594084594254" />
     <state x="499" y="174" key="FileChooserDialogImpl" timestamp="1592880176825">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
@@ -211,10 +225,10 @@
       <screen x="0" y="0" width="1440" height="860" />
     </state>
     <state x="250" y="88" key="Maven.ArtifactSearchDialog/0.0.1440.860@0.0.1440.860" timestamp="1589079093908" />
-    <state x="223" y="15" key="SettingsEditor" timestamp="1594035830760">
+    <state x="223" y="15" key="SettingsEditor" timestamp="1594084849441">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
-    <state x="223" y="15" key="SettingsEditor/0.0.1440.860@0.0.1440.860" timestamp="1594035830760" />
+    <state x="223" y="15" key="SettingsEditor/0.0.1440.860@0.0.1440.860" timestamp="1594084849441" />
     <state x="94" y="157" key="new project wizard" timestamp="1590302438469">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
