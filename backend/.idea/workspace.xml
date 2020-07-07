@@ -1,44 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a98889b3-566f-4ad4-ac48-54f22393de74" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/reins/url/controller/statController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/reins/url/controller/urlController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/reins/url/dao/StatDao.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/reins/url/dao/UrlDao.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/reins/url/entity/Statistics.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/reins/url/service/StatService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/reins/url/service/UrlService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/test.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/$CACHE_FILE$" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/16600ed6-612d-44ef-9140-66e4320004ce.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/16600ed6-612d-44ef-9140-66e4320004ce/storage_v2/_src_/schema/airplane.Up-l1w.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/16600ed6-612d-44ef-9140-66e4320004ce/storage_v2/_src_/schema/e-book.UdMBrw.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/16600ed6-612d-44ef-9140-66e4320004ce/storage_v2/_src_/schema/information_schema.FNRwLQ.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/16600ed6-612d-44ef-9140-66e4320004ce/storage_v2/_src_/schema/mysql.osA4Bg.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/16600ed6-612d-44ef-9140-66e4320004ce/storage_v2/_src_/schema/performance_schema.kIw0nw.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/16600ed6-612d-44ef-9140-66e4320004ce/storage_v2/_src_/schema/sample_db_script.t89hgQ.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/16600ed6-612d-44ef-9140-66e4320004ce/storage_v2/_src_/schema/sys.zb4BAA.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/984f22a8-d454-4447-a1c9-5830252aca52.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend.iml" beforeDir="false" afterPath="$PROJECT_DIR$/backend.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/reins/url/controller/BookController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/reins/url/dao/BookDao.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/reins/url/daoimpl/BookDaoImpl.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/reins/url/entity/Book.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/reins/url/entity/Figure.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/reins/url/repository/BookRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/reins/url/repository/BookRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/reins/url/repository/FigureRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/reins/url/repository/FigureRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/reins/url/service/BookService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/reins/url/serviceimpl/BookServiceImpl.java" beforeDir="false" />
-    </list>
+    <list default="true" id="a98889b3-566f-4ad4-ac48-54f22393de74" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
