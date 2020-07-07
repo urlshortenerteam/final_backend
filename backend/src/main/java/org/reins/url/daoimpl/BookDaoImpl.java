@@ -1,7 +1,7 @@
 package org.reins.url.daoimpl;
 import org.reins.url.dao.BookDao;
-import org.reins.url.entity.Book;
-import org.reins.url.entity.Figure;
+import org.reins.url.entity.Users;
+import org.reins.url.entity.Shortener;
 import org.reins.url.repository.BookRepository;
 import org.reins.url.repository.FigureRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +21,13 @@ public class BookDaoImpl implements BookDao {
     @Override
     public int addBook(String name,String author,String ISBN,String base,int stock,double price,String intro) {
         bookRepository.addBook(name,author,ISBN,stock,price);
-        List<Book> list=bookRepository.getBook();
+        List<Users> list=bookRepository.getBook();
         int ID=0;
         for (int i=0;i<list.size();++i) {
-            Book book=(Book)list.get(i);
-            if (book.getID()>ID) ID=book.getID();
+            Users users =(Users)list.get(i);
+            if (users.getID()>ID) ID= users.getID();
         }
-        figureRepository.insert(new Figure(ID,base,intro));
+        figureRepository.insert(new Shortener(ID,base,intro));
         return 1;
     }
     @Override
@@ -40,18 +40,18 @@ public class BookDaoImpl implements BookDao {
         return bookRepository.deleteBook(ID);
     }
     @Override
-    public List<Book> getBook() {
-        List<Book> list=bookRepository.getBook();
+    public List<Users> getBook() {
+        List<Users> list=bookRepository.getBook();
         for (int i=0;i<list.size();++i) {
-            Optional<Figure> figure=figureRepository.findById(list.get(i).getID());
-            if (figure.isPresent()) list.get(i).setFigure(figure.get());
-            else list.get(i).setFigure(null);
+            Optional<Shortener> figure=figureRepository.findById(list.get(i).getID());
+            if (figure.isPresent()) list.get(i).setShortener(figure.get());
+            else list.get(i).setShortener(null);
         }
         return list;
     }
     @Override
     public int saveBook(int ID,String name,String author,String ISBN,String base,int stock,double price,String intro) {
-        figureRepository.save(new Figure(ID,base,intro));
+        figureRepository.save(new Shortener(ID,base,intro));
         return bookRepository.saveBook(ID,name,author,ISBN,stock,price);
     }
 }

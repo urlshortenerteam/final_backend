@@ -1,13 +1,14 @@
 package org.reins.url.entity;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-@Document(collection="figure")
-public class Figure {
+@Document(collection="shortener")
+public class Shortener {
     @Id
-    private int id;
+    private String id;
+    private int shorten_id;
     private String base;
     private String intro;
-    public Figure(int id,String base,String intro) {
+    public Shortener(int id, String base, String intro) {
         this.id=id;
         this.base=base;
         this.intro=intro;

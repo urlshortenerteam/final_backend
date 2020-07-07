@@ -1,6 +1,6 @@
 package org.reins.url.serviceimpl;
 import org.reins.url.dao.BookDao;
-import org.reins.url.entity.Book;
+import org.reins.url.entity.Users;
 import org.reins.url.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,7 @@ public class BookServiceImpl implements BookService {
         return bookDao.deleteBook(ID);
     }
     @Override
-    public List<Book> getBook() {
+    public List<Users> getBook() {
         return bookDao.getBook();
     }
     @Override

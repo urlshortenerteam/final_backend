@@ -1,6 +1,6 @@
 package org.reins.url.controller;
 import com.alibaba.fastjson.JSONArray;
-import org.reins.url.entity.Book;
+import org.reins.url.entity.Users;
 import org.reins.url.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -36,19 +36,19 @@ public class BookController {
     public ArrayList<JSONArray> getBook(HttpServletRequest request) {
         String name=request.getParameter("name");
         ArrayList<JSONArray> bookJson=new ArrayList<>();
-        List<Book> list=bookService.getBook();
+        List<Users> list=bookService.getBook();
         for (int i=0;i<list.size();++i) {
-            Book book=(Book)list.get(i);
-            if (name==null || book.getName().toLowerCase().contains(name.toLowerCase())) {
+            Users users =(Users)list.get(i);
+            if (name==null || users.getName().toLowerCase().contains(name.toLowerCase())) {
                 ArrayList<String> temp=new ArrayList<>();
-                temp.add(Integer.toString(book.getID()));
-                temp.add(book.getName());
-                temp.add(book.getAuthor());
-                temp.add(book.getISBN());
-                temp.add(book.getFigure().getBase());
-                temp.add(Integer.toString(book.getStock()));
-                temp.add(Double.toString(book.getPrice()));
-                temp.add(book.getFigure().getIntro());
+                temp.add(Integer.toString(users.getID()));
+                temp.add(users.getName());
+                temp.add(users.getAuthor());
+                temp.add(users.getISBN());
+                temp.add(users.getShortener().getBase());
+                temp.add(Integer.toString(users.getStock()));
+                temp.add(Double.toString(users.getPrice()));
+                temp.add(users.getShortener().getIntro());
                 bookJson.add((JSONArray)JSONArray.toJSON(temp));
             }
         }
