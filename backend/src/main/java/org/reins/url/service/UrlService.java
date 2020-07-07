@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface UrlService {
 
-    String generateShortUrl(String longUrl);
+    String generateShortUrl(Integer id,String longUrl);
     String getLongUrl(String shortUrl);
-    String generateOneShortUrl(List<String> longUrls);
+    String generateOneShortUrl(Integer id,List<String> longUrls);
 }
