@@ -5,30 +5,36 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Shortener {
     @Id
     private String id;
-    private int shorten_id;
-    private String base;
-    private String intro;
-    public Shortener(int id, String base, String intro) {
-        this.id=id;
-        this.base=base;
-        this.intro=intro;
+    private long shorten_id;
+    private String short_url;
+    private String long_url;
+    public Shortener(long shorten_id,String short_url,String long_url) {
+        this.shorten_id=shorten_id;
+        this.short_url=short_url;
+        this.long_url=long_url;
     }
-    public int getId() {
+    public String getId() {
         return id;
     }
-    public void setId(int id) {
+    public void setId(String id) {
         this.id=id;
     }
-    public String getBase() {
-        return base;
+    public long getShorten_id() {
+        return shorten_id;
     }
-    public void setBase(String base) {
-        this.base=base;
+    public void setShorten_id(long shorten_id) {
+        this.shorten_id=shorten_id;
     }
-    public String getIntro() {
-        return intro;
+    public String getShort_url() {
+        return short_url;
     }
-    public void setIntro(String intro) {
-        this.intro=intro;
+    public void setShort_url(String short_url) {
+        this.short_url=short_url;
+    }
+    public String getLong_url() {
+        return long_url;
+    }
+    public void setLong_url(String long_url) {
+        this.long_url=long_url;
     }
 }

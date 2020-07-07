@@ -2,27 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d545f9b3-cb88-4439-a9cf-c466a928be92" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/reins/url/controller/StatController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/reins/url/controller/UrlController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/reins/url/dao/StatDao.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/reins/url/dao/UrlDao.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/reins/url/entity/Statistics.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/reins/url/service/StatService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/reins/url/service/UrlService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/reins/url/entity/Shorten_log.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/reins/url/entity/Visit_log.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend.iml" beforeDir="false" afterPath="$PROJECT_DIR$/backend.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/reins/url/controller/BookController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/reins/url/controller/BookController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/reins/url/dao/BookDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/reins/url/dao/BookDao.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/reins/url/daoimpl/BookDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/reins/url/daoimpl/BookDaoImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/reins/url/entity/Book.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/reins/url/entity/Users.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/reins/url/entity/Figure.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/reins/url/entity/Shortener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/reins/url/repository/BookRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/reins/url/repository/BookRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/reins/url/repository/FigureRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/reins/url/repository/FigureRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/reins/url/service/BookService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/reins/url/service/BookService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/reins/url/serviceimpl/BookServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/reins/url/serviceimpl/BookServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/reins/url/entity/Shortener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/reins/url/entity/Shortener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/reins/url/entity/Users.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/reins/url/entity/Users.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -161,7 +145,7 @@
       <workItem from="1593839440566" duration="1118000" />
       <workItem from="1594021952887" duration="141000" />
       <workItem from="1594033325118" duration="1914000" />
-      <workItem from="1594083861231" duration="6008000" />
+      <workItem from="1594083861231" duration="8660000" />
     </task>
     <servers />
   </component>
