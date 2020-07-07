@@ -2,7 +2,10 @@ package org.reins.url.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
 import java.util.List;
 @Data
 @AllArgsConstructor
