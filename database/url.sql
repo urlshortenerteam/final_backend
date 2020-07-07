@@ -30,8 +30,9 @@ create table visit_log
 create table edit_log
 (
 	id bigint auto_increment,
-	editor_id varchar(50) not null,
+	editor_id bigint not null,
 	edit_time datetime not null,
 	shortener_id varchar(24) not null,
-	primary key (id)
+	primary key (id),
+	foreign key (editor_id) references users(id) on delete cascade
 );
