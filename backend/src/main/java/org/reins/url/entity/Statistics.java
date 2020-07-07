@@ -1,11 +1,15 @@
 package org.reins.url.entity;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import java.util.List;
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Statistics {
-    String shortUrl;
-    Long visit_count;
-    List<Area_distr> area_distrs;
-    List<Time_distr> time_distrs;
-    List<Source_distr> source_distrs;
+    public String shortUrl;
+    public Long visit_count;
+    public List<Area_distr> area_distrs;
+    public List<Time_distr> time_distrs;
+    public List<Source_distr> source_distrs;
 }
