@@ -1,15 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a98889b3-566f-4ad4-ac48-54f22393de74" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/reins/url/serviceimpl/StatServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/cb74e42c-48c3-442f-b50f-cc00a3163279.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/cb74e42c-48c3-442f-b50f-cc00a3163279/storage_v2/_src_/schema/information_schema.FNRwLQ.meta" beforeDir="false" />
+    <list default="true" id="b5f5321b-0cec-47ed-9c20-7814dbcd80d3" name="Default Changelist" comment="Merge branch 'master' into develop2&#10;&#10;# Conflicts:&#10;#&#9;backend/.idea/dataSources.local.xml&#10;#&#9;backend/.idea/dataSources.xml&#10;#&#9;backend/.idea/dataSources/1d0036fc-51d0-4f27-ac74-cf5b9cff4348.xml&#10;#&#9;backend/.idea/dataSources/1d0036fc-51d0-4f27-ac74-cf5b9cff4348/storage_v2/_src_/schema/information_schema.FNRwLQ.meta&#10;#&#9;backend/.idea/workspace.xml&#10;#&#9;backend/src/main/java/org/reins/url/entity/Area_distr.java&#10;#&#9;backend/src/main/java/org/reins/url/entity/Source_distr.java&#10;#&#9;backend/src/main/java/org/reins/url/entity/Time_distr.java&#10;#&#9;backend/src/main/java/org/reins/url/service/UrlService.java&#10;#&#9;database/url.sql">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/reins/url/entity/Area_distr.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/reins/url/entity/Area_distr.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/reins/url/entity/Source_distr.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/reins/url/entity/Source_distr.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/reins/url/entity/Time_distr.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/reins/url/entity/Time_distr.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/reins/url/service/UrlService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/reins/url/service/UrlService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,7 +63,7 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="a98889b3-566f-4ad4-ac48-54f22393de74" name="Default Changelist" comment="" />
+      <changelist id="b5f5321b-0cec-47ed-9c20-7814dbcd80d3" name="Default Changelist" comment="Merge branch 'master' into develop2&#10;&#10;# Conflicts:&#10;#&#9;backend/.idea/dataSources.local.xml&#10;#&#9;backend/.idea/dataSources.xml&#10;#&#9;backend/.idea/dataSources/1d0036fc-51d0-4f27-ac74-cf5b9cff4348.xml&#10;#&#9;backend/.idea/dataSources/1d0036fc-51d0-4f27-ac74-cf5b9cff4348/storage_v2/_src_/schema/information_schema.FNRwLQ.meta&#10;#&#9;backend/.idea/workspace.xml&#10;#&#9;backend/src/main/java/org/reins/url/entity/Area_distr.java&#10;#&#9;backend/src/main/java/org/reins/url/entity/Source_distr.java&#10;#&#9;backend/src/main/java/org/reins/url/entity/Time_distr.java&#10;#&#9;backend/src/main/java/org/reins/url/service/UrlService.java&#10;#&#9;database/url.sql" />
       <created>1594082423971</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
@@ -87,6 +80,8 @@
       <workItem from="1594101045715" duration="1940000" />
       <workItem from="1594104396518" duration="897000" />
       <workItem from="1594105529187" duration="1471000" />
+      <workItem from="1594110236051" duration="227000" />
+      <workItem from="1594110470097" duration="5000" />
     </task>
     <servers />
   </component>
