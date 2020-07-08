@@ -1,12 +1,10 @@
 package org.reins.url.daoimpl;
-
 import org.reins.url.dao.StatDao;
 import org.reins.url.entity.Shorten_log;
 import org.reins.url.entity.Shortener;
 import org.reins.url.repository.Shorten_logRepository;
 import org.reins.url.repository.ShortenerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.List;
 import java.util.Optional;
 
