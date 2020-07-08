@@ -7,7 +7,7 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 @RestController
-public class StatController {
+public class statController {
     @Autowired
     StatService statService;
     @RequestMapping("/getStat")

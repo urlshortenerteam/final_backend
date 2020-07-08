@@ -7,11 +7,13 @@ import org.reins.url.entity.Statistics;
 import org.reins.url.entity.Visit_log;
 import org.reins.url.service.StatService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
+@Service
 public class StatServiceImpl implements StatService {
     @Autowired
     StatDao statDao;
@@ -19,6 +21,7 @@ public class StatServiceImpl implements StatService {
     @Autowired
     VisitDao visitDao;
 
+    @Override
     public List<Statistics> getStat() {
         List<Statistics> res=new ArrayList<>();
         List<Shorten_log> shorten_logs=statDao.findAll();
@@ -30,7 +33,11 @@ public class StatServiceImpl implements StatService {
                 List<Visit_log> visit_logs=visitDao.findByShortenerId(shortener_id);
                 statistics.visit_count+=visit_logs.size();
                 for (Visit_log v:visit_logs){
-                    statistics.addArea_distr(v.getIp());
+                    try {
+                        statistics.addArea_distr(v.getIp());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     statistics.addTime_distr(v.getVisit_time());
                     statistics.addSource_distr(v.getIp());
                 }
@@ -40,6 +47,7 @@ public class StatServiceImpl implements StatService {
         return res;
     }
 
+    @Override
     public Statistics getShortStat(String short_url) {
         Statistics statistics=new Statistics();
         statistics.shortUrl=short_url;
@@ -55,7 +63,11 @@ public class StatServiceImpl implements StatService {
             List<Visit_log> visit_logs=visitDao.findByShortenerId(shortener_id);
             statistics.visit_count+=visit_logs.size();
             for (Visit_log v:visit_logs){
-                statistics.addArea_distr(v.getIp());
+                try {
+                    statistics.addArea_distr(v.getIp());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 statistics.addTime_distr(v.getVisit_time());
                 statistics.addSource_distr(v.getIp());
             }
