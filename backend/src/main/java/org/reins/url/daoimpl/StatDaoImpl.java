@@ -9,8 +9,8 @@ public class StatDaoImpl implements StatDao {
     @Autowired
     Shorten_logRepository shorten_logRepository;
     @Autowired
-    ShortenerRepository shortenerReposiy;
-    public List<Shorten_log> findAll(){
+    ShortenerRepository shortenerRepository;
+    public List<Shorten_log> findAll() {
         return shorten_logRepository.findAll();
     }
 }
