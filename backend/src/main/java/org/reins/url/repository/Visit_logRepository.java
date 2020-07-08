@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import java.util.List;
-public interface Visit_logRepository extends JpaRepository<Visit_log,Integer>{
+public interface Visit_logRepository extends JpaRepository<Visit_log,Long> {
 }

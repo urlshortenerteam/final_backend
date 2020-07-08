@@ -21,18 +21,13 @@ public class UrlDaoImpl implements UrlDao {
     private ShortenerRepository shortenerRepository;
     @Override
     public void addLog(long creator_id,List<String> shortUrls,List<String> longUrls) {
-        shorten_logRepository.addLog(creator_id,new Date());
-        long shorten_id=0;
-        List<Shorten_log> shorten_logList=shorten_logRepository.getLog();
-        for (int i=0;i<shorten_logList.size();++i) {
-            Shorten_log shorten_log=shorten_logList.get(i);
-            if (shorten_log.getId()>shorten_id) shorten_id=shorten_log.getId();
-        }
+        Shorten_log shorten_log=shorten_logRepository.save(new Shorten_log(creator_id,new Date()));
+        long shorten_id=shorten_log.getId();
         for (int i=0;i<shortUrls.size();++i) shortenerRepository.insert(new Shortener(shorten_id,shortUrls.get(i),longUrls.get(i)));
     }
     @Override
     public List<Shorten_log> getLog() {
-        List<Shorten_log> shorten_logList=shorten_logRepository.getLog();
+        List<Shorten_log> shorten_logList=shorten_logRepository.findAll();
         List<Shortener> shortenerList=shortenerRepository.findAll();
         for (int i=0;i<shorten_logList.size();i++) {
             long shorten_id=shorten_logList.get(i).getId();
