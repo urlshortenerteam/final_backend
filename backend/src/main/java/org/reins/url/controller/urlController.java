@@ -12,36 +12,9 @@ import java.util.List;
 public class UrlController {
     @Autowired
     UrlService urlService;
-    @RequestMapping("/getShort")
-    public List<String> generateShort(@RequestParam("id") long id,@RequestBody List<String> longUrls) {
-        List<String> shortUrls=new ArrayList<>();
+    private String long2short(String longUrl) {
         String key="azhe";
         String chars="abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        for (int i=0;i<longUrls.size();i++) {
-            String longUrl=longUrls.get(i);
-            String hex=DigestUtils.md5DigestAsHex((key+longUrl).getBytes());
-            List<String> res=new ArrayList<>();
-            for (int j=0;j<4;j++) {
-                long hexLong=0x3fffffff&Long.parseLong(hex.substring(j*8,j*8+8),16);
-                StringBuilder outChars=new StringBuilder();
-                for (int k=0;k<6;k++) {
-                    long index=0x3d&hexLong;
-                    outChars.append(chars.substring((int)index,(int)index+1));
-                    hexLong>>=5;
-                }
-                res.add(outChars.toString());
-            }
-            shortUrls.add(res.get((int)(Math.random()*4)));
-        }
-        urlService.addLog(id,shortUrls,longUrls);
-        return shortUrls;
-    }
-    @RequestMapping("/getOneShort")
-    public String generateOneShort(@RequestParam("id") long id,@RequestBody List<String> longUrls) {
-        String shortUrl;
-        String key="azhe";
-        String chars="abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        String longUrl=longUrls.get((int)(Math.random()*longUrls.size()));
         String hex=DigestUtils.md5DigestAsHex((key+longUrl).getBytes());
         List<String> res=new ArrayList<>();
         for (int i=0;i<4;i++) {
@@ -49,12 +22,27 @@ public class UrlController {
             StringBuilder outChars=new StringBuilder();
             for (int j=0;j<6;j++) {
                 long index=0x3d&hexLong;
-                outChars.append(chars.substring((int)index, (int)index+1));
+                outChars.append(chars,(int)index,(int)index+1);
                 hexLong>>=5;
             }
             res.add(outChars.toString());
         }
-        shortUrl=res.get((int)(Math.random()*4));
+        return res.get((int)(Math.random()*4));
+    }
+    @RequestMapping("/getShort")
+    public List<String> generateShort(@RequestParam("id") long id,@RequestBody List<String> longUrls) {
+        List<String> shortUrls=new ArrayList<>();
+        for (int i=0;i<longUrls.size();i++) {
+            String longUrl=longUrls.get(i);
+            shortUrls.add(long2short(longUrl));
+        }
+        urlService.addLog(id,shortUrls,longUrls);
+        return shortUrls;
+    }
+    @RequestMapping("/getOneShort")
+    public String generateOneShort(@RequestParam("id") long id,@RequestBody List<String> longUrls) {
+        String longUrl=longUrls.get((int)(Math.random()*longUrls.size()));
+        String shortUrl=long2short(longUrl);
         List<String> shortUrls=new ArrayList<>();
         for (int i=0;i<longUrls.size();++i) shortUrls.add(shortUrl);
         urlService.addLog(id,shortUrls,longUrls);
