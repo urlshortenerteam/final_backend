@@ -12,8 +12,10 @@ public class StatController {
     StatService statService;
     @RequestMapping("/getStat")
     public List<Statistics> getStat(@RequestParam("user_id") long user_id) {
+        return statService.getStat();
     }
     @RequestMapping("/getShortStat")
     public Statistics getShortStat(@RequestParam("user_id") long user_id,@RequestParam("short_url") String short_url) {
+        return statService.getShortStat(short_url);
     }
 }

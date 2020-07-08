@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Area_distr {
     public String name;
-    public Integer code;
-    public Long value;
+    public int code;
+    public long value;
 }

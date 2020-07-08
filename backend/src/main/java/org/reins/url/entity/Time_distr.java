@@ -6,6 +6,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Time_distr {
-    public Integer time;
-    public Long value;
+    public int time;
+    public long value;
+
+    public Time_distr(){
+        value=0;
+        time=0;
+    }
 }

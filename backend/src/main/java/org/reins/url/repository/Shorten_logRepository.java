@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import java.util.Date;
 import java.util.List;
-public interface Shorten_logRepository extends JpaRepository<Shorten_log,Integer> {
+public interface Shorten_logRepository extends JpaRepository<Shorten_log,Long> {
     @Modifying
     @Query(value="insert into Shorten_log(creator_id,create_time) values(:creator_id,:create_time)",nativeQuery=true)
     int addLog(@Param("creator_id")long creator_id,@Param("create_time")Date create_time);

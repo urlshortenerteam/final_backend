@@ -6,4 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import java.util.List;
 public interface Visit_logRepository extends JpaRepository<Visit_log,Long>{
+    @Modifying
+    @Query(value="from Visit_log v where v.shortener_id = :Shortener_id")
+    List<Visit_log> findByShortener_id(@Param("Shortener_id")long Shortener_id);
 }
