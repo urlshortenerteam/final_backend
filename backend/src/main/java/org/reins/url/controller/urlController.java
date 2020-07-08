@@ -1,5 +1,6 @@
 package org.reins.url.controller;
 import org.reins.url.entity.Shorten_log;
+import org.reins.url.entity.Shortener;
 import org.reins.url.service.UrlService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.DigestUtils;
@@ -48,5 +49,19 @@ public class UrlController {
         for (int i=0;i<longUrls.size();++i) shortUrls.add(shortUrl);
         urlService.addLog(id,shortUrls,longUrls);
         return shortUrl;
+    }
+    @RequestMapping("/getLong")
+    public String getLong(@RequestParam("shortUrl") String shortUrl) {
+        List<Shorten_log> shorten_logList=urlService.getLog();
+        List<String> longUrls=new ArrayList<>();
+        for (int i=0;i<shorten_logList.size();i++) {
+            List<Shortener> shortenerList=shorten_logList.get(i).getShortener();
+            for (int j=0;j<shortenerList.size();j++) {
+                Shortener shortener=shortenerList.get(j);
+                if (shortener.getShort_url().equals(shortUrl)) longUrls.add(shortener.getLong_url());
+            }
+        }
+        if (longUrls.isEmpty()) return null;
+        return longUrls.get((int)(Math.random()*longUrls.size()));
     }
 }

@@ -6,8 +6,8 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import java.util.List;
 @RepositoryRestResource(collectionResourceRel="shortener",path="shortener")
 public interface ShortenerRepository extends MongoRepository<Shortener,String> {
-    @Query(value="{'shorten_id':{'$e':shorten_id}}")
+    @Query(value="{'shorten_id':?0}")
     List<Shortener> findByShorten_id(long shorten_id);
-    @Query(value="{'short_url':{'$e':short_url}}")
+    @Query(value="{'short_url':?0}")
     List<Shortener> findByShort_url(String short_url);
 }
