@@ -1,4 +1,5 @@
 package org.reins.url.controller;
+import org.reins.url.entity.Shorten_log;
 import org.reins.url.service.UrlService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.DigestUtils;
@@ -9,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.List;
 @RestController
-public class urlController {
+public class UrlController {
     @Autowired
     UrlService urlService;
     private String long2short(String longUrl) {
@@ -30,7 +31,7 @@ public class urlController {
         return res.get((int)(Math.random()*4));
     }
     @RequestMapping("/getShort")
-    public List<String> generateShort(@RequestParam("id") long id,@RequestBody List<String> longUrls) {
+    public List<String> generateShort(@RequestParam("id") long id,@RequestParam("longUrls") List<String> longUrls) {
         List<String> shortUrls=new ArrayList<>();
         for (int i=0;i<longUrls.size();i++) {
             String longUrl=longUrls.get(i);
@@ -40,7 +41,7 @@ public class urlController {
         return shortUrls;
     }
     @RequestMapping("/getOneShort")
-    public String generateOneShort(@RequestParam("id") long id,@RequestBody List<String> longUrls) {
+    public String generateOneShort(@RequestParam("id") long id,@RequestParam("longUrls") List<String> longUrls) {
         String longUrl=longUrls.get((int)(Math.random()*longUrls.size()));
         String shortUrl=long2short(longUrl);
         List<String> shortUrls=new ArrayList<>();

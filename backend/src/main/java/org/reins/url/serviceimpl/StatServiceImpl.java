@@ -16,10 +16,8 @@ import java.util.Optional;
 public class StatServiceImpl implements StatService {
     @Autowired
     StatDao statDao;
-
     @Autowired
     VisitDao visitDao;
-
     @Override
     public List<Statistics> getStat() {
         List<Statistics> res=new ArrayList<>();
@@ -31,7 +29,7 @@ public class StatServiceImpl implements StatService {
                 long shortener_id=Long.parseLong(shortener.getId());
                 List<Visit_log> visit_logs=visitDao.findByShortenerId(shortener_id);
                 statistics.visit_count+=visit_logs.size();
-                for (Visit_log v:visit_logs){
+                for (Visit_log v:visit_logs) {
                     try {
                         statistics.addArea_distr(v.getIp());
                     } catch (Exception e) {
@@ -45,7 +43,6 @@ public class StatServiceImpl implements StatService {
         }
         return res;
     }
-
     @Override
     public Statistics getShortStat(String short_url) {
         Statistics statistics=new Statistics();
@@ -61,7 +58,7 @@ public class StatServiceImpl implements StatService {
             long shortener_id=Long.parseLong(shortener.getId());
             List<Visit_log> visit_logs=visitDao.findByShortenerId(shortener_id);
             statistics.visit_count+=visit_logs.size();
-            for (Visit_log v:visit_logs){
+            for (Visit_log v:visit_logs) {
                 try {
                     statistics.addArea_distr(v.getIp());
                 } catch (Exception e) {
