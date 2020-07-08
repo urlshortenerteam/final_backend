@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 @Transactional
@@ -28,15 +27,9 @@ public class UrlDaoImpl implements UrlDao {
     @Override
     public List<Shorten_log> getLog() {
         List<Shorten_log> shorten_logList=shorten_logRepository.findAll();
-        List<Shortener> shortenerList=shortenerRepository.findAll();
         for (int i=0;i<shorten_logList.size();i++) {
             long shorten_id=shorten_logList.get(i).getId();
-            List<Shortener> tmp=new ArrayList<>();
-            for (int j=0;j<shortenerList.size();j++) {
-                Shortener shortener=shortenerList.get(j);
-                if (shortener.getShorten_id()==shorten_id) tmp.add(shortener);
-            }
-            shorten_logList.get(i).setShortener(tmp);
+            shorten_logList.get(i).setShortener(shortenerRepository.findByShorten_id(shorten_id));
         }
         return shorten_logList;
     }
