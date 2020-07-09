@@ -14,7 +14,7 @@ public class VisitDaoImpl implements VisitDao {
     @Autowired
     Visit_logRepository visit_logRepository;
     @Override
-    public List<Visit_log> findByShortenerId(long shortener_id) {
+    public List<Visit_log> findByShortenerId(String shortener_id) {
         return visit_logRepository.findByShortener_id(shortener_id);
     }
 }
