@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.List;
 @RestController
-public class UrlController {
+public class urlController {
     @Autowired
     UrlService urlService;
     private String long2short(String longUrl) {
