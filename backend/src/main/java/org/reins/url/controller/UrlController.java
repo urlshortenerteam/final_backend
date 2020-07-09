@@ -4,12 +4,11 @@ import org.reins.url.entity.Shortener;
 import org.reins.url.service.UrlService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.DigestUtils;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 @RestController
 public class UrlController {
     @Autowired
@@ -31,27 +30,34 @@ public class UrlController {
         }
         return res.get((int)(Math.random()*4));
     }
+    @CrossOrigin
     @RequestMapping("/getShort")
-    public List<String> generateShort(@RequestParam("id") long id,@RequestBody List<String> longUrls) {
+    public Map<String,List<String>> generateShort(@RequestParam("id") long id,@RequestBody List<String> longUrls) {
         List<String> shortUrls=new ArrayList<>();
         for (int i=0;i<longUrls.size();i++) {
             String longUrl=longUrls.get(i);
             shortUrls.add(long2short(longUrl));
         }
         urlService.addLog(id,shortUrls,longUrls);
-        return shortUrls;
+        Map<String,List<String>> res=new HashMap<>();
+        res.put("data",shortUrls);
+        return res;
     }
+    @CrossOrigin
     @RequestMapping("/getOneShort")
-    public String generateOneShort(@RequestParam("id") long id,@RequestBody List<String> longUrls) {
+    public Map<String,String> generateOneShort(@RequestParam("id") long id,@RequestBody List<String> longUrls) {
         String longUrl=longUrls.get((int)(Math.random()*longUrls.size()));
         String shortUrl=long2short(longUrl);
         List<String> shortUrls=new ArrayList<>();
         for (int i=0;i<longUrls.size();++i) shortUrls.add(shortUrl);
         urlService.addLog(id,shortUrls,longUrls);
-        return shortUrl;
+        Map<String,String> res=new HashMap<>();
+        res.put("data",shortUrl);
+        return res;
     }
+    @CrossOrigin
     @RequestMapping("/getLong")
-    public String getLong(@RequestParam("shortUrl") String shortUrl) {
+    public Map<String,String> getLong(@RequestParam("shortUrl") String shortUrl) {
         List<Shorten_log> shorten_logList=urlService.getLog();
         List<String> longUrls=new ArrayList<>();
         for (int i=0;i<shorten_logList.size();i++) {
@@ -62,6 +68,8 @@ public class UrlController {
             }
         }
         if (longUrls.isEmpty()) return null;
-        return longUrls.get((int)(Math.random()*longUrls.size()));
+        Map<String,String> res=new HashMap<>();
+        res.put("data",longUrls.get((int)(Math.random()*longUrls.size())));
+        return res;
     }
 }
