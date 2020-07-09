@@ -1,7 +1,7 @@
 package org.reins.url.service;
+import org.reins.url.entity.Shorten_log;
 import java.util.List;
 public interface UrlService {
-    String generateShortUrl(String longUrl);
-    String getLongUrl(String shortUrl);
-    String generateOneShortUrl(List<String> longUrls);
+    void addLog(long creator_id,List<String> shortUrls,List<String> longUrls);
+    List<Shorten_log> getLog();
 }
