@@ -15,7 +15,10 @@ public class Statistics {
     public Statistics() {
         area_distrs=new ArrayList<>();
         time_distrs=new Time_distr[24];
-        for (int i=0;i<24;++i) time_distrs[i].time=i;
+        for (int i=0;i<24;++i) {
+            time_distrs[i]=new Time_distr();
+            time_distrs[i].time=i;
+        }
         source_distrs=new ArrayList<>();
         visit_count=0;
     }
