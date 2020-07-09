@@ -28,7 +28,7 @@ public class StatServiceImpl implements StatService {
             statistics.shortUrl=s.getShortener().get(0).getShort_url();
             for (Shortener shortener:s.getShortener()) {
                 List<Visit_log> visit_logs=visitDao.findByShortenerId(shortener.getId());
-                statistics.visit_count+=visit_logs.size();
+                statistics.count+=visit_logs.size();
                 for (Visit_log v:visit_logs) {
                     try {
                         statistics.addArea_distr(v.getIp());
@@ -52,12 +52,12 @@ public class StatServiceImpl implements StatService {
         long shorten_id=shorteners.get(0).getShorten_id();
         Optional<Shorten_log> shorten_log=statDao.findById(shorten_id);
         if (!shorten_log.isPresent()) {
-            statistics.visit_count=-1;
+            statistics.count=-1;
             return statistics;
         }
         for (Shortener shortener:shorteners) {
             List<Visit_log> visit_logs=visitDao.findByShortenerId(shortener.getId());
-            statistics.visit_count+=visit_logs.size();
+            statistics.count+=visit_logs.size();
             for (Visit_log v:visit_logs) {
                 try {
                     statistics.addArea_distr(v.getIp());

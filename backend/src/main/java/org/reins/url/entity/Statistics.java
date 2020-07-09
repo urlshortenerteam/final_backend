@@ -8,19 +8,19 @@ import java.util.*;
 @AllArgsConstructor
 public class Statistics {
     public String shortUrl;
-    public long visit_count;
-    public List<Area_distr> area_distrs;
-    public Time_distr[] time_distrs;
-    public List<Source_distr> source_distrs;
+    public long count;
+    public List<Area_distr> area_distr;
+    public Time_distr[] time_distr;
+    public List<Source_distr> source_distr;
     public Statistics() {
-        area_distrs=new ArrayList<>();
-        time_distrs=new Time_distr[24];
+        area_distr=new ArrayList<>();
+        time_distr=new Time_distr[24];
         for (int i=0;i<24;++i) {
-            time_distrs[i]=new Time_distr();
-            time_distrs[i].time=i;
+            time_distr[i]=new Time_distr();
+            time_distr[i].time=i;
         }
-        source_distrs=new ArrayList<>();
-        visit_count=0;
+        source_distr=new ArrayList<>();
+        count=0;
     }
     public void addArea_distr(String ip) throws Exception {
         boolean isIpAddress=Util.isIpAddress(ip);
@@ -33,7 +33,7 @@ public class Statistics {
         DataBlock block=searcher.btreeSearch(ip);
         String area=block.getRegion().substring(6,8);
         boolean flag=false;
-        for (Area_distr area_distr:area_distrs) {
+        for (Area_distr area_distr:area_distr) {
             if (area_distr.name.equals(area)) {
                 ++area_distr.value;
                 flag=true;
@@ -44,14 +44,14 @@ public class Statistics {
             Area_distr a=new Area_distr();
             a.name=area;
             a.value=1;
-            area_distrs.add(a);
+            area_distr.add(a);
         }
     }
     public void addTime_distr(Date visit_time) {
         Calendar calendarTime=Calendar.getInstance();
         calendarTime.setTime(visit_time);
         int hour=calendarTime.get(Calendar.HOUR_OF_DAY);
-        time_distrs[hour].value++;
+        time_distr[hour].value++;
     }
     public void addSource_distr(String ip) {
     }

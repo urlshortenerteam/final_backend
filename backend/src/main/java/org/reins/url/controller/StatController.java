@@ -3,17 +3,25 @@ import org.reins.url.entity.Statistics;
 import org.reins.url.service.StatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 @RestController
 public class StatController {
     @Autowired
     StatService statService;
+    @CrossOrigin
     @RequestMapping("/getStat")
-    public List<Statistics> getStat(@RequestParam("user_id") long user_id) {
-        return statService.getStat();
+    public Map<String,List<Statistics>> getStat(@RequestParam("id") long id) {
+        Map<String,List<Statistics>> res=new HashMap<>();
+        res.put("data",statService.getStat());
+        return res;
     }
+    @CrossOrigin
     @RequestMapping("/getShortStat")
-    public Statistics getShortStat(@RequestParam("user_id") long user_id,@RequestParam("short_url") String short_url) {
-        return statService.getShortStat(short_url);
+    public Map<String,Statistics> getShortStat(@RequestParam("id") long id,@RequestParam("short") String short_url) {
+        Map<String,Statistics> res=new HashMap<>();
+        res.put("data",statService.getShortStat(short_url));
+        return res;
     }
 }
