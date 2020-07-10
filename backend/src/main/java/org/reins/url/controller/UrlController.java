@@ -5,6 +5,9 @@ import org.reins.url.service.UrlService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -56,8 +59,9 @@ public class UrlController {
         return res;
     }
     @CrossOrigin
-    @RequestMapping("/getLong")
-    public Map<String,String> getLong(@RequestParam("shortUrl") String shortUrl) {
+    @RequestMapping("/getLong/*")
+    public void getLong(HttpServletRequest req, HttpServletResponse resp) {
+        String shortUrl=req.getRequestURI().substring(9);
         List<Shorten_log> shorten_logList=urlService.getLog();
         List<String> longUrls=new ArrayList<>();
         for (int i=0;i<shorten_logList.size();i++) {
@@ -67,9 +71,11 @@ public class UrlController {
                 if (shortener.getShort_url().equals(shortUrl)) longUrls.add(shortener.getLong_url());
             }
         }
-        if (longUrls.isEmpty()) return null;
-        Map<String,String> res=new HashMap<>();
-        res.put("data",longUrls.get((int)(Math.random()*longUrls.size())));
-        return res;
+        if (longUrls.isEmpty()) return;
+        try {
+            resp.sendRedirect(longUrls.get((int)(Math.random()*longUrls.size())));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
