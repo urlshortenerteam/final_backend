@@ -16,6 +16,6 @@ class ApplicationTests {
     private MockMvc mockMvc;
     @Test
     public void shouldReturnDefaultMessage() throws Exception {
-        this.mockMvc.perform(get("/getStat?user_id=1")).andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(get("/getStat?id=1")).andDo(print()).andExpect(status().isOk());
     }
 }
