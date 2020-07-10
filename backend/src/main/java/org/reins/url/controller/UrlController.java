@@ -1,4 +1,6 @@
 package org.reins.url.controller;
+import eu.bitwalker.useragentutils.DeviceType;
+import eu.bitwalker.useragentutils.UserAgent;
 import org.reins.url.entity.Shorten_log;
 import org.reins.url.entity.Shortener;
 import org.reins.url.service.UrlService;
@@ -41,7 +43,7 @@ public class UrlController {
             String longUrl=longUrls.get(i);
             shortUrls.add(long2short(longUrl));
         }
-        urlService.addLog(id,shortUrls,longUrls);
+        urlService.addShortenLog(id,shortUrls,longUrls);
         Map<String,List<String>> res=new HashMap<>();
         res.put("data",shortUrls);
         return res;
@@ -53,7 +55,7 @@ public class UrlController {
         String shortUrl=long2short(longUrl);
         List<String> shortUrls=new ArrayList<>();
         for (int i=0;i<longUrls.size();++i) shortUrls.add(shortUrl);
-        urlService.addLog(id,shortUrls,longUrls);
+        urlService.addShortenLog(id,shortUrls,longUrls);
         Map<String,String> res=new HashMap<>();
         res.put("data",shortUrl);
         return res;
@@ -62,18 +64,21 @@ public class UrlController {
     @RequestMapping("/{[A-Za-z0-9]{6}}")
     public void getLong(HttpServletRequest req,HttpServletResponse resp) {
         String shortUrl=req.getRequestURI().substring(1);
-        List<Shorten_log> shorten_logList=urlService.getLog();
-        List<String> longUrls=new ArrayList<>();
+        List<Shorten_log> shorten_logList=urlService.getShortenLog();
+        List<Shortener> longUrls=new ArrayList<>();
         for (int i=0;i<shorten_logList.size();i++) {
             List<Shortener> shortenerList=shorten_logList.get(i).getShortener();
             for (int j=0;j<shortenerList.size();j++) {
                 Shortener shortener=shortenerList.get(j);
-                if (shortener.getShort_url().equals(shortUrl)) longUrls.add(shortener.getLong_url());
+                if (shortener.getShort_url().equals(shortUrl)) longUrls.add(shortener);
             }
         }
         if (longUrls.isEmpty()) return;
+        Shortener longUrl=longUrls.get((int)(Math.random()*longUrls.size()));
+        Boolean device=(UserAgent.parseUserAgentString(req.getHeader("User-Agent")).getOperatingSystem().getDeviceType()!=DeviceType.COMPUTER);
         try {
-            resp.sendRedirect(longUrls.get((int)(Math.random()*longUrls.size())));
+            urlService.addVisitLog(longUrl.getId(),req.getRemoteAddr(),device);
+            resp.sendRedirect(longUrl.getLong_url());
         } catch (IOException e) {
             e.printStackTrace();
         }
