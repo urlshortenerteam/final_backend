@@ -59,9 +59,9 @@ public class UrlController {
         return res;
     }
     @CrossOrigin
-    @RequestMapping("/getLong/*")
-    public void getLong(HttpServletRequest req, HttpServletResponse resp) {
-        String shortUrl=req.getRequestURI().substring(9);
+    @RequestMapping("/{[A-Za-z0-9]{6}}")
+    public void getLong(HttpServletRequest req,HttpServletResponse resp) {
+        String shortUrl=req.getRequestURI().substring(1);
         List<Shorten_log> shorten_logList=urlService.getLog();
         List<String> longUrls=new ArrayList<>();
         for (int i=0;i<shorten_logList.size();i++) {
