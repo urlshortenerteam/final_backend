@@ -1,6 +1,7 @@
 package org.reins.url.controller;
 import org.reins.url.entity.Statistics;
 import org.reins.url.entity.UserStat;
+import org.reins.url.entity.Users;
 import org.reins.url.service.StatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -27,8 +28,8 @@ public class StatController {
     }
     @CrossOrigin
     @RequestMapping("/getUserStat")
-    public Map<String,List<UserStat>> getUserStat(){
-        Map<String,List<UserStat>> res=new HashMap<>();
+    public Map<String,List<Users>> getUserStat(){
+        Map<String,List<Users>> res=new HashMap<>();
         res.put("data",statService.getUserStat());
         return res;
     }

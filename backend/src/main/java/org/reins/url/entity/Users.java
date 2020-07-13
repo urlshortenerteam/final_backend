@@ -8,6 +8,8 @@ public class Users implements Serializable {
     private long id;
     private String name;
     private String password;
+    private int role;
+    private long visit_count;
     public Users() {
     }
     @Id
@@ -30,5 +32,13 @@ public class Users implements Serializable {
     }
     public void setPassword(String password) {
         this.password=password;
+    }
+    public int getRole(){return role;}
+    public void setRole(int role){this.role=role;}
+    public long getVisit_count() {
+        return visit_count;
+    }
+    public void setVisit_count(long visit_count) {
+        this.visit_count=visit_count;
     }
 }

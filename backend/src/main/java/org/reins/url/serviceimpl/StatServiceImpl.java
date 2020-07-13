@@ -1,5 +1,6 @@
 package org.reins.url.serviceimpl;
 import org.reins.url.dao.StatDao;
+import org.reins.url.dao.UserDao;
 import org.reins.url.dao.VisitDao;
 import org.reins.url.entity.*;
 import org.reins.url.service.StatService;
@@ -15,6 +16,8 @@ public class StatServiceImpl implements StatService {
     StatDao statDao;
     @Autowired
     VisitDao visitDao;
+    @Autowired
+    UserDao userDao;
     @Override
     public List<Statistics> getStat() {
         List<Statistics> res=new ArrayList<>();
@@ -69,7 +72,7 @@ public class StatServiceImpl implements StatService {
     }
 
     @Override
-    public List<UserStat> getUserStat(){
-        
+    public List<Users> getUserStat(){
+        return userDao.findAllUserStat();
     }
 }
