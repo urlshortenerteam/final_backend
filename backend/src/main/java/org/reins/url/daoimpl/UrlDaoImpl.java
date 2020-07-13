@@ -5,7 +5,7 @@ import org.reins.url.entity.Shortener;
 import org.reins.url.entity.Users;
 import org.reins.url.repository.Shorten_logRepository;
 import org.reins.url.repository.ShortenerRepository;
-import org.reins.url.repository.UsersRepository;
+import org.reins.url.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,7 @@ public class UrlDaoImpl implements UrlDao {
     @Autowired
     private ShortenerRepository shortenerRepository;
     @Autowired
-    private UsersRepository usersRepository;
+    private UserRepository usersRepository;
     @Override
     public void addShortenLog(long creator_id,List<String> shortUrls,List<String> longUrls) {
         Shorten_log shorten_log=shorten_logRepository.save(new Shorten_log(creator_id,new Date()));

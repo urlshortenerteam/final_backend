@@ -33,4 +33,8 @@ public class UserDaoImpl implements UserDao {
         user.setPassword(password);
         userRepository.save(user);
     }
+    @Override
+    public Users checkUser(String name,String password){
+        return userRepository.checkUser(name,password);
+    }
 }
