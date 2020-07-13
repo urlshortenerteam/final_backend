@@ -13,12 +13,6 @@ public class Visit_log implements Serializable {
     private Boolean device;
     public Visit_log() {
     }
-    public Visit_log(String shortener_id,Date visit_time,String ip,Boolean device) {
-        this.shortener_id=shortener_id;
-        this.visit_time=visit_time;
-        this.ip=ip;
-        this.device=device;
-    }
     @Id
     @GeneratedValue(generator="increment")
     @GenericGenerator(name="increment",strategy="increment")

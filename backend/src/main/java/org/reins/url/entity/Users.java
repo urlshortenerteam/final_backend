@@ -8,16 +8,10 @@ public class Users implements Serializable {
     private long id;
     private String name;
     private String password;
+    private String email;
     private int role;
     private long visit_count;
     public Users() {
-    }
-    public Users(long id,String name,String password,int role,long visit_count) {
-        this.id=id;
-        this.name=name;
-        this.password=password;
-        this.role=role;
-        this.visit_count=visit_count;
     }
     @Id
     @GeneratedValue(generator="increment")
@@ -39,6 +33,12 @@ public class Users implements Serializable {
     }
     public void setPassword(String password) {
         this.password=password;
+    }
+    public String getEmail() {
+        return email;
+    }
+    public void setEmail(String email) {
+        this.email=email;
     }
     public int getRole() {
         return role;

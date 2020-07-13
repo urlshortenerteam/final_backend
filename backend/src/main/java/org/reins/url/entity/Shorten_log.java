@@ -12,10 +12,6 @@ public class Shorten_log implements Serializable {
     private Date create_time;
     public Shorten_log() {
     }
-    public Shorten_log(long creator_id,Date create_time) {
-        this.creator_id=creator_id;
-        this.create_time=create_time;
-    }
     @Id
     @GeneratedValue(generator="increment")
     @GenericGenerator(name="increment",strategy="increment")
