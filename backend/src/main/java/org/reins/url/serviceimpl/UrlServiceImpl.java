@@ -2,6 +2,7 @@ package org.reins.url.serviceimpl;
 import org.reins.url.dao.UrlDao;
 import org.reins.url.dao.VisitDao;
 import org.reins.url.entity.Shorten_log;
+import org.reins.url.entity.Shortener;
 import org.reins.url.service.UrlService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,15 @@ public class UrlServiceImpl implements UrlService {
         visitDao.addVisitLog(shortener_id,ip,device);
     }
     @Override
-    public List<Shorten_log> getShortenLog() {
-        return urlDao.getShortenLog();
+    public void changeUsersVisit_count(long id) {
+        urlDao.changeUsersVisit_count(id);
+    }
+    @Override
+    public List<Shortener> findShortenerByShort_url(String short_url) {
+        return urlDao.findShortenerByShort_url(short_url);
+    }
+    @Override
+    public Shorten_log findShorten_logById(long id) {
+        return urlDao.findShorten_logById(id);
     }
 }
