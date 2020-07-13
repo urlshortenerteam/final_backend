@@ -1,10 +1,7 @@
 package org.reins.url.serviceimpl;
 import org.reins.url.dao.StatDao;
 import org.reins.url.dao.VisitDao;
-import org.reins.url.entity.Shorten_log;
-import org.reins.url.entity.Shortener;
-import org.reins.url.entity.Statistics;
-import org.reins.url.entity.Visit_log;
+import org.reins.url.entity.*;
 import org.reins.url.service.StatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -69,5 +66,10 @@ public class StatServiceImpl implements StatService {
             }
         }
         return statistics;
+    }
+
+    @Override
+    public List<UserStat> getUserStat(){
+        
     }
 }

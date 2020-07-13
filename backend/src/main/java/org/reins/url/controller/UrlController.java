@@ -1,4 +1,6 @@
 package org.reins.url.controller;
+import eu.bitwalker.useragentutils.DeviceType;
+import eu.bitwalker.useragentutils.UserAgent;
 import org.reins.url.entity.Shorten_log;
 import org.reins.url.entity.Shortener;
 import org.reins.url.service.UrlService;
@@ -62,6 +64,11 @@ public class UrlController {
     @RequestMapping("/{[A-Za-z0-9]{6}}")
     public void getLong(HttpServletRequest req,HttpServletResponse resp) {
         String shortUrl=req.getRequestURI().substring(1);
+        boolean device;
+        if (UserAgent.parseUserAgentString(req.getHeader("User-Agent")).getOperatingSystem().getDeviceType()== DeviceType.COMPUTER)
+            device=false;
+        else device=true;
+        System.out.println(req.getRemoteAddr());
         List<Shorten_log> shorten_logList=urlService.getLog();
         List<String> longUrls=new ArrayList<>();
         for (int i=0;i<shorten_logList.size();i++) {
