@@ -7,6 +7,8 @@ create table users
 	id bigint auto_increment,
 	name varchar(50) not null,
 	password varchar(50) not null,
+	role int not null,
+	visit_count bigint not null,
 	primary key (id),
 	unique key (name)
 );
