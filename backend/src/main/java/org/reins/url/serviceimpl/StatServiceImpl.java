@@ -1,5 +1,6 @@
 package org.reins.url.serviceimpl;
 import org.reins.url.dao.StatDao;
+import org.reins.url.dao.UrlDao;
 import org.reins.url.dao.UserDao;
 import org.reins.url.dao.VisitDao;
 import org.reins.url.entity.*;
@@ -18,6 +19,8 @@ public class StatServiceImpl implements StatService {
     VisitDao visitDao;
     @Autowired
     UserDao userDao;
+    @Autowired
+    UrlDao urlDao;
     @Override
     public List<Statistics> getStat() {
         List<Statistics> res=new ArrayList<>();
@@ -47,7 +50,7 @@ public class StatServiceImpl implements StatService {
     public Statistics getShortStat(String short_url) {
         Statistics statistics=new Statistics();
         statistics.shortUrl=short_url;
-        List<Shortener> shorteners=statDao.findShortenerByShortUrl(short_url);
+        List<Shortener> shorteners=urlDao.findShortenerByShort_url(short_url);
         if (shorteners.size()==0) return statistics;
         long shorten_id=shorteners.get(0).getShorten_id();
         Optional<Shorten_log> shorten_log=statDao.findById(shorten_id);

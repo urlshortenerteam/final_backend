@@ -38,8 +38,4 @@ public class StatDaoImpl implements StatDao {
     public Optional<Shorten_log> findById(long shorten_id) {
         return shorten_logRepository.findById(shorten_id);
     }
-    @Override
-    public List<Shortener> findShortenerByShortUrl(String short_url) {
-        return shortenerRepository.findByShort_url(short_url);
-    }
 }

@@ -7,5 +7,4 @@ public interface StatDao {
     List<Shorten_log> findAll();
     List<Shorten_log> findByCreator_id(long creator_id);
     Optional<Shorten_log> findById(long shorten_id);
-    List<Shortener> findShortenerByShortUrl(String short_url);
 }
