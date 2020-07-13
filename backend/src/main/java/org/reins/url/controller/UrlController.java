@@ -19,9 +19,13 @@ public class UrlController {
     @Autowired
     UrlService urlService;
     private String long2short(String longUrl) {
-        String key="azhe";
         String chars="abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        String hex=DigestUtils.md5DigestAsHex((key+longUrl).getBytes());
+        StringBuilder key=new StringBuilder();
+        for (int i=0;i<6;i++) {
+            int index=(int)(Math.random()*62);
+            key.append(chars,index,index+1);
+        }
+        String hex=DigestUtils.md5DigestAsHex((key.toString()+longUrl).getBytes());
         List<String> res=new ArrayList<>();
         for (int i=0;i<4;i++) {
             long hexLong=0x3fffffff&Long.parseLong(hex.substring(i*8,i*8+8),16);
@@ -64,20 +68,15 @@ public class UrlController {
     @RequestMapping("/{[A-Za-z0-9]{6}}")
     public void getLong(HttpServletRequest req,HttpServletResponse resp) {
         String shortUrl=req.getRequestURI().substring(1);
-        List<Shorten_log> shorten_logList=urlService.getShortenLog();
-        List<Shortener> longUrls=new ArrayList<>();
-        for (int i=0;i<shorten_logList.size();i++) {
-            List<Shortener> shortenerList=shorten_logList.get(i).getShortener();
-            for (int j=0;j<shortenerList.size();j++) {
-                Shortener shortener=shortenerList.get(j);
-                if (shortener.getShort_url().equals(shortUrl)) longUrls.add(shortener);
-            }
-        }
+        List<Shortener> longUrls=urlService.findShortenerByShort_url(shortUrl);
         if (longUrls.isEmpty()) return;
         Shortener longUrl=longUrls.get((int)(Math.random()*longUrls.size()));
+        Shorten_log shorten_log=urlService.findShorten_logById(longUrl.getShorten_id());
+        if (shorten_log==null) return;
         Boolean device=(UserAgent.parseUserAgentString(req.getHeader("User-Agent")).getOperatingSystem().getDeviceType()!=DeviceType.COMPUTER);
         try {
             urlService.addVisitLog(longUrl.getId(),req.getRemoteAddr(),device);
+            urlService.changeUsersVisit_count(shorten_log.getCreator_id());
             resp.sendRedirect(longUrl.getLong_url());
         } catch (IOException e) {
             e.printStackTrace();
