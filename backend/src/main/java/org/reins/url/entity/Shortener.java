@@ -8,6 +8,8 @@ public class Shortener {
     private long shorten_id;
     private String short_url;
     private String long_url;
+    public Shortener() {
+    }
     public Shortener(long shorten_id,String short_url,String long_url) {
         this.shorten_id=shorten_id;
         this.short_url=short_url;
