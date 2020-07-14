@@ -34,7 +34,7 @@ jobs:
         # Report level for reviewdog [info,warning,error]
         level: warning
         # Reporter of reviewdog command [github-pr-check,github-pr-review]
-        reporter: added
+        reporter: github-pr-review
         # Filtering for the reviewdog command [added,diff_context,file,nofilter].
         filter_mode: added
         # Exit code for reviewdog when errors are found [true,false]
