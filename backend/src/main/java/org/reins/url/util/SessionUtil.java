@@ -12,13 +12,13 @@ import javax.servlet.http.HttpSession;
 
 public class SessionUtil {
 
-    public static boolean checkAuth() {
+    public static boolean checkAuth(){
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        if (requestAttributes != null) {
+        if(requestAttributes != null) {
             HttpServletRequest request = requestAttributes.getRequest();
             HttpSession session = request.getSession(false);
 
-            if (session != null) {
+            if(session != null) {
                 Integer userType = (Integer) session.getAttribute("userType");
                 //return userType != null && userType >= 0;
                 return true;
@@ -58,12 +58,12 @@ public class SessionUtil {
         }
     }
 
-    public static Boolean removeSession() {
+    public static Boolean removeSession(){
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        if (requestAttributes != null) {
+        if(requestAttributes != null) {
             HttpServletRequest request = requestAttributes.getRequest();
             HttpSession session = request.getSession(false);
-            if (session != null) {
+            if(session != null) {
                 session.invalidate();
             }
         }

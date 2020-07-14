@@ -2,7 +2,6 @@ package org.reins.url.service;
 
 import org.reins.url.entity.Statistics;
 import org.reins.url.entity.Users;
-
 import java.util.List;
 
 public interface StatService {

@@ -4,8 +4,13 @@ import eu.bitwalker.useragentutils.DeviceType;
 import eu.bitwalker.useragentutils.UserAgent;
 import org.reins.url.entity.Shorten_log;
 import org.reins.url.entity.Shortener;
-import org.reins.url.service.UrlService;
+import org.reins.url.entity.Users;
+import org.reins.url.service.Shorten_logService;
+import org.reins.url.service.ShortenerService;
+import org.reins.url.service.UsersService;
+import org.reins.url.service.Visit_logService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,14 +25,19 @@ import java.util.Map;
 @RestController
 public class UrlController {
     @Autowired
-    private UrlService urlService;
-
-    private String long2short(final String longUrl) {
-        String chars = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        StringBuilder key = new StringBuilder();
-        for (int i = 0; i < 6; i++) {
-            int index = (int) (Math.random() * 62);
-            key.append(chars, index, index + 1);
+    Shorten_logService shorten_logService;
+    @Autowired
+    ShortenerService shortenerService;
+    @Autowired
+    UsersService usersService;
+    @Autowired
+    Visit_logService visit_logService;
+    private String long2short(String longUrl) {
+        String chars="abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        StringBuilder key=new StringBuilder();
+        for (int i=0;i<6;i++) {
+            int index=(int)(Math.random()*62);
+            key.append(chars,index,index+1);
         }
         String hex = DigestUtils.md5DigestAsHex((key.toString() + longUrl).getBytes());
         List<String> res = new ArrayList<>();
@@ -51,7 +61,7 @@ public class UrlController {
         for (String longUrl : longUrls) {
             shortUrls.add(long2short(longUrl));
         }
-        urlService.addShortenLog(id, shortUrls, longUrls);
+        shorten_logService.addShorten_log(id, shortUrls, longUrls);
         Map<String, List<String>> res = new HashMap<>();
         res.put("data", shortUrls);
         return res;
@@ -64,7 +74,7 @@ public class UrlController {
         String shortUrl = long2short(longUrl);
         List<String> shortUrls = new ArrayList<>();
         for (int i = 0; i < longUrls.size(); ++i) shortUrls.add(shortUrl);
-        urlService.addShortenLog(id, shortUrls, longUrls);
+        shorten_logService.addShorten_log(id, shortUrls, longUrls);
         Map<String, String> res = new HashMap<>();
         res.put("data", shortUrl);
         return res;
@@ -74,18 +84,43 @@ public class UrlController {
     @RequestMapping("/{[A-Za-z0-9]{6}}")
     public void getLong(HttpServletRequest req, HttpServletResponse resp) {
         String shortUrl = req.getRequestURI().substring(1);
-        List<Shortener> longUrls = urlService.findShortenerByShort_url(shortUrl);
+        List<Shortener> longUrls = shortenerService.findShortenerByShort_url(shortUrl);
         if (longUrls.isEmpty()) return;
         Shortener longUrl = longUrls.get((int) (Math.random() * longUrls.size()));
-        Shorten_log shorten_log = urlService.findShorten_logById(longUrl.getShorten_id());
+        Shorten_log shorten_log = shorten_logService.findById(longUrl.getShorten_id());
         if (shorten_log == null) return;
         Boolean device = (UserAgent.parseUserAgentString(req.getHeader("User-Agent")).getOperatingSystem().getDeviceType() != DeviceType.COMPUTER);
         try {
-            urlService.addVisitLog(longUrl.getId(), req.getRemoteAddr(), device);
-            urlService.changeUsersVisit_count(shorten_log.getCreator_id());
+            visit_logService.addVisit_log(longUrl.getId(), req.getRemoteAddr(), device);
+            usersService.changeVisit_count(shorten_log.getCreator_id());
             resp.sendRedirect(longUrl.getLong_url());
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    @CrossOrigin
+    @RequestMapping("/editUrl")
+    public Map<String,Boolean> editUrl(@Param("id") long id,@Param("shortUrl") String shortUrl,@RequestBody String longUrl) {
+        List<Shortener> shortenerList=shortenerService.findShortenerByShort_url(shortUrl);
+        Map<String,Boolean> res=new HashMap<>();
+        if (shortenerList.size()>1) {
+            res.put("data",false);
+            return res;
+        }
+        Shortener shortener=shortenerList.get(0);
+        Shorten_log shorten_log=shorten_logService.findById(shortener.getShorten_id());
+        if (shorten_log==null) {
+            res.put("data",false);
+            return res;
+        }
+        Users users=usersService.findById(id);
+        if (users!=null && (shorten_log.getCreator_id()==id || (users.getRole()==0 && longUrl.equals("BANNED")))) {
+            shortener.setLong_url(longUrl);
+            shortenerService.changeLong_url(shortener);
+            res.put("data",true);
+            return res;
+        }
+        res.put("data",false);
+        return res;
     }
 }

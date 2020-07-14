@@ -17,6 +17,7 @@ public class Visit_log implements Serializable {
 
     public Visit_log() {
     }
+<<<<<<< HEAD
 
     public Visit_log(String shortener_id, Date visit_time, String ip, Boolean device) {
         this.shortener_id = shortener_id;
@@ -25,6 +26,8 @@ public class Visit_log implements Serializable {
         this.device = device;
     }
 
+=======
+>>>>>>> fc6a84a2c46ef647affed1cc50855d3bc927f8f5
     @Id
     @GeneratedValue(generator = "increment")
     @GenericGenerator(name = "increment", strategy = "increment")
