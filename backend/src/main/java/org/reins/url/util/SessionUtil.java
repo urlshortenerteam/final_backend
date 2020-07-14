@@ -4,28 +4,26 @@ import net.sf.json.JSONObject;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 
 public class SessionUtil {
 
-    public static boolean checkAuth() {
-        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        if (requestAttributes != null) {
-            HttpServletRequest request = requestAttributes.getRequest();
-            HttpSession session = request.getSession(false);
-
-            if (session != null) {
-                Integer userType = (Integer) session.getAttribute("userType");
-                //return userType != null && userType >= 0;
-                return true;
-            }
-        }
-        return false;
-    }
+//    public static boolean checkAuth() {
+//        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+//        if (requestAttributes != null) {
+//            HttpServletRequest request = requestAttributes.getRequest();
+//            HttpSession session = request.getSession(false);
+//
+//            if (session != null) {
+//                //Integer userType = (Integer) session.getAttribute("userType");
+//                //return userType != null && userType >= 0;
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
 
     public static JSONObject getAuth() {
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
@@ -36,8 +34,8 @@ public class SessionUtil {
 
             if (session != null) {
                 JSONObject ret = new JSONObject();
-                ret.put("id", (Integer) session.getAttribute("id"));
-                ret.put("type", (String) session.getAttribute("type"));
+                ret.put("id", session.getAttribute("id"));
+                ret.put("type", session.getAttribute("type"));
                 return ret;
             }
         }
@@ -58,15 +56,15 @@ public class SessionUtil {
         }
     }
 
-    public static Boolean removeSession() {
-        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        if (requestAttributes != null) {
-            HttpServletRequest request = requestAttributes.getRequest();
-            HttpSession session = request.getSession(false);
-            if (session != null) {
-                session.invalidate();
-            }
-        }
-        return true;
-    }
+//    public static Boolean removeSession() {
+//        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+//        if (requestAttributes != null) {
+//            HttpServletRequest request = requestAttributes.getRequest();
+//            HttpSession session = request.getSession(false);
+//            if (session != null) {
+//                session.invalidate();
+//            }
+//        }
+//        return true;
+//    }
 }

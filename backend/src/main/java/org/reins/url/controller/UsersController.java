@@ -16,7 +16,7 @@ public class UsersController {
 
     @CrossOrigin
     @RequestMapping("/register")
-    public Map<String, Map<String, Boolean>> register(@RequestBody Map<String, String> params) {
+    public JSONObject register(@RequestBody Map<String, String> params) {
         String name = params.get("name");
         String password = params.get("password");
         String email = params.get("email");
@@ -29,7 +29,7 @@ public class UsersController {
 
     @CrossOrigin
     @RequestMapping("/loginReq")
-    public Object login(@RequestBody Map<String, String> params) {
+    public JSONObject login(@RequestBody Map<String, String> params) {
         String name = params.get("name");
         String password = params.get("password");
         Users user = usersService.checkUser(name, password);
@@ -55,8 +55,7 @@ public class UsersController {
         JSONObject auth = SessionUtil.getAuth();
         JSONObject obj = new JSONObject();
         JSONObject data = new JSONObject();
-        if (auth == null) data.put("status", false);
-        else data.put("status", true);
+        data.put("status", auth != null);
         obj.put("data", data);
         return obj;
     }

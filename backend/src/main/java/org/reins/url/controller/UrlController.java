@@ -2,6 +2,7 @@ package org.reins.url.controller;
 
 import eu.bitwalker.useragentutils.DeviceType;
 import eu.bitwalker.useragentutils.UserAgent;
+import net.sf.json.JSONObject;
 import org.reins.url.entity.Shorten_log;
 import org.reins.url.entity.Shortener;
 import org.reins.url.entity.Users;
@@ -60,8 +61,7 @@ public class UrlController {
     @RequestMapping("/getShort")
     public Map<String, List<String>> generateShort(@RequestParam("id") long id, @RequestBody List<String> longUrls) {
         List<String> shortUrls = new ArrayList<>();
-        for (int i = 0; i < longUrls.size(); i++) {
-            String longUrl = longUrls.get(i);
+        for (String longUrl : longUrls) {
             shortUrls.add(long2short(longUrl));
         }
         shorten_logService.addShorten_log(id, shortUrls, longUrls);
@@ -72,13 +72,13 @@ public class UrlController {
 
     @CrossOrigin
     @RequestMapping("/getOneShort")
-    public Map<String, String> generateOneShort(@RequestParam("id") long id, @RequestBody List<String> longUrls) {
+    public JSONObject generateOneShort(@RequestParam("id") long id, @RequestBody List<String> longUrls) {
         String longUrl = longUrls.get((int) (Math.random() * longUrls.size()));
         String shortUrl = long2short(longUrl);
         List<String> shortUrls = new ArrayList<>();
         for (int i = 0; i < longUrls.size(); ++i) shortUrls.add(shortUrl);
         shorten_logService.addShorten_log(id, shortUrls, longUrls);
-        Map<String, String> res = new HashMap<>();
+        JSONObject res = new JSONObject();
         res.put("data", shortUrl);
         return res;
     }
