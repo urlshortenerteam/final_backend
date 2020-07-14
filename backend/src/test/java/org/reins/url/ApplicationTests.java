@@ -15,11 +15,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 class ApplicationTests {
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Test
-    public void shouldReturnDefaultMessage() throws Exception {
-        this.mockMvc.perform(get("/getStat?id=1")).andDo(print()).andExpect(status().isOk());
-    }
+//    @Autowired
+//    private MockMvc mockMvc;
+//
+//    @Test
+//    public void shouldReturnDefaultMessage() throws Exception {
+//        this.mockMvc.perform(get("/getStat?id=1")).andDo(print()).andExpect(status().isOk());
+//    }
 }
