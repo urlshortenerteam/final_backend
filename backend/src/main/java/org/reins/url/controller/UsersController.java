@@ -50,6 +50,7 @@ public class UsersController {
         return obj;
     }
 
+    @CrossOrigin
     @RequestMapping("/checkSession")
     public JSONObject checkSession() {
         JSONObject auth = SessionUtil.getAuth();

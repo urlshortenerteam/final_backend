@@ -1,5 +1,6 @@
 package org.reins.url.controller;
 
+import net.sf.json.JSONObject;
 import org.reins.url.entity.Statistics;
 import org.reins.url.entity.Users;
 import org.reins.url.service.StatService;
@@ -20,24 +21,24 @@ public class StatController {
 
     @CrossOrigin
     @RequestMapping("/getStat")
-    public Map<String, List<Statistics>> getStat(@RequestParam("id") long id) {
-        Map<String, List<Statistics>> res = new HashMap<>();
+    public JSONObject getStat(@RequestParam("id") long id) {
+        JSONObject res = new JSONObject();
         res.put("data", statService.getStat());
         return res;
     }
 
     @CrossOrigin
     @RequestMapping("/getShortStat")
-    public Map<String, Statistics> getShortStat(@RequestParam("id") long id, @RequestParam("short") String short_url) {
-        Map<String, Statistics> res = new HashMap<>();
+    public JSONObject getShortStat(@RequestParam("id") long id, @RequestParam("short") String short_url) {
+        JSONObject res = new JSONObject();
         res.put("data", statService.getShortStat(short_url));
         return res;
     }
 
     @CrossOrigin
     @RequestMapping("/getUserStat")
-    public Map<String, List<Users>> getUserStat() {
-        Map<String, List<Users>> res = new HashMap<>();
+    public JSONObject getUserStat() {
+        JSONObject res = new JSONObject();
         res.put("data", statService.getUserStat());
         return res;
     }

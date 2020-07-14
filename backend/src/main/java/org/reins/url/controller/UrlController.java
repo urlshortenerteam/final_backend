@@ -59,13 +59,13 @@ public class UrlController {
 
     @CrossOrigin
     @RequestMapping("/getShort")
-    public Map<String, List<String>> generateShort(@RequestParam("id") long id, @RequestBody List<String> longUrls) {
+    public JSONObject generateShort(@RequestParam("id") long id, @RequestBody List<String> longUrls) {
         List<String> shortUrls = new ArrayList<>();
         for (String longUrl : longUrls) {
             shortUrls.add(long2short(longUrl));
         }
         shorten_logService.addShorten_log(id, shortUrls, longUrls);
-        Map<String, List<String>> res = new HashMap<>();
+        JSONObject res = new JSONObject();
         res.put("data", shortUrls);
         return res;
     }
@@ -104,9 +104,9 @@ public class UrlController {
 
     @CrossOrigin
     @RequestMapping("/editUrl")
-    public Map<String, Boolean> editUrl(@Param("id") long id, @Param("shortUrl") String shortUrl, @RequestBody String longUrl) {
+    public JSONObject editUrl(@Param("id") long id, @Param("shortUrl") String shortUrl, @RequestBody String longUrl) {
         List<Shortener> shortenerList = shortenerService.findShortenerByShort_url(shortUrl);
-        Map<String, Boolean> res = new HashMap<>();
+        JSONObject res = new JSONObject();
         if (shortenerList.size() > 1) {
             res.put("data", false);
             return res;
