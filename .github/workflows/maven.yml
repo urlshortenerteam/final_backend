@@ -36,7 +36,7 @@ jobs:
         # Reporter of reviewdog command [github-pr-check,github-pr-review]
         reporter: added
         # Filtering for the reviewdog command [added,diff_context,file,nofilter].
-        filter_mode: false
+        filter_mode: added
         # Exit code for reviewdog when errors are found [true,false]
         fail_on_error: true
         # Checkstyle config file
