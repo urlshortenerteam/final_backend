@@ -32,16 +32,16 @@ jobs:
       uses: nikitasavinov/checkstyle-action@0.3.0
       with:
         # Report level for reviewdog [info,warning,error]
-        level: warning 
+        level: warning
         # Reporter of reviewdog command [github-pr-check,github-pr-review]
-        reporter: added 
+        reporter: added
         # Filtering for the reviewdog command [added,diff_context,file,nofilter].
-        filter_mode: false 
+        filter_mode: false
         # Exit code for reviewdog when errors are found [true,false]
-        fail_on_error: true 
+        fail_on_error: true
         # Checkstyle config file
-        checkstyle_config: google_checks.xml 
+        checkstyle_config: google_checks.xml
         # Working directory relative to the root directory.
-        workdir: ./backend 
+        workdir: ./backend
         # Tool name to use for reviewdog reporter
-        tool_name: reviewdog 
+        tool_name: reviewdog
