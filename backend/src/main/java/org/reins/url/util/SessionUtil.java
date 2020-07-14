@@ -27,31 +27,31 @@ public class SessionUtil {
         return false;
     }
 
-    public static JSONObject getAuth() {
+    public static JSONObject getAuth(){
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 
-        if (requestAttributes != null) {
+        if(requestAttributes != null) {
             HttpServletRequest request = requestAttributes.getRequest();
             HttpSession session = request.getSession(false);
 
-            if (session != null) {
+            if(session != null) {
                 JSONObject ret = new JSONObject();
-                ret.put("id", (Integer) session.getAttribute("id"));
-                ret.put("type", (String) session.getAttribute("type"));
+                ret.put("id", (Integer)session.getAttribute("id"));
+                ret.put("type", (String)session.getAttribute("type"));
                 return ret;
             }
         }
         return null;
     }
 
-    public static void setSession(JSONObject data) {
+    public static void setSession(JSONObject data){
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        if (requestAttributes != null) {
+        if(requestAttributes != null) {
             HttpServletRequest request = requestAttributes.getRequest();
             HttpSession session = request.getSession();
 
-            for (Object str : data.keySet()) {
-                String key = (String) str;
+            for(Object str:data.keySet()){
+                String key = (String)str;
                 Object val = data.get(key);
                 session.setAttribute(key, val);
             }
