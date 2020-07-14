@@ -16,7 +16,7 @@ import java.util.Optional;
 @Service
 public class UsersDaoImpl implements UsersDao {
     @Autowired
-    UsersRepository usersRepository;
+    private UsersRepository usersRepository;
 
     @Override
     public void changeVisit_count(long id) {

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class UsersServiceImpl implements UsersService {
     @Autowired
-    UsersDao usersDao;
+    private UsersDao usersDao;
 
     @Override
     public void changeVisit_count(long id) {

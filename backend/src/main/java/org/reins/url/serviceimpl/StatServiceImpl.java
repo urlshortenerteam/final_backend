@@ -16,13 +16,13 @@ import java.util.Optional;
 @Service
 public class StatServiceImpl implements StatService {
     @Autowired
-    Shorten_logDao shorten_logDao;
+    private Shorten_logDao shorten_logDao;
     @Autowired
-    ShortenerDao shortenerDao;
+    private ShortenerDao shortenerDao;
     @Autowired
-    UsersDao usersDao;
+    private UsersDao usersDao;
     @Autowired
-    Visit_logDao visit_logDao;
+    private Visit_logDao visit_logDao;
 
     @Override
     public List<Statistics> getStat() {

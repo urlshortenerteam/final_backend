@@ -11,7 +11,7 @@ import java.util.List;
 @Service
 public class ShortenerServiceImpl implements ShortenerService {
     @Autowired
-    ShortenerDao shortenerDao;
+    private ShortenerDao shortenerDao;
 
     @Override
     public void changeLong_url(Shortener shortener) {

@@ -12,7 +12,7 @@ import java.util.Map;
 @RestController
 public class UsersController {
     @Autowired
-    UsersService usersService;
+    private UsersService usersService;
 
     @CrossOrigin
     @RequestMapping("/register")

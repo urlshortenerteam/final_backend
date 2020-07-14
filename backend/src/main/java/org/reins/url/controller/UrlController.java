@@ -14,6 +14,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -25,13 +26,13 @@ import java.util.Map;
 @RestController
 public class UrlController {
     @Autowired
-    Shorten_logService shorten_logService;
+    private Shorten_logService shorten_logService;
     @Autowired
-    ShortenerService shortenerService;
+    private ShortenerService shortenerService;
     @Autowired
-    UsersService usersService;
+    private UsersService usersService;
     @Autowired
-    Visit_logService visit_logService;
+    private Visit_logService visit_logService;
 
     private String long2short(String longUrl) {
         String chars = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";

@@ -12,5 +12,5 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class Edit_logDaoImpl implements Edit_logDao {
     @Autowired
-    Edit_logRepository edit_logRepository;
+    private Edit_logRepository edit_logRepository;
 }

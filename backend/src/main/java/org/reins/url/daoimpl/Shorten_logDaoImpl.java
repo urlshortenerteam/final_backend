@@ -19,9 +19,9 @@ import java.util.Optional;
 @Service
 public class Shorten_logDaoImpl implements Shorten_logDao {
     @Autowired
-    Shorten_logRepository shorten_logRepository;
+    private Shorten_logRepository shorten_logRepository;
     @Autowired
-    ShortenerRepository shortenerRepository;
+    private ShortenerRepository shortenerRepository;
 
     @Override
     public void addShorten_log(long creator_id, List<String> shortUrls, List<String> longUrls) {

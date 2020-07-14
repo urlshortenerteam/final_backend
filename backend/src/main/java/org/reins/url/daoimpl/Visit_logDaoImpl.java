@@ -16,7 +16,7 @@ import java.util.List;
 @Service
 public class Visit_logDaoImpl implements Visit_logDao {
     @Autowired
-    Visit_logRepository visit_logRepository;
+    private Visit_logRepository visit_logRepository;
 
     @Override
     public void addVisit_log(String shortener_id, String ip, Boolean device) {
