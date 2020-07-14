@@ -9,16 +9,18 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
-    UserDao userDao;
+    private UserDao userDao;
+
     @Override
-    public boolean register(String name,String password){
+    public boolean register(String name, String password) {
         if (userDao.doesNameExist(name))
             return false;
-        userDao.register(name,password);
+        userDao.register(name, password);
         return true;
     }
+
     @Override
-    public Users checkUser(String name, String password){
-        return userDao.checkUser(name,password);
+    public Users checkUser(String name, String password) {
+        return userDao.checkUser(name, password);
     }
 }

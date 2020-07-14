@@ -16,25 +16,29 @@ import java.util.Optional;
 @Service
 public class UserDaoImpl implements UserDao {
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
+
     @Override
-    public List<Users> findAllUserStat(){
+    public List<Users> findAllUserStat() {
         return userRepository.findAllUserStat();
     }
+
     @Override
-    public boolean doesNameExist(String name){
-        Optional<Users> user=userRepository.findByName(name);
+    public boolean doesNameExist(String name) {
+        Optional<Users> user = userRepository.findByName(name);
         return user.isPresent();
     }
+
     @Override
-    public void register(String name,String password){
-        Users user=new Users();
+    public void register(String name, String password) {
+        Users user = new Users();
         user.setName(name);
         user.setPassword(password);
         userRepository.save(user);
     }
+
     @Override
-    public Users checkUser(String name,String password){
-        return userRepository.checkUser(name,password);
+    public Users checkUser(String name, String password) {
+        return userRepository.checkUser(name, password);
     }
 }

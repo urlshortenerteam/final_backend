@@ -6,7 +6,10 @@ import java.util.List;
 
 public interface UserDao {
     List<Users> findAllUserStat();
+
     boolean doesNameExist(String name);
-    void register(String name,String password);
-    Users checkUser(String name,String password);
+
+    void register(String name, String password);
+
+    Users checkUser(String name, String password);
 }
