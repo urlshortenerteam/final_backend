@@ -7,5 +7,7 @@ import java.util.List;
 public interface ShortenerDao {
     void changeLong_url(Shortener shortener);
 
-    List<Shortener> findShortenerByShort_url(String short_url);
+    List<Shortener> findByShorten_id(long shorten_id);
+
+    List<Shortener> findByShort_url(String short_url);
 }

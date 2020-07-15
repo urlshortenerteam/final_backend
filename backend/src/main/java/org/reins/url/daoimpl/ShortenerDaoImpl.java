@@ -23,7 +23,12 @@ public class ShortenerDaoImpl implements ShortenerDao {
     }
 
     @Override
-    public List<Shortener> findShortenerByShort_url(String short_url) {
+    public List<Shortener> findByShorten_id(long shorten_id) {
+        return shortenerRepository.findByShorten_id(shorten_id);
+    }
+
+    @Override
+    public List<Shortener> findByShort_url(String short_url) {
         return shortenerRepository.findByShort_url(short_url);
     }
 }

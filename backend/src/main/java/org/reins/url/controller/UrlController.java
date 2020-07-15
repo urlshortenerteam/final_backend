@@ -1,8 +1,8 @@
 package org.reins.url.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import eu.bitwalker.useragentutils.DeviceType;
 import eu.bitwalker.useragentutils.UserAgent;
-import net.sf.json.JSONObject;
 import org.reins.url.entity.Shorten_log;
 import org.reins.url.entity.Shortener;
 import org.reins.url.entity.Users;
@@ -84,7 +84,7 @@ public class UrlController {
     @RequestMapping("/{[A-Za-z0-9]{6}}")
     public void getLong(HttpServletRequest req, HttpServletResponse resp) {
         String shortUrl = req.getRequestURI().substring(1);
-        List<Shortener> longUrls = shortenerService.findShortenerByShort_url(shortUrl);
+        List<Shortener> longUrls = shortenerService.findByShort_url(shortUrl);
         if (longUrls.isEmpty()) return;
         Shortener longUrl = longUrls.get((int) (Math.random() * longUrls.size()));
         Shorten_log shorten_log = shorten_logService.findById(longUrl.getShorten_id());
@@ -102,7 +102,7 @@ public class UrlController {
     @CrossOrigin
     @RequestMapping("/editUrl")
     public JSONObject editUrl(@Param("id") long id, @Param("shortUrl") String shortUrl, @RequestBody String longUrl) {
-        List<Shortener> shortenerList = shortenerService.findShortenerByShort_url(shortUrl);
+        List<Shortener> shortenerList = shortenerService.findByShort_url(shortUrl);
         JSONObject res = new JSONObject();
         if (shortenerList.size() > 1) {
             res.put("data", false);
