@@ -3,7 +3,7 @@ package org.reins.url.controller;
 import net.sf.json.JSONObject;
 import org.reins.url.entity.Users;
 import org.reins.url.service.UsersService;
-import org.reins.url.util.SessionUtil;
+import org.reins.url.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +13,8 @@ import java.util.Map;
 public class UsersController {
     @Autowired
     private UsersService usersService;
+    @Autowired
+    private JwtUtil jwtUtil;
 
     @CrossOrigin
     @RequestMapping("/register")
@@ -44,21 +46,17 @@ public class UsersController {
             if (user.getRole() == 2) obj.put("loginStatus", false);
             else {
                 obj.put("loginStatus", true);
-                SessionUtil.setSession(obj);
+                obj.put("token",jwtUtil.sign(user.getId(),user.getName()));
             }
         }
-        return obj;
+        JSONObject res=new JSONObject();
+        res.put("data",obj);
+        return res;
     }
 
     @CrossOrigin
     @RequestMapping("/checkSession")
-    public JSONObject checkSession() {
-        JSONObject auth = SessionUtil.getAuth();
-        JSONObject obj = new JSONObject();
-        JSONObject data = new JSONObject();
-        data.put("status", auth != null);
-        obj.put("data", data);
-        return obj;
+    public void checkSession() {
     }
 
     @CrossOrigin
