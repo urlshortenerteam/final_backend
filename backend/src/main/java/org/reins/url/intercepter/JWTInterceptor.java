@@ -7,11 +7,13 @@ import org.reins.url.entity.Users;
 import org.reins.url.service.UsersService;
 import org.reins.url.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import io.jsonwebtoken.Claims;
 
+@Component
 public class JWTInterceptor implements HandlerInterceptor {
 
     @Autowired
@@ -19,12 +21,15 @@ public class JWTInterceptor implements HandlerInterceptor {
     @Autowired
     private UsersService usersService;
 
+    @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object obj, Exception e) throws Exception {
     }
 
+    @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object obj, ModelAndView mav) throws Exception {
     }
 
+    @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object obj) {
         System.out.println("开始进入拦截器检验jwt头部是否含有Authorization方法！");
         // 通过url得到token请求头是否包含Authorization

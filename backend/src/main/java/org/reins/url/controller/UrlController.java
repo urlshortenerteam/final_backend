@@ -6,10 +6,7 @@ import eu.bitwalker.useragentutils.UserAgent;
 import org.reins.url.entity.Shorten_log;
 import org.reins.url.entity.Shortener;
 import org.reins.url.entity.Users;
-import org.reins.url.service.Shorten_logService;
-import org.reins.url.service.ShortenerService;
-import org.reins.url.service.UsersService;
-import org.reins.url.service.Visit_logService;
+import org.reins.url.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.util.DigestUtils;
@@ -23,6 +20,8 @@ import java.util.List;
 
 @RestController
 public class UrlController {
+    @Autowired
+    private Edit_logService edit_logService;
     @Autowired
     private Shorten_logService shorten_logService;
     @Autowired
@@ -104,24 +103,30 @@ public class UrlController {
     public JSONObject editUrl(@Param("id") long id, @Param("shortUrl") String shortUrl, @RequestBody String longUrl) {
         List<Shortener> shortenerList = shortenerService.findByShort_url(shortUrl);
         JSONObject res = new JSONObject();
-        if (shortenerList.size() > 1) {
-            res.put("data", false);
+        JSONObject jsonObject = new JSONObject();
+        if (shortenerList.size() != 1) {
+            jsonObject.put("status", false);
+            res.put("data", jsonObject);
             return res;
         }
         Shortener shortener = shortenerList.get(0);
         Shorten_log shorten_log = shorten_logService.findById(shortener.getShorten_id());
         if (shorten_log == null) {
-            res.put("data", false);
+            jsonObject.put("status", false);
+            res.put("data", jsonObject);
             return res;
         }
         Users users = usersService.findById(id);
         if (users != null && (shorten_log.getCreator_id() == id || (users.getRole() == 0 && longUrl.equals("BANNED")))) {
             shortener.setLong_url(longUrl);
             shortenerService.changeLong_url(shortener);
-            res.put("data", true);
+            edit_logService.addEdit_log(id, shortener.getId());
+            jsonObject.put("status", true);
+            res.put("data", jsonObject);
             return res;
         }
-        res.put("data", false);
+        jsonObject.put("status", false);
+        res.put("data", jsonObject);
         return res;
     }
 }

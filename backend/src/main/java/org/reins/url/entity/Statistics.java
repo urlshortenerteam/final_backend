@@ -5,7 +5,6 @@ import lombok.Data;
 import net.sf.json.JSONArray;
 import org.lionsoul.ip2region.*;
 
-import java.io.IOException;
 import java.util.*;
 
 @Data
@@ -16,7 +15,7 @@ public class Statistics {
     public List<Area_distr> area_distr;
     public Time_distr[] time_distr;
     public List<Source_distr> source_distr;
-    public JSONArray longUrls;
+    public JSONArray longUrl;
 
     public Statistics() {
         area_distr = new ArrayList<>();
@@ -27,6 +26,7 @@ public class Statistics {
         }
         source_distr = new ArrayList<>();
         count = 0;
+        longUrl = new JSONArray();
     }
 
     public void addArea_distr(String ip) throws Exception {
