@@ -1,5 +1,7 @@
 package org.reins.url.serviceimpl;
 
+import net.sf.json.JSON;
+import net.sf.json.JSONObject;
 import org.reins.url.dao.Shorten_logDao;
 import org.reins.url.dao.ShortenerDao;
 import org.reins.url.dao.UsersDao;
@@ -11,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class StatServiceImpl implements StatService {
@@ -35,6 +36,7 @@ public class StatServiceImpl implements StatService {
             for (Shortener shortener : s.getShortener()) {
                 List<Visit_log> visit_logs = visit_logDao.findByShortenerId(shortener.getId());
                 statistics.count += visit_logs.size();
+                statistics.longUrls.add(new JSONObject().put("url",shortener.getLong_url()));
                 for (Visit_log v : visit_logs) {
                     try {
                         statistics.addArea_distr(v.getIp());
