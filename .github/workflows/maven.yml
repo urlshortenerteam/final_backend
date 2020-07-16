@@ -16,14 +16,16 @@ jobs:
       mysql:
         image: mysql:5.7
         env:
-          MYSQL_ALLOW_EMPTY_PASSWORD: yes
-          MYSQL_DATABASE: laravel_tags
+          MYSQL_USER: root
+          MYSQL_PASSWORD: root
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: url
         ports:
           - 3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     strategy:
       matrix:
-        mongodb-version: [3.6, 4.0, 4.2]
+        mongodb-version: [4.2]
     steps:
     - name: Start MongoDB v${{ matrix.mongodb-version }}
       uses: supercharge/mongodb-github-action@1.2.0
