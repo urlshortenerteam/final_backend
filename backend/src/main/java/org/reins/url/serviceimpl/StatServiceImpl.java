@@ -37,7 +37,7 @@ public class StatServiceImpl implements StatService {
                 statistics.count += visit_logs.size();
                 JSONObject jsonObject=new JSONObject();
                 jsonObject.put("url", shortener.getLong_url());
-                statistics.longUrls.add(jsonObject);
+                statistics.longUrl.add(jsonObject);
                 for (Visit_log v : visit_logs) {
                     try {
                         statistics.addArea_distr(v.getIp());
@@ -70,7 +70,7 @@ public class StatServiceImpl implements StatService {
             statistics.count += visit_logs.size();
             JSONObject jsonObject=new JSONObject();
             jsonObject.put("url", shortener.getLong_url());
-            statistics.longUrls.add(jsonObject);
+            statistics.longUrl.add(jsonObject); 
             for (Visit_log v : visit_logs) {
                 try {
                     statistics.addArea_distr(v.getIp());
