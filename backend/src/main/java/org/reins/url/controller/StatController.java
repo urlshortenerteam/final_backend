@@ -17,7 +17,7 @@ public class StatController {
     @RequestMapping("/getStat")
     public JSONObject getStat(@RequestParam("id") long id) {
         JSONObject res = new JSONObject();
-        res.put("data", statService.getStat());
+        res.put("data", statService.getStat(id));
         return res;
     }
 
