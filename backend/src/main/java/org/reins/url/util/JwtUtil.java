@@ -96,7 +96,7 @@ public class JwtUtil {
 
     // 解密jwt
     public static Claims parseJWT(String jwt) throws Exception {
-        System.out.println("进入解密jwt方法！");
+        //System.out.println("进入解密jwt方法！");
         SecretKey key = generalKey(); // 签名秘钥，和生成的签名的秘钥一模一样
         Claims claims = Jwts.parser() // 得到DefaultJwtParser
                 .setSigningKey(key) // 设置签名的秘钥

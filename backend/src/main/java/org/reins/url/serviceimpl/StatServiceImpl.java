@@ -25,9 +25,9 @@ public class StatServiceImpl implements StatService {
     private Visit_logDao visit_logDao;
 
     @Override
-    public List<Statistics> getStat() {
+    public List<Statistics> getStat(long id) {
         List<Statistics> res = new ArrayList<>();
-        List<Shorten_log> shorten_logs = shorten_logDao.findAll();
+        List<Shorten_log> shorten_logs = shorten_logDao.findByCreator_id(id);
         for (Shorten_log s : shorten_logs) {
             Statistics statistics = new Statistics();
             if (s.getShortener().size() == 0) continue;
