@@ -27,6 +27,7 @@ public class Statistics {
         }
         source_distr = new ArrayList<>();
         count = 0;
+        longUrls=new JSONArray();
     }
 
     public void addArea_distr(String ip) throws Exception {

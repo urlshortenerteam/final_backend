@@ -25,7 +25,7 @@ public class JwtUtil {
     private static final String TOKEN_SECRET = "SXSNB";
 
     // 由字符串生成加密key
-    public SecretKey generalKey() {
+    public static SecretKey generalKey() {
         System.out.println("进入由字符串生成加密key方法！");
         // 本地的密码解码
         byte[] encodedKey = Base64.decodeBase64(TOKEN_SECRET);
@@ -35,7 +35,7 @@ public class JwtUtil {
     }
 
     // 生成签名
-    public String sign(long id, String username/*, String password*/) {
+    public static String sign(long id, String username/*, String password*/) {
         System.out.println("生成签名方法开始执行！");
         try {
             // 设置过期时间,单位毫秒
@@ -68,7 +68,7 @@ public class JwtUtil {
     }
 
 
-    public boolean verify(String token) {
+    public static boolean verify(String token) {
         System.out.println("进入检验token是否正确方法！");
         try {
 //          Algorithm algorithm = Algorithm.HMAC256(password); //使用用户输入的密码
@@ -76,6 +76,7 @@ public class JwtUtil {
 //          JWTVerifier verifier = JWT.require(algorithm).withClaim("id", id).build();
             JWTVerifier verifier = JWT.require(algorithm).build();
             verifier.verify(token);
+            System.out.println("token正确！");
             return true;
         } catch (Exception e) {
             return false;
@@ -94,7 +95,7 @@ public class JwtUtil {
 //    }
 
     // 解密jwt
-    public Claims parseJWT(String jwt) throws Exception {
+    public static Claims parseJWT(String jwt) throws Exception {
         System.out.println("进入解密jwt方法！");
         SecretKey key = generalKey(); // 签名秘钥，和生成的签名的秘钥一模一样
         Claims claims = Jwts.parser() // 得到DefaultJwtParser
