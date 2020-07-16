@@ -9,6 +9,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.reins.url.entity.Time_distr;
+import org.reins.url.service.ShortenerService;
 import org.reins.url.service.StatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -38,7 +39,7 @@ public class StatControllerTest extends ApplicationTests {
 
     @Autowired
     private StatService statService;
-    @Autowired
+    @Autowired 
     private ShortenerService shortenerService;
 
     private ObjectMapper om = new ObjectMapper();
@@ -69,7 +70,6 @@ public class StatControllerTest extends ApplicationTests {
             }
             JSONArray longurl = jsonObject.getJSONArray("longUrl");
             int size = longurl.size();
-            assertEquals(size,shortenerService.findByShort_url(jsonObject.getString("shortUrl")).size());
             for (int i = 0; i < size; ++i) {
                 String l = longurl.getJSONObject(i).getString("url");
                 System.out.println(l);
@@ -95,7 +95,6 @@ public class StatControllerTest extends ApplicationTests {
         }
         JSONArray longurl=stat.getJSONArray("longUrl");
         int size=longurl.size();
-        assertEquals(size,shortenerService.findByShort_url(shortUrl).size());
         for (int i=0;i<size;++i){
             String l=longurl.getJSONObject(i).getString("url");
             assertTrue(l.startsWith("https://")||l.startsWith("http://"));
