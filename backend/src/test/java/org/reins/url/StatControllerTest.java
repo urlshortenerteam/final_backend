@@ -72,7 +72,6 @@ public class StatControllerTest extends ApplicationTests {
             int size = longurl.size();
             for (int i = 0; i < size; ++i) {
                 String l = longurl.getJSONObject(i).getString("url");
-                System.out.println(l);
                 assertTrue(l.startsWith("https://") || l.startsWith("http://"));
             }
         }
