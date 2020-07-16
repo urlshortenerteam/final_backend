@@ -77,13 +77,13 @@ public class UrlControllerTest extends ApplicationTests {
         List<String> longUrls = new ArrayList<>();
         longUrls.add("https://www.baidu.com/");
         longUrls.add("https://github.com/");
-        String res = mockMvc.perform(post("/getOneShort?id=1").contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString(longUrls)))
+        String res = mockMvc.perform(post("/getOneShort?id=1").contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString(longUrls)).header("Authorization","SXSTQL"))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         String shortUrl = om.readValue(res, new TypeReference<JSONObject>() {
         }).getString("data");
         assertTrue(shortUrl.matches("[A-Za-z0-9]{6}"));
 
-        res = mockMvc.perform(post("/getOneShort?id=2").contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString(longUrls)))
+        res = mockMvc.perform(post("/getOneShort?id=2").contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString(longUrls)).header("Authorization","SXSTQL"))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         shortUrl = om.readValue(res, new TypeReference<JSONObject>() {
         }).getString("data");
