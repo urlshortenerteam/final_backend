@@ -5,7 +5,7 @@ import org.reins.url.entity.Users;
 import java.util.List;
 
 public interface UsersDao {
-    void banUser(long id);
+    void changeRole(long id, int role);
 
     void changeVisit_count(long id);
 

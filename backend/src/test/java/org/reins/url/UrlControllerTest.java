@@ -130,5 +130,10 @@ public class UrlControllerTest extends ApplicationTests {
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         assertTrue(om.readValue(res, new TypeReference<JSONObject>() {
         }).getJSONObject("data").getBooleanValue("status"));
+
+        res = mockMvc.perform(post("/editUrl?id=1&shortUrl=" + shortUrl).contentType(MediaType.APPLICATION_JSON_VALUE).content("LIFT"))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+        assertTrue(om.readValue(res, new TypeReference<JSONObject>() {
+        }).getJSONObject("data").getBooleanValue("status"));
     }
 }

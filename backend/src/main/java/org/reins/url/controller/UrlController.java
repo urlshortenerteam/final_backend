@@ -103,30 +103,30 @@ public class UrlController {
     public JSONObject editUrl(@Param("id") long id, @Param("shortUrl") String shortUrl, @RequestBody String longUrl) {
         List<Shortener> shortenerList = shortenerService.findByShort_url(shortUrl);
         JSONObject res = new JSONObject();
-        JSONObject jsonObject = new JSONObject();
+        JSONObject status = new JSONObject();
         if (shortenerList.size() != 1) {
-            jsonObject.put("status", false);
-            res.put("data", jsonObject);
+            status.put("status", false);
+            res.put("data", status);
             return res;
         }
         Shortener shortener = shortenerList.get(0);
         Shorten_log shorten_log = shorten_logService.findById(shortener.getShorten_id());
         if (shorten_log == null) {
-            jsonObject.put("status", false);
-            res.put("data", jsonObject);
+            status.put("status", false);
+            res.put("data", status);
             return res;
         }
         Users users = usersService.findById(id);
-        if (users != null && (shorten_log.getCreator_id() == id || (users.getRole() == 0 && longUrl.equals("BANNED")))) {
+        if (users != null && (shorten_log.getCreator_id() == id || (users.getRole() == 0 && (longUrl.equals("BANNED") || longUrl.equals("LIFT"))))) {
             shortener.setLong_url(longUrl);
             shortenerService.changeLong_url(shortener);
             edit_logService.addEdit_log(id, shortener.getId());
-            jsonObject.put("status", true);
-            res.put("data", jsonObject);
+            status.put("status", true);
+            res.put("data", status);
             return res;
         }
-        jsonObject.put("status", false);
-        res.put("data", jsonObject);
+        status.put("status", false);
+        res.put("data", status);
         return res;
     }
 }

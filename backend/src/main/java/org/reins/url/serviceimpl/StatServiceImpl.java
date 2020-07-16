@@ -68,6 +68,9 @@ public class StatServiceImpl implements StatService {
         for (Shortener shortener : shorteners) {
             List<Visit_log> visit_logs = visit_logDao.findByShortenerId(shortener.getId());
             statistics.count += visit_logs.size();
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("url", shortener.getLong_url());
+            statistics.longUrl.add(jsonObject);
             for (Visit_log v : visit_logs) {
                 try {
                     statistics.addArea_distr(v.getIp());

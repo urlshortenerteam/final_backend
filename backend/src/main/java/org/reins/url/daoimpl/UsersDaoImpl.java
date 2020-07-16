@@ -19,7 +19,7 @@ public class UsersDaoImpl implements UsersDao {
     private UsersRepository usersRepository;
 
     @Override
-    public void banUser(long id) {
+    public void changeRole(long id, int role) {
         Optional<Users> usersOptional = usersRepository.findById(id);
         if (usersOptional.isPresent()) {
             Users users = new Users();
@@ -27,7 +27,7 @@ public class UsersDaoImpl implements UsersDao {
             users.setName(usersOptional.get().getName());
             users.setPassword(usersOptional.get().getPassword());
             users.setEmail(usersOptional.get().getEmail());
-            users.setRole(2);
+            users.setRole(role);
             users.setVisit_count(usersOptional.get().getVisit_count());
             usersRepository.save(users);
         }

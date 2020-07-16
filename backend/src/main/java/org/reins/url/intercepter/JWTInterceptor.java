@@ -18,8 +18,6 @@ public class JWTInterceptor implements HandlerInterceptor {
 
     @Autowired
     private JwtUtil jWTUtil;
-    @Autowired
-    private UsersService usersService;
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object obj, Exception e) throws Exception {
@@ -31,6 +29,9 @@ public class JWTInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object obj) {
+        System.out.println(request.getMethod());
+        if (request.getMethod().equals("OPTIONS"))
+            return true;
         System.out.println("开始进入拦截器检验jwt头部是否含有Authorization方法！");
         // 通过url得到token请求头是否包含Authorization
         String jwt = request.getHeader("Authorization");

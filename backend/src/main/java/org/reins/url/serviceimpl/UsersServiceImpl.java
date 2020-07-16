@@ -12,8 +12,8 @@ public class UsersServiceImpl implements UsersService {
     private UsersDao usersDao;
 
     @Override
-    public void banUser(long id) {
-        usersDao.banUser(id);
+    public void changeRole(long id, int role) {
+        usersDao.changeRole(id, role);
     }
 
     @Override
@@ -29,6 +29,11 @@ public class UsersServiceImpl implements UsersService {
     @Override
     public Users findById(long id) {
         return usersDao.findById(id);
+    }
+
+    @Override
+    public boolean doesNameExist(String name) {
+        return usersDao.doesNameExist(name);
     }
 
     @Override

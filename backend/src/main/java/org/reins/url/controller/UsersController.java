@@ -61,16 +61,19 @@ public class UsersController {
 
     @CrossOrigin
     @RequestMapping("/banUser")
-    public JSONObject banUser(@RequestParam("id") long id, @RequestParam("ban_id") long ban_id) {
+    public JSONObject banUser(@RequestParam("id") long id, @RequestParam("ban_id") long ban_id, @RequestParam("ban") boolean ban) {
         Users admin = usersService.findById(id);
         Users banUser = usersService.findById(ban_id);
         JSONObject res = new JSONObject();
-        if (admin == null || banUser == null || admin.getRole() != 0 || banUser.getRole() == 2) {
-            res.put("data", false);
+        JSONObject status = new JSONObject();
+        if (admin == null || banUser == null || admin.getRole() != 0 || banUser.getRole() == 0) {
+            status.put("status", false);
+            res.put("data", status);
             return res;
         }
-        usersService.banUser(ban_id);
-        res.put("data", true);
+        usersService.changeRole(ban_id, ban ? 2 : 1);
+        status.put("status", true);
+        res.put("data", status);
         return res;
     }
 }
