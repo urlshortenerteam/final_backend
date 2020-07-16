@@ -52,6 +52,8 @@ public class UrlControllerTest extends ApplicationTests {
 
     @Test
     public void generateShort() throws Exception {
+        usersInit();
+
         List<String> longUrls = new ArrayList<>();
         longUrls.add("https://www.baidu.com/");
         longUrls.add("https://github.com/");
@@ -74,6 +76,8 @@ public class UrlControllerTest extends ApplicationTests {
 
     @Test
     public void generateOneShort() throws Exception {
+        usersInit();
+
         List<String> longUrls = new ArrayList<>();
         longUrls.add("https://www.baidu.com/");
         longUrls.add("https://github.com/");
@@ -92,6 +96,9 @@ public class UrlControllerTest extends ApplicationTests {
 
     @Test
     public void getLong() throws Exception {
+        usersInit();
+        shortenerInit();
+
         boolean exists = (shortenerService.findByShort_url("000000").size() > 0);
         mockMvc.perform(get("/000000").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(exists ? status().isMovedTemporarily() : status().isOk()).andReturn();
@@ -103,14 +110,17 @@ public class UrlControllerTest extends ApplicationTests {
 
     @Test
     public void editUrl() throws Exception {
+        usersInit();
+        shortenerInit();
+
         String shortUrl = shortenerService.findByShorten_id(1).get(0).getShort_url();
-        String longUrl = "http://jwc.sjtu.edu.cn/web/sjtu/198001.htm";
+        String longUrl = "https://www.baidu.com/";
         String res = mockMvc.perform(post("/editUrl?id=1&shortUrl=" + shortUrl).header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).content(longUrl))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         assertFalse(om.readValue(res, new TypeReference<JSONObject>() {
         }).getJSONObject("data").getBooleanValue("status"));
 
-        shortUrl = shortenerService.findByShorten_id(4).get(0).getShort_url();
+        shortUrl = shortenerService.findByShorten_id(2).get(0).getShort_url();
         res = mockMvc.perform(post("/editUrl?id=0&shortUrl=" + shortUrl).header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).content(longUrl))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         assertFalse(om.readValue(res, new TypeReference<JSONObject>() {

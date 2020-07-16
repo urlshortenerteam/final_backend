@@ -14,8 +14,18 @@ public class ShortenerServiceImpl implements ShortenerService {
     private ShortenerDao shortenerDao;
 
     @Override
+    public void addShortener(long shorten_id, String short_url, String long_url) {
+        shortenerDao.addShortener(shorten_id, short_url, long_url);
+    }
+
+    @Override
     public void changeLong_url(Shortener shortener) {
         shortenerDao.changeLong_url(shortener);
+    }
+
+    @Override
+    public void deleteShortener(String id) {
+        shortenerDao.deleteShortener(id);
     }
 
     @Override

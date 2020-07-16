@@ -41,16 +41,6 @@ public class UsersControllerTest extends ApplicationTests {
 
     private ObjectMapper om = new ObjectMapper();
 
-    private String testName() {
-        String chars = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        StringBuilder name = new StringBuilder();
-        for (int i = 0; i < 6; i++) {
-            int index = (int) (Math.random() * chars.length());
-            name.append(chars, index, index + 1);
-        }
-        return "test_" + name.toString();
-    }
-
     @Before
     public void setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
@@ -62,21 +52,30 @@ public class UsersControllerTest extends ApplicationTests {
 
     @Test
     public void register() throws Exception {
+        usersInit();
+
+        String name = "test_000001";
         Map<String, String> params = new HashMap<>();
-        params.put("name", "test0");
-        params.put("password", "test0");
-        params.put("email", "test0@sjtu.edu.cn");
+        params.put("name", name);
+        params.put("password", name);
+        params.put("email", name + "@sjtu.edu.cn");
         String res = mockMvc.perform(post("/register").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString(params)))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         assertFalse(om.readValue(res, new TypeReference<JSONObject>() {
         }).getJSONObject("data").getBooleanValue("success"));
 
-        String name = testName();
+        String chars = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        StringBuilder nameBuilder = new StringBuilder();
+        for (int i = 0; i < 6; i++) {
+            int index = (int) (Math.random() * chars.length());
+            nameBuilder.append(chars, index, index + 1);
+        }
+        name = "test_" + nameBuilder.toString();
+        boolean exists = usersService.doesNameExist(name);
         params = new HashMap<>();
         params.put("name", name);
-        params.put("password", "123456");
+        params.put("password", name);
         params.put("email", name + "@sjtu.edu.cn");
-        boolean exists = usersService.doesNameExist(name);
         res = mockMvc.perform(post("/register").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString(params)))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         assertNotEquals(exists, om.readValue(res, new TypeReference<JSONObject>() {
@@ -85,8 +84,10 @@ public class UsersControllerTest extends ApplicationTests {
 
     @Test
     public void login() throws Exception {
+        usersInit();
+
         Map<String, String> params = new HashMap<>();
-        params.put("name", "test0");
+        params.put("name", "test_000001");
         params.put("password", "wrong");
         String res = mockMvc.perform(post("/loginReq").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString(params)))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
@@ -97,8 +98,8 @@ public class UsersControllerTest extends ApplicationTests {
         assertEquals(-1, user.getIntValue("id"));
 
         params = new HashMap<>();
-        params.put("name", "test1");
-        params.put("password", "test1");
+        params.put("name", "test_000001");
+        params.put("password", "test_000001");
         res = mockMvc.perform(post("/loginReq").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString(params)))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         user = om.readValue(res, new TypeReference<JSONObject>() {
@@ -108,8 +109,8 @@ public class UsersControllerTest extends ApplicationTests {
         assertEquals(2, user.getIntValue("id"));
 
         params = new HashMap<>();
-        params.put("name", "test2");
-        params.put("password", "test2");
+        params.put("name", "test_000002");
+        params.put("password", "test_000002");
         res = mockMvc.perform(post("/loginReq").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString(params)))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         user = om.readValue(res, new TypeReference<JSONObject>() {
@@ -121,6 +122,8 @@ public class UsersControllerTest extends ApplicationTests {
 
     @Test
     public void banUser() throws Exception {
+        usersInit();
+
         String res = mockMvc.perform(get("/banUser?id=0&ban_id=0&ban=true").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         assertFalse(om.readValue(res, new TypeReference<JSONObject>() {
