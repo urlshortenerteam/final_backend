@@ -62,6 +62,7 @@ public class UrlControllerTest extends ApplicationTests {
         assertEquals(2, shortUrls.size());
         assertTrue(shortUrls.get(0).matches("[A-Za-z0-9]{6}"));
         assertTrue(shortUrls.get(1).matches("[A-Za-z0-9]{6}"));
+
         res = mockMvc.perform(post("/getShort?id=2").contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString(longUrls)))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         shortUrls = om.readValue(res, new TypeReference<JSONObject>() {
@@ -81,6 +82,7 @@ public class UrlControllerTest extends ApplicationTests {
         String shortUrl = om.readValue(res, new TypeReference<JSONObject>() {
         }).getString("data");
         assertTrue(shortUrl.matches("[A-Za-z0-9]{6}"));
+
         res = mockMvc.perform(post("/getOneShort?id=2").contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString(longUrls)))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         shortUrl = om.readValue(res, new TypeReference<JSONObject>() {
@@ -90,10 +92,43 @@ public class UrlControllerTest extends ApplicationTests {
 
     @Test
     public void getLong() throws Exception {
+        boolean exists = (shortenerService.findByShort_url("000000").size() > 0);
         mockMvc.perform(get("/000000").contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isOk()).andReturn();
+                .andExpect(exists ? status().isMovedTemporarily() : status().isOk()).andReturn();
+
         String shortUrl = shortenerService.findByShorten_id(1).get(0).getShort_url();
         mockMvc.perform(get("/" + shortUrl).contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isMovedTemporarily()).andReturn();
+    }
+
+    @Test
+    public void editUrl() throws Exception {
+        String shortUrl = shortenerService.findByShorten_id(1).get(0).getShort_url();
+        String longUrl = "http://jwc.sjtu.edu.cn/web/sjtu/198001.htm";
+        String res = mockMvc.perform(post("/editUrl?id=1&shortUrl=" + shortUrl).contentType(MediaType.APPLICATION_JSON_VALUE).content(longUrl))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+        assertFalse(om.readValue(res, new TypeReference<JSONObject>() {
+        }).getJSONObject("data").getBooleanValue("status"));
+
+        shortUrl = shortenerService.findByShorten_id(4).get(0).getShort_url();
+        res = mockMvc.perform(post("/editUrl?id=0&shortUrl=" + shortUrl).contentType(MediaType.APPLICATION_JSON_VALUE).content(longUrl))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+        assertFalse(om.readValue(res, new TypeReference<JSONObject>() {
+        }).getJSONObject("data").getBooleanValue("status"));
+
+        res = mockMvc.perform(post("/editUrl?id=1&shortUrl=" + shortUrl).contentType(MediaType.APPLICATION_JSON_VALUE).content(longUrl))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+        assertFalse(om.readValue(res, new TypeReference<JSONObject>() {
+        }).getJSONObject("data").getBooleanValue("status"));
+
+        res = mockMvc.perform(post("/editUrl?id=2&shortUrl=" + shortUrl).contentType(MediaType.APPLICATION_JSON_VALUE).content(longUrl))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+        assertTrue(om.readValue(res, new TypeReference<JSONObject>() {
+        }).getJSONObject("data").getBooleanValue("status"));
+
+        res = mockMvc.perform(post("/editUrl?id=1&shortUrl=" + shortUrl).contentType(MediaType.APPLICATION_JSON_VALUE).content("BANNED"))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+        assertTrue(om.readValue(res, new TypeReference<JSONObject>() {
+        }).getJSONObject("data").getBooleanValue("status"));
     }
 }

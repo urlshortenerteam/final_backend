@@ -9,18 +9,21 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-
 public class LoginConfig implements WebMvcConfigurer {
-    @Autowired
-    private JWTInterceptor jwtInterceptor;
-
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(jwtInterceptor)
-                .addPathPatterns("/**")
-                .excludePathPatterns("/loginReq", "/register");
-
+        registry.addInterceptor(new JWTInterceptor()).addPathPatterns("/**").excludePathPatterns("/loginReq", "/register");
+//        super.addInterceptors(registry);
     }
+
+//    @Override
+//    public void addCorsMappings(CorsRegistry registry) {
+//        registry.addMapping("/**")
+//                .allowedOrigins("*")
+//                .allowCredentials(true)
+//                .allowedMethods("GET", "POST", "DELETE", "PUT", "PATCH", "OPTIONS", "HEAD")
+//                .maxAge(3600 * 24);
+//    }
 }
 //public class LoginConfig extends WebMvcConfigurationSupport {
 //
