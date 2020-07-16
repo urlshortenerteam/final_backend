@@ -66,7 +66,7 @@ public class UsersControllerTest extends ApplicationTests {
         params.put("name", "test0");
         params.put("password", "test0");
         params.put("email", "test0@sjtu.edu.cn");
-        String res = mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString(params)))
+        String res = mockMvc.perform(post("/register").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString(params)))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         assertFalse(om.readValue(res, new TypeReference<JSONObject>() {
         }).getJSONObject("data").getBooleanValue("success"));
@@ -77,7 +77,7 @@ public class UsersControllerTest extends ApplicationTests {
         params.put("password", "123456");
         params.put("email", name + "@sjtu.edu.cn");
         boolean exists = usersService.doesNameExist(name);
-        res = mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString(params)))
+        res = mockMvc.perform(post("/register").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString(params)))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         assertNotEquals(exists, om.readValue(res, new TypeReference<JSONObject>() {
         }).getJSONObject("data").getBooleanValue("success"));
@@ -88,7 +88,7 @@ public class UsersControllerTest extends ApplicationTests {
         Map<String, String> params = new HashMap<>();
         params.put("name", "test0");
         params.put("password", "wrong");
-        String res = mockMvc.perform(post("/loginReq").contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString(params)))
+        String res = mockMvc.perform(post("/loginReq").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString(params)))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         JSONObject user = om.readValue(res, new TypeReference<JSONObject>() {
         }).getJSONObject("data");
@@ -99,7 +99,7 @@ public class UsersControllerTest extends ApplicationTests {
         params = new HashMap<>();
         params.put("name", "test1");
         params.put("password", "test1");
-        res = mockMvc.perform(post("/loginReq").contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString(params)))
+        res = mockMvc.perform(post("/loginReq").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString(params)))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         user = om.readValue(res, new TypeReference<JSONObject>() {
         }).getJSONObject("data");
@@ -110,7 +110,7 @@ public class UsersControllerTest extends ApplicationTests {
         params = new HashMap<>();
         params.put("name", "test2");
         params.put("password", "test2");
-        res = mockMvc.perform(post("/loginReq").contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString(params)))
+        res = mockMvc.perform(post("/loginReq").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString(params)))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         user = om.readValue(res, new TypeReference<JSONObject>() {
         }).getJSONObject("data");
@@ -121,22 +121,22 @@ public class UsersControllerTest extends ApplicationTests {
 
     @Test
     public void banUser() throws Exception {
-        String res = mockMvc.perform(get("/banUser?id=0&ban_id=0&ban=true").contentType(MediaType.APPLICATION_JSON_VALUE))
+        String res = mockMvc.perform(get("/banUser?id=0&ban_id=0&ban=true").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         assertFalse(om.readValue(res, new TypeReference<JSONObject>() {
         }).getJSONObject("data").getBooleanValue("status"));
 
-        res = mockMvc.perform(get("/banUser?id=1&ban_id=1&ban=true").contentType(MediaType.APPLICATION_JSON_VALUE))
+        res = mockMvc.perform(get("/banUser?id=1&ban_id=1&ban=true").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         assertFalse(om.readValue(res, new TypeReference<JSONObject>() {
         }).getJSONObject("data").getBooleanValue("status"));
 
-        res = mockMvc.perform(get("/banUser?id=2&ban_id=2&ban=true").contentType(MediaType.APPLICATION_JSON_VALUE))
+        res = mockMvc.perform(get("/banUser?id=2&ban_id=2&ban=true").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         assertFalse(om.readValue(res, new TypeReference<JSONObject>() {
         }).getJSONObject("data").getBooleanValue("status"));
 
-        res = mockMvc.perform(get("/banUser?id=1&ban_id=2&ban=false").contentType(MediaType.APPLICATION_JSON_VALUE))
+        res = mockMvc.perform(get("/banUser?id=1&ban_id=2&ban=false").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         assertTrue(om.readValue(res, new TypeReference<JSONObject>() {
         }).getJSONObject("data").getBooleanValue("status"));

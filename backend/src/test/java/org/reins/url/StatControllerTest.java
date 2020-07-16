@@ -9,7 +9,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.reins.url.entity.Time_distr;
-import org.reins.url.service.ShortenerService;
 import org.reins.url.service.StatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,12 +18,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -56,26 +53,27 @@ public class StatControllerTest extends ApplicationTests {
     }
 
     @Test
-    public void getStat() throws Exception{
-        String res=mockMvc.perform(get("/getStat?id=1").contentType(MediaType.APPLICATION_JSON_VALUE).header("Authorization","SXSTQL"))
+    public void getStat() throws Exception {
+        String res = mockMvc.perform(get("/getStat?id=1").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).header("Authorization","SXSTQL"))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
-        List<JSONObject> stats=om.readValue(res,new TypeReference<JSONObject>(){})
-                .getJSONArray("data").toJavaList(JSONObject.class);
-        for (JSONObject jsonObject:stats){
+        List<JSONObject> stats = om.readValue(res, new TypeReference<JSONObject>() {
+        }).getJSONArray("data").toJavaList(JSONObject.class);
+        for (JSONObject jsonObject : stats) {
             assertTrue((jsonObject.getString("shortUrl")).matches("[A-Za-z0-9]{6}"));
-            assertTrue((jsonObject.getLong("count"))>=0);
-            List<Time_distr> time_distrs=jsonObject.getJSONArray("time_distr").toJavaList(Time_distr.class);
-            assertEquals(time_distrs.size(),24);
-            for (int i=0;i<24;++i){
+            assertTrue((jsonObject.getLong("count")) >= 0);
+            List<Time_distr> time_distrs = jsonObject.getJSONArray("time_distr").toJavaList(Time_distr.class);
+            assertEquals(time_distrs.size(), 24);
+            for (int i = 0; i < 24; ++i) {
                 assertEquals(i, time_distrs.get(i).time);
-                assertTrue(time_distrs.get(i).value>=0);
+                assertTrue(time_distrs.get(i).value >= 0);
             }
-            JSONArray longurl=jsonObject.getJSONArray("longUrl");
-            int size=longurl.size();
+            JSONArray longurl = jsonObject.getJSONArray("longUrl");
+            int size = longurl.size();
             assertEquals(size,shortenerService.findByShort_url(jsonObject.getString("shortUrl")).size());
-            for (int i=0;i<size;++i){
-                String l=longurl.getJSONObject(i).getString("url");
-                assertTrue(l.startsWith("https://")||l.startsWith("http://"));
+            for (int i = 0; i < size; ++i) {
+                String l = longurl.getJSONObject(i).getString("url");
+                System.out.println(l);
+                assertTrue(l.startsWith("https://") || l.startsWith("http://"));
             }
         }
     }
