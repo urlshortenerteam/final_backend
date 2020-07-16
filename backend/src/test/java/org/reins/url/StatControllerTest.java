@@ -8,7 +8,11 @@ import org.junit.Before;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.reins.url.entity.Shorten_log;
+import org.reins.url.entity.Shortener;
 import org.reins.url.entity.Time_distr;
+import org.reins.url.repository.Shorten_logRepository;
+import org.reins.url.repository.ShortenerRepository;
 import org.reins.url.service.ShortenerService;
 import org.reins.url.service.StatService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +22,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-
+;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -39,8 +43,13 @@ public class StatControllerTest extends ApplicationTests {
 
     @Autowired
     private StatService statService;
-    @Autowired 
+    @Autowired
     private ShortenerService shortenerService;
+    @Autowired
+    private Shorten_logRepository shorten_logRepository;
+    @Autowired
+    private ShortenerRepository shortenerRepository;
+
 
     private ObjectMapper om = new ObjectMapper();
 
@@ -55,7 +64,24 @@ public class StatControllerTest extends ApplicationTests {
 
     @Test
     public void getStat() throws Exception {
-        String res = mockMvc.perform(get("/getStat?id=1").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).header("Authorization","SXSTQL"))
+//        List<Shorten_log> shorten_logs=new ArrayList<>();
+//        Shorten_log tmp1= new Shorten_log();
+//        tmp1.setId(1);
+//        tmp1.setCreator_id(1);
+//        tmp1.setCreate_time(new Date());
+//        shorten_logs.add(tmp1);
+//        when(shorten_logRepository.findByCreator_id(1)).thenReturn(shorten_logs);
+//
+//        List<Shortener> shorteners=new ArrayList<>();
+//        Shortener tmp2=new Shortener();
+//        tmp2.setId("1");
+//        tmp2.setShort_url("000000");
+//        tmp2.setShorten_id(1);
+//        tmp2.setLong_url("https://www.baidu.com");
+//        shorteners.add(tmp2);
+//        when(shortenerRepository.findByShorten_id(1)).thenReturn(shorteners);
+
+        String res = mockMvc.perform(get("/getStat?id=1").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).header("Authorization", "SXSTQL"))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         List<JSONObject> stats = om.readValue(res, new TypeReference<JSONObject>() {
         }).getJSONArray("data").toJavaList(JSONObject.class);
@@ -79,42 +105,44 @@ public class StatControllerTest extends ApplicationTests {
     }
 
     @Test
-    public void getShortStat() throws Exception{
-        String shortUrl="B7VAfa";
-        String res=mockMvc.perform(get("/getShortStat?id=1&short="+shortUrl).contentType(MediaType.APPLICATION_JSON_VALUE).header("Authorization","SXSTQL"))
+    public void getShortStat() throws Exception {
+        String shortUrl = "B7VAfa";
+        String res = mockMvc.perform(get("/getShortStat?id=1&short=" + shortUrl).contentType(MediaType.APPLICATION_JSON_VALUE).header("Authorization", "SXSTQL"))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
-        JSONObject stat=om.readValue(res,new TypeReference<JSONObject>(){})
+        JSONObject stat = om.readValue(res, new TypeReference<JSONObject>() {
+        })
                 .getJSONObject("data");
         assertTrue((stat.getString("shortUrl")).matches("[A-Za-z0-9]{6}"));
-        assertTrue((stat.getLong("count"))>=0);
-        List<Time_distr> time_distrs=stat.getJSONArray("time_distr").toJavaList(Time_distr.class);
-        assertEquals(time_distrs.size(),24);
-        for (int i=0;i<24;++i){
+        assertTrue((stat.getLong("count")) >= 0);
+        List<Time_distr> time_distrs = stat.getJSONArray("time_distr").toJavaList(Time_distr.class);
+        assertEquals(time_distrs.size(), 24);
+        for (int i = 0; i < 24; ++i) {
             assertEquals(i, time_distrs.get(i).time);
-            assertTrue(time_distrs.get(i).value>=0);
+            assertTrue(time_distrs.get(i).value >= 0);
         }
-        JSONArray longurl=stat.getJSONArray("longUrl");
-        int size=longurl.size();
-        for (int i=0;i<size;++i){
-            String l=longurl.getJSONObject(i).getString("url");
-            assertTrue(l.startsWith("https://")||l.startsWith("http://"));
+        JSONArray longurl = stat.getJSONArray("longUrl");
+        int size = longurl.size();
+        for (int i = 0; i < size; ++i) {
+            String l = longurl.getJSONObject(i).getString("url");
+            assertTrue(l.startsWith("https://") || l.startsWith("http://"));
         }
     }
 
     @Test
     public void getUserStat() throws Exception {
-        String res=mockMvc.perform(get("/getUserStat").contentType(MediaType.APPLICATION_JSON_VALUE).header("Authorization","SXSTQL"))
+        String res = mockMvc.perform(get("/getUserStat").contentType(MediaType.APPLICATION_JSON_VALUE).header("Authorization", "SXSTQL"))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
-        List<JSONObject> users=om.readValue(res,new TypeReference<JSONObject>(){})
+        List<JSONObject> users = om.readValue(res, new TypeReference<JSONObject>() {
+        })
                 .getJSONArray("data").toJavaList(JSONObject.class);
         assertEquals("test0", users.get(0).getString("name"));
         assertEquals("test0", users.get(0).getString("password"));
         assertEquals("123@sjtu.edu.cn", users.get(0).getString("email"));
-        for (JSONObject user:users){
-            assertTrue(user.getLong("id")>=0);
-            int role=user.getInteger("role");
-            assertTrue(role>=0&&role<=2);
-            assertTrue(user.getLong("visit_count")>=0);
+        for (JSONObject user : users) {
+            assertTrue(user.getLong("id") >= 0);
+            int role = user.getInteger("role");
+            assertTrue(role >= 0 && role <= 2);
+            assertTrue(user.getLong("visit_count") >= 0);
         }
     }
 }
