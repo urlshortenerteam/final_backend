@@ -55,7 +55,11 @@ public class UsersDaoImpl implements UsersDao {
 
     @Override
     public List<Users> findAllUserStat() {
-        return usersRepository.findAllUserStat();
+        List<Users> users = usersRepository.findAllUserStat();
+        for (Users u : users) {
+            u.setPassword("");
+        }
+        return users;
     }
 
     @Override
