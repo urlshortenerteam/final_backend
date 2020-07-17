@@ -7,7 +7,9 @@ import org.junit.Before;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.reins.url.entity.Users;
 import org.reins.url.service.UsersService;
+import org.reins.url.xeger.Xeger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -18,6 +20,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -43,6 +46,13 @@ public class UsersControllerTest extends ApplicationTests {
 
     @Before
     public void setUp() {
+        usersService.register("test_000000", "test_000000", "test_000000@sjtu.edu.cn");
+        usersService.register("test_000001", "test_000001", "test_000001@sjtu.edu.cn");
+        usersService.register("test_000002", "test_000002", "test_000002@sjtu.edu.cn");
+        Users user = usersService.checkUser("test_000000", "test_000000");
+        usersService.changeRole(user.getId(), 0);
+        user = usersService.checkUser("test_000002", "test_000002");
+        usersService.changeRole(user.getId(), 2);
         mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
     }
 
@@ -52,8 +62,6 @@ public class UsersControllerTest extends ApplicationTests {
 
     @Test
     public void register() throws Exception {
-        init();
-
         String name = "test_000001";
         Map<String, String> params = new HashMap<>();
         params.put("name", name);
@@ -64,13 +72,8 @@ public class UsersControllerTest extends ApplicationTests {
         assertFalse(om.readValue(res, new TypeReference<JSONObject>() {
         }).getJSONObject("data").getBooleanValue("success"));
 
-        String chars = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        StringBuilder nameBuilder = new StringBuilder();
-        for (int i = 0; i < 6; i++) {
-            int index = (int) (Math.random() * chars.length());
-            nameBuilder.append(chars, index, index + 1);
-        }
-        name = "test_" + nameBuilder.toString();
+        Xeger xeger = new Xeger("[A-Za-z0-9]{6}", new Random(0));
+        name = "test_" + xeger.generate();
         boolean exists = usersService.doesNameExist(name);
         params = new HashMap<>();
         params.put("name", name);
@@ -84,8 +87,6 @@ public class UsersControllerTest extends ApplicationTests {
 
     @Test
     public void login() throws Exception {
-        init();
-
         Map<String, String> params = new HashMap<>();
         params.put("name", "test_000001");
         params.put("password", "wrong");
@@ -122,8 +123,6 @@ public class UsersControllerTest extends ApplicationTests {
 
     @Test
     public void banUser() throws Exception {
-        init();
-
         String res = mockMvc.perform(get("/banUser?id=0&ban_id=0&ban=true").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         assertFalse(om.readValue(res, new TypeReference<JSONObject>() {

@@ -8,9 +8,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.reins.url.dao.Shorten_logDao;
+import org.reins.url.dao.UsersDao;
 import org.reins.url.entity.*;
 import org.reins.url.repository.*;
-import org.reins.url.service.ShortenerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -42,9 +42,6 @@ public class UrlControllerTest extends ApplicationTests {
     @Autowired
     private WebApplicationContext context;
 
-    @Autowired
-    private ShortenerService shortenerService;
-
     @MockBean
     private Edit_logRepository edit_logRepository;
     @MockBean
@@ -57,6 +54,8 @@ public class UrlControllerTest extends ApplicationTests {
     private Visit_logRepository visit_logRepository;
     @MockBean
     private Shorten_logDao shorten_logDao;
+    @MockBean
+    private UsersDao usersDao;
 
     private ObjectMapper om = new ObjectMapper();
 
@@ -71,7 +70,6 @@ public class UrlControllerTest extends ApplicationTests {
 
     @Test
     public void generateShort() throws Exception {
-        init();
         when(shortenerRepository.insert(any(Shortener.class))).thenReturn(new Shortener());
         when(shorten_logRepository.save(any(Shorten_log.class))).thenReturn(new Shorten_log());
 
@@ -89,7 +87,6 @@ public class UrlControllerTest extends ApplicationTests {
 
     @Test
     public void generateOneShort() throws Exception {
-        init();
         when(shortenerRepository.insert(any(Shortener.class))).thenReturn(new Shortener());
         when(shorten_logRepository.save(any(Shorten_log.class))).thenReturn(new Shorten_log());
 
@@ -105,7 +102,6 @@ public class UrlControllerTest extends ApplicationTests {
 
     @Test
     public void getLong() throws Exception {
-        init();
         List<Shortener> longUrls0 = new ArrayList<>();
         when(shortenerRepository.findByShort_url("000000")).thenReturn(longUrls0);
         Shortener shortener = new Shortener();
@@ -129,7 +125,12 @@ public class UrlControllerTest extends ApplicationTests {
 
     @Test
     public void editUrl() throws Exception {
-        init();
+        Users user0 = new Users();
+        Users user1 = new Users();
+        user0.setRole(0);
+        user1.setRole(1);
+        when(usersDao.findById(1)).thenReturn(user0);
+        when(usersDao.findById(2)).thenReturn(user1);
         List<Shortener> shortenerList0 = new ArrayList<>();
         when(shortenerRepository.findByShort_url("000000")).thenReturn(shortenerList0);
         Shortener shortener = new Shortener();

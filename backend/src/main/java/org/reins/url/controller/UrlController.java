@@ -7,6 +7,7 @@ import org.reins.url.entity.Shorten_log;
 import org.reins.url.entity.Shortener;
 import org.reins.url.entity.Users;
 import org.reins.url.service.*;
+import org.reins.url.xeger.Xeger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.util.DigestUtils;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @RestController
 public class UrlController {
@@ -32,20 +34,17 @@ public class UrlController {
     private Visit_logService visit_logService;
 
     public String long2short(String longUrl) {
-        String chars = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        StringBuilder key = new StringBuilder();
-        for (int i = 0; i < 6; i++) {
-            int index = (int) (Math.random() * chars.length());
-            key.append(chars, index, index + 1);
-        }
-        String hex = DigestUtils.md5DigestAsHex((key.toString() + longUrl).getBytes());
+        Xeger xeger = new Xeger("[A-Za-z0-9]{6}", new Random(0));
+        String hex = DigestUtils.md5DigestAsHex((xeger.generate() + longUrl).getBytes());
         List<String> res = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             long hexLong = 0x3fffffff & Long.parseLong(hex.substring(i * 8, i * 8 + 8), 16);
             StringBuilder outChars = new StringBuilder();
             for (int j = 0; j < 6; j++) {
                 long index = 0x3d & hexLong;
-                outChars.append(chars, (int) index, (int) index + 1);
+                if (index < 26) outChars.append('A' + index);
+                else if (index < 52) outChars.append('a' + index - 26);
+                else outChars.append('0' + index - 52);
                 hexLong >>= 5;
             }
             res.add(outChars.toString());
