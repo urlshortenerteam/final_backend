@@ -42,9 +42,9 @@ public class UrlController {
             StringBuilder outChars = new StringBuilder();
             for (int j = 0; j < 6; j++) {
                 long index = 0x3d & hexLong;
-                if (index < 26) outChars.append('A' + index);
-                else if (index < 52) outChars.append('a' + index - 26);
-                else outChars.append('0' + index - 52);
+                if (index < 26) outChars.append((char) ('A' + index));
+                else if (index < 52) outChars.append((char) ('a' + index - 26));
+                else outChars.append((char) ('0' + index - 52));
                 hexLong >>= 5;
             }
             res.add(outChars.toString());
