@@ -18,6 +18,15 @@ public class ShortenerDaoImpl implements ShortenerDao {
     @Autowired
     private ShortenerRepository shortenerRepository;
 
+    private List<Shortener> reorderShortenerList(List<Shortener> shortenerList) {
+        for (int i = 1; i < shortenerList.size(); i++)
+            if (shortenerList.get(i).getLong_url().equals("BANNED")) {
+                Collections.swap(shortenerList, i, 0);
+                break;
+            }
+        return shortenerList;
+    }
+
     @Override
     public void addShortener(long shorten_id, String short_url, String long_url) {
         Shortener shortener = new Shortener();
@@ -39,17 +48,13 @@ public class ShortenerDaoImpl implements ShortenerDao {
 
     @Override
     public List<Shortener> findByShorten_id(long shorten_id) {
-        return shortenerRepository.findByShorten_id(shorten_id);
+        List<Shortener> shortenerList = shortenerRepository.findByShorten_id(shorten_id);
+        return reorderShortenerList(shortenerList);
     }
 
     @Override
     public List<Shortener> findByShort_url(String short_url) {
         List<Shortener> shortenerList = shortenerRepository.findByShort_url(short_url);
-        for (int i = 1; i < shortenerList.size(); i++)
-            if (shortenerList.get(i).getLong_url().equals("BANNED")) {
-                Collections.swap(shortenerList, i, 0);
-                break;
-            }
-        return shortenerList;
+        return reorderShortenerList(shortenerList);
     }
 }
