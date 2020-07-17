@@ -41,6 +41,16 @@ public class UsersControllerTest extends ApplicationTests {
 
     private ObjectMapper om = new ObjectMapper();
 
+    private String testName() {
+        String chars = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        StringBuilder name = new StringBuilder();
+        for (int i = 0; i < 6; i++) {
+            int index = (int) (Math.random() * chars.length());
+            name.append(chars, index, index + 1);
+        }
+        return "test_" + name.toString();
+    }
+
     @Before
     public void setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
