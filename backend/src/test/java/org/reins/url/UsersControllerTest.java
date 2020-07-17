@@ -52,7 +52,7 @@ public class UsersControllerTest extends ApplicationTests {
 
     @Test
     public void register() throws Exception {
-        usersInit();
+        init();
 
         String name = "test_000001";
         Map<String, String> params = new HashMap<>();
@@ -84,7 +84,7 @@ public class UsersControllerTest extends ApplicationTests {
 
     @Test
     public void login() throws Exception {
-        usersInit();
+        init();
 
         Map<String, String> params = new HashMap<>();
         params.put("name", "test_000001");
@@ -122,7 +122,7 @@ public class UsersControllerTest extends ApplicationTests {
 
     @Test
     public void banUser() throws Exception {
-        usersInit();
+        init();
 
         String res = mockMvc.perform(get("/banUser?id=0&ban_id=0&ban=true").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();

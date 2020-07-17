@@ -7,9 +7,13 @@ import org.junit.Before;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.reins.url.dao.Shorten_logDao;
+import org.reins.url.entity.*;
+import org.reins.url.repository.*;
 import org.reins.url.service.ShortenerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -20,6 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -39,6 +45,19 @@ public class UrlControllerTest extends ApplicationTests {
     @Autowired
     private ShortenerService shortenerService;
 
+    @MockBean
+    private Edit_logRepository edit_logRepository;
+    @MockBean
+    private ShortenerRepository shortenerRepository;
+    @MockBean
+    private Shorten_logRepository shorten_logRepository;
+    @MockBean
+    private UsersRepository usersRepository;
+    @MockBean
+    private Visit_logRepository visit_logRepository;
+    @MockBean
+    private Shorten_logDao shorten_logDao;
+
     private ObjectMapper om = new ObjectMapper();
 
     @Before
@@ -52,7 +71,9 @@ public class UrlControllerTest extends ApplicationTests {
 
     @Test
     public void generateShort() throws Exception {
-        usersInit();
+        init();
+        when(shortenerRepository.insert(any(Shortener.class))).thenReturn(new Shortener());
+        when(shorten_logRepository.save(any(Shorten_log.class))).thenReturn(new Shorten_log());
 
         List<String> longUrls = new ArrayList<>();
         longUrls.add("https://www.baidu.com/");
@@ -64,84 +85,87 @@ public class UrlControllerTest extends ApplicationTests {
         assertEquals(2, shortUrls.size());
         assertTrue(shortUrls.get(0).matches("[A-Za-z0-9]{6}"));
         assertTrue(shortUrls.get(1).matches("[A-Za-z0-9]{6}"));
-
-        res = mockMvc.perform(post("/getShort?id=2").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString(longUrls)))
-                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
-        shortUrls = om.readValue(res, new TypeReference<JSONObject>() {
-        }).getJSONArray("data").toJavaList(String.class);
-        assertEquals(2, shortUrls.size());
-        assertTrue(shortUrls.get(0).matches("[A-Za-z0-9]{6}"));
-        assertTrue(shortUrls.get(1).matches("[A-Za-z0-9]{6}"));
     }
 
     @Test
     public void generateOneShort() throws Exception {
-        usersInit();
+        init();
+        when(shortenerRepository.insert(any(Shortener.class))).thenReturn(new Shortener());
+        when(shorten_logRepository.save(any(Shorten_log.class))).thenReturn(new Shorten_log());
 
         List<String> longUrls = new ArrayList<>();
         longUrls.add("https://www.baidu.com/");
         longUrls.add("https://github.com/");
-        String res = mockMvc.perform(post("/getOneShort?id=1").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString(longUrls)).header("Authorization","SXSTQL"))
+        String res = mockMvc.perform(post("/getOneShort?id=1").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString(longUrls)).header("Authorization", "SXSTQL"))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         String shortUrl = om.readValue(res, new TypeReference<JSONObject>() {
-        }).getString("data");
-        assertTrue(shortUrl.matches("[A-Za-z0-9]{6}"));
-
-        res = mockMvc.perform(post("/getOneShort?id=2").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString(longUrls)).header("Authorization","SXSTQL"))
-                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
-        shortUrl = om.readValue(res, new TypeReference<JSONObject>() {
         }).getString("data");
         assertTrue(shortUrl.matches("[A-Za-z0-9]{6}"));
     }
 
     @Test
     public void getLong() throws Exception {
-        usersInit();
-        shortenerInit();
+        init();
+        List<Shortener> longUrls0 = new ArrayList<>();
+        when(shortenerRepository.findByShort_url("000000")).thenReturn(longUrls0);
+        Shortener shortener = new Shortener();
+        shortener.setShorten_id(1);
+        shortener.setLong_url("https://www.baidu.com/");
+        List<Shortener> longUrls1 = new ArrayList<>();
+        longUrls1.add(shortener);
+        when(shortenerRepository.findByShort_url("000001")).thenReturn(longUrls1);
+        Shorten_log shorten_log = new Shorten_log();
+        shorten_log.setCreator_id(1);
+        when(shorten_logDao.findById(1)).thenReturn(shorten_log);
+        when(visit_logRepository.save(any(Visit_log.class))).thenReturn(new Visit_log());
+        when(usersRepository.save(any(Users.class))).thenReturn(new Users());
 
-        boolean exists = (shortenerService.findByShort_url("000000").size() > 0);
         mockMvc.perform(get("/000000").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(exists ? status().isMovedTemporarily() : status().isOk()).andReturn();
+                .andExpect(status().isOk()).andReturn();
 
-        String shortUrl = shortenerService.findByShorten_id(1).get(0).getShort_url();
-        mockMvc.perform(get("/" + shortUrl).header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE))
+        mockMvc.perform(get("/000001").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isMovedTemporarily()).andReturn();
     }
 
     @Test
     public void editUrl() throws Exception {
-        usersInit();
-        shortenerInit();
+        init();
+        List<Shortener> shortenerList0 = new ArrayList<>();
+        when(shortenerRepository.findByShort_url("000000")).thenReturn(shortenerList0);
+        Shortener shortener = new Shortener();
+        shortener.setShorten_id(1);
+        List<Shortener> shortenerList1 = new ArrayList<>();
+        shortenerList1.add(shortener);
+        when(shortenerRepository.findByShort_url("000001")).thenReturn(shortenerList1);
+        Shorten_log shorten_log = new Shorten_log();
+        shorten_log.setCreator_id(2);
+        when(shorten_logDao.findById(1)).thenReturn(shorten_log);
+        when(shortenerRepository.save(any(Shortener.class))).thenReturn(new Shortener());
+        when(edit_logRepository.save(any(Edit_log.class))).thenReturn(new Edit_log());
+        when(shortenerRepository.insert(any(Shortener.class))).thenReturn(new Shortener());
 
-        String shortUrl = shortenerService.findByShorten_id(1).get(0).getShort_url();
         String longUrl = "https://www.baidu.com/";
-        String res = mockMvc.perform(post("/editUrl?id=1&shortUrl=" + shortUrl).header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).content(longUrl))
+        String res = mockMvc.perform(post("/editUrl?id=1&shortUrl=000000").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).content(longUrl))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         assertFalse(om.readValue(res, new TypeReference<JSONObject>() {
         }).getJSONObject("data").getBooleanValue("status"));
 
-        shortUrl = shortenerService.findByShorten_id(2).get(0).getShort_url();
-        res = mockMvc.perform(post("/editUrl?id=0&shortUrl=" + shortUrl).header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).content(longUrl))
+        res = mockMvc.perform(post("/editUrl?id=0&shortUrl=000001").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).content(longUrl))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         assertFalse(om.readValue(res, new TypeReference<JSONObject>() {
         }).getJSONObject("data").getBooleanValue("status"));
 
-        res = mockMvc.perform(post("/editUrl?id=1&shortUrl=" + shortUrl).header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).content(longUrl))
+        res = mockMvc.perform(post("/editUrl?id=1&shortUrl=000001").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).content(longUrl))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         assertFalse(om.readValue(res, new TypeReference<JSONObject>() {
         }).getJSONObject("data").getBooleanValue("status"));
 
-        res = mockMvc.perform(post("/editUrl?id=2&shortUrl=" + shortUrl).header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).content(longUrl))
+        res = mockMvc.perform(post("/editUrl?id=2&shortUrl=000001").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).content(longUrl))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         assertTrue(om.readValue(res, new TypeReference<JSONObject>() {
         }).getJSONObject("data").getBooleanValue("status"));
 
-        res = mockMvc.perform(post("/editUrl?id=1&shortUrl=" + shortUrl).header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).content("BANNED"))
-                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
-        assertTrue(om.readValue(res, new TypeReference<JSONObject>() {
-        }).getJSONObject("data").getBooleanValue("status"));
-
-        res = mockMvc.perform(post("/editUrl?id=1&shortUrl=" + shortUrl).header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).content("LIFT"))
+        res = mockMvc.perform(post("/editUrl?id=1&shortUrl=000001").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).content("BANNED"))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         assertTrue(om.readValue(res, new TypeReference<JSONObject>() {
         }).getJSONObject("data").getBooleanValue("status"));
