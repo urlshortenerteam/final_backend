@@ -131,10 +131,10 @@ public class UrlControllerTest extends ApplicationTests {
         assertFalse(om.readValue(res, new TypeReference<JSONObject>() {
         }).getJSONObject("data").getBooleanValue("status"));
 
-        res = mockMvc.perform(post("/editUrl?id=2&shortUrl=" + shortUrl).header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).content(longUrl))
-                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
-        assertTrue(om.readValue(res, new TypeReference<JSONObject>() {
-        }).getJSONObject("data").getBooleanValue("status"));
+//        res = mockMvc.perform(post("/editUrl?id=2&shortUrl=" + shortUrl).header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).content(longUrl))
+//                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+//        assertTrue(om.readValue(res, new TypeReference<JSONObject>() {
+//        }).getJSONObject("data").getBooleanValue("status"));
 
         res = mockMvc.perform(post("/editUrl?id=1&shortUrl=" + shortUrl).header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).content("BANNED"))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
