@@ -76,7 +76,7 @@ public class Xeger {
     /**
      * Attempts to generate a random String using a random walk of length between <code>minLength</code> and
      * <code>maxLength</code> steps.
-     *
+     * <p>
      * A target length will be randomly generated within this range, and a random walk of at least that length
      * will be attempted. The walk will initially avoid states with no outgoing transitions until the target
      * length is reached: from then onwards, it will consider all transitions equally, and stop as soon as an
@@ -87,7 +87,7 @@ public class Xeger {
      * @param minLength Minimum length for the range.
      * @param maxLength Maximum length for the range.
      * @throws FailedRandomWalkException The minimum random walk length was not reached, or the maximum random walk
-     * length was exceeded.
+     *                                   length was exceeded.
      */
     public String generate(int minLength, int maxLength) throws FailedRandomWalkException {
         final StringBuilder builder = new StringBuilder();
@@ -199,8 +199,8 @@ public class Xeger {
     /**
      * Generates a random number within the given bounds.
      *
-     * @param min The minimum number (inclusive).
-     * @param max The maximum number (inclusive).
+     * @param min    The minimum number (inclusive).
+     * @param max    The maximum number (inclusive).
      * @param random The object used as the randomizer.
      * @return A random number in the given range.
      */

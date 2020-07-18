@@ -11,7 +11,5 @@ public interface ShortenerService {
 
     void deleteShortener(String id);
 
-    List<Shortener> findByShorten_id(long shorten_id);
-
     List<Shortener> findByShort_url(String short_url);
 }

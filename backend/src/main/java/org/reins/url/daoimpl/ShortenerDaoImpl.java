@@ -47,12 +47,6 @@ public class ShortenerDaoImpl implements ShortenerDao {
     }
 
     @Override
-    public List<Shortener> findByShorten_id(long shorten_id) {
-        List<Shortener> shortenerList = shortenerRepository.findByShorten_id(shorten_id);
-        return reorderShortenerList(shortenerList);
-    }
-
-    @Override
     public List<Shortener> findByShort_url(String short_url) {
         List<Shortener> shortenerList = shortenerRepository.findByShort_url(short_url);
         return reorderShortenerList(shortenerList);

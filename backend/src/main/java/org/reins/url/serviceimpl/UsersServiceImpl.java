@@ -32,11 +32,6 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Override
-    public boolean doesNameExist(String name) {
-        return usersDao.doesNameExist(name);
-    }
-
-    @Override
     public Boolean register(String name, String password, String email) {
         if (usersDao.doesNameExist(name)) return false;
         usersDao.register(name, password, email);

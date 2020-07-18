@@ -7,8 +7,6 @@ import org.junit.Before;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.reins.url.dao.Shorten_logDao;
-import org.reins.url.dao.UsersDao;
 import org.reins.url.entity.*;
 import org.reins.url.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +20,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -52,12 +51,8 @@ public class UrlControllerTest extends ApplicationTests {
     private UsersRepository usersRepository;
     @MockBean
     private Visit_logRepository visit_logRepository;
-    @MockBean
-    private Shorten_logDao shorten_logDao;
-    @MockBean
-    private UsersDao usersDao;
 
-    private ObjectMapper om = new ObjectMapper();
+    private final ObjectMapper om = new ObjectMapper();
 
     @Before
     public void setUp() {
@@ -102,17 +97,24 @@ public class UrlControllerTest extends ApplicationTests {
 
     @Test
     public void getLong() throws Exception {
-        List<Shortener> longUrls0 = new ArrayList<>();
-        when(shortenerRepository.findByShort_url("000000")).thenReturn(longUrls0);
-        Shortener shortener = new Shortener();
-        shortener.setShorten_id(1);
-        shortener.setLong_url("https://www.baidu.com/");
-        List<Shortener> longUrls1 = new ArrayList<>();
-        longUrls1.add(shortener);
-        when(shortenerRepository.findByShort_url("000001")).thenReturn(longUrls1);
+        when(shortenerRepository.findByShort_url("000000")).thenReturn(new ArrayList<>());
+        Shortener shortener1 = new Shortener();
+        shortener1.setShorten_id(1);
+        shortener1.setLong_url("https://www.baidu.com/");
+        List<Shortener> longUrls = new ArrayList<>();
+        longUrls.add(shortener1);
+        when(shortenerRepository.findByShort_url("000001")).thenReturn(longUrls);
         Shorten_log shorten_log = new Shorten_log();
+        shorten_log.setId(1);
         shorten_log.setCreator_id(1);
-        when(shorten_logDao.findById(1)).thenReturn(shorten_log);
+        when(shorten_logRepository.findById((long) 1)).thenReturn(Optional.of(shorten_log));
+        Shortener shortener2 = new Shortener();
+        shortener2.setLong_url("BANNED");
+        List<Shortener> shortenerList = new ArrayList<>();
+        shortenerList.add(shortener1);
+        shortenerList.add(shortener2);
+        when(shortenerRepository.findByShorten_id(1)).thenReturn(shortenerList);
+        when(usersRepository.findById((long) 1)).thenReturn(Optional.of(new Users()));
         when(visit_logRepository.save(any(Visit_log.class))).thenReturn(new Visit_log());
         when(usersRepository.save(any(Users.class))).thenReturn(new Users());
 
@@ -129,18 +131,33 @@ public class UrlControllerTest extends ApplicationTests {
         Users user1 = new Users();
         user0.setRole(0);
         user1.setRole(1);
-        when(usersDao.findById(1)).thenReturn(user0);
-        when(usersDao.findById(2)).thenReturn(user1);
-        List<Shortener> shortenerList0 = new ArrayList<>();
-        when(shortenerRepository.findByShort_url("000000")).thenReturn(shortenerList0);
-        Shortener shortener = new Shortener();
-        shortener.setShorten_id(1);
+        when(usersRepository.findById((long) 1)).thenReturn(Optional.of(user0));
+        when(usersRepository.findById((long) 2)).thenReturn(Optional.of(user1));
+        when(usersRepository.findById((long) 3)).thenReturn(Optional.of(user1));
+        when(shortenerRepository.findByShort_url("000000")).thenReturn(new ArrayList<>());
+        Shortener shortener1 = new Shortener();
+        shortener1.setShorten_id(1);
         List<Shortener> shortenerList1 = new ArrayList<>();
-        shortenerList1.add(shortener);
+        shortenerList1.add(shortener1);
         when(shortenerRepository.findByShort_url("000001")).thenReturn(shortenerList1);
+        Shortener shortener2 = new Shortener();
+        shortener2.setShorten_id(2);
+        List<Shortener> shortenerList2 = new ArrayList<>();
+        shortenerList2.add(shortener2);
+        when(shortenerRepository.findByShort_url("000002")).thenReturn(shortenerList2);
+        Shortener shortener3 = new Shortener();
+        shortener3.setShorten_id(1);
+        shortener3.setLong_url("BANNED");
+        List<Shortener> shortenerList3 = new ArrayList<>();
+        shortenerList3.add(shortener1);
+        shortenerList3.add(shortener3);
+        when(shortenerRepository.findByShort_url("000003")).thenReturn(shortenerList3);
         Shorten_log shorten_log = new Shorten_log();
+        shorten_log.setId(1);
         shorten_log.setCreator_id(2);
-        when(shorten_logDao.findById(1)).thenReturn(shorten_log);
+        when(shorten_logRepository.findById((long) 1)).thenReturn(Optional.of(shorten_log));
+        when(shortenerRepository.findByShorten_id(1)).thenReturn(new ArrayList<>());
+        when(shorten_logRepository.findById((long) 2)).thenReturn(Optional.empty());
         when(shortenerRepository.save(any(Shortener.class))).thenReturn(new Shortener());
         when(edit_logRepository.save(any(Edit_log.class))).thenReturn(new Edit_log());
         when(shortenerRepository.insert(any(Shortener.class))).thenReturn(new Shortener());
@@ -151,7 +168,7 @@ public class UrlControllerTest extends ApplicationTests {
         assertFalse(om.readValue(res, new TypeReference<JSONObject>() {
         }).getJSONObject("data").getBooleanValue("status"));
 
-        res = mockMvc.perform(post("/editUrl?id=0&shortUrl=000001").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).content(longUrl))
+        res = mockMvc.perform(post("/editUrl?id=1&shortUrl=000002").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).content(longUrl))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         assertFalse(om.readValue(res, new TypeReference<JSONObject>() {
         }).getJSONObject("data").getBooleanValue("status"));
@@ -166,7 +183,17 @@ public class UrlControllerTest extends ApplicationTests {
         assertTrue(om.readValue(res, new TypeReference<JSONObject>() {
         }).getJSONObject("data").getBooleanValue("status"));
 
+        res = mockMvc.perform(post("/editUrl?id=3&shortUrl=000001").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).content("BANNED"))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+        assertFalse(om.readValue(res, new TypeReference<JSONObject>() {
+        }).getJSONObject("data").getBooleanValue("status"));
+
         res = mockMvc.perform(post("/editUrl?id=1&shortUrl=000001").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).content("BANNED"))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+        assertTrue(om.readValue(res, new TypeReference<JSONObject>() {
+        }).getJSONObject("data").getBooleanValue("status"));
+
+        res = mockMvc.perform(post("/editUrl?id=1&shortUrl=000003").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).content("LIFT"))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         assertTrue(om.readValue(res, new TypeReference<JSONObject>() {
         }).getJSONObject("data").getBooleanValue("status"));
