@@ -33,6 +33,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class UrlControllerTest extends ApplicationTests {
+    private final ObjectMapper om = new ObjectMapper();
+
     @Test
     public void contextLoads() {
     }
@@ -56,8 +58,6 @@ public class UrlControllerTest extends ApplicationTests {
     private Shorten_logDao shorten_logDao;
     @MockBean
     private UsersDao usersDao;
-
-    private final ObjectMapper om = new ObjectMapper();
 
     @Before
     public void setUp() {
