@@ -57,7 +57,7 @@ public class UrlControllerTest extends ApplicationTests {
     @MockBean
     private UsersDao usersDao;
 
-    private ObjectMapper om = new ObjectMapper();
+    private final ObjectMapper om = new ObjectMapper();
 
     @Before
     public void setUp() {
@@ -120,7 +120,7 @@ public class UrlControllerTest extends ApplicationTests {
                 .andExpect(status().isOk()).andReturn();
 
         mockMvc.perform(get("/000001").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isMovedTemporarily()).andReturn();
+                .andExpect(status().isFound()).andReturn();
     }
 
     @Test
