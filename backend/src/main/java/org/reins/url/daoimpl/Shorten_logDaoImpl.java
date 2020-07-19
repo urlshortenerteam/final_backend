@@ -50,16 +50,6 @@ public class Shorten_logDaoImpl implements Shorten_logDao {
     }
 
     @Override
-    public List<Shorten_log> findAll() {
-        List<Shorten_log> list = shorten_logRepository.findAll();
-        for (Shorten_log s : list) {
-            List<Shortener> shortenerList = shortenerRepository.findByShorten_id(s.getId());
-            s.setShortener(reorderShortenerList(shortenerList));
-        }
-        return list;
-    }
-
-    @Override
     public Shorten_log findById(long id) {
         Optional<Shorten_log> shorten_logOptional = shorten_logRepository.findById(id);
         if (!shorten_logOptional.isPresent()) return null;

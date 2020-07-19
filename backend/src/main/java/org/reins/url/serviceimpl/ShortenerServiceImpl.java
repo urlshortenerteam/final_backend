@@ -29,11 +29,6 @@ public class ShortenerServiceImpl implements ShortenerService {
     }
 
     @Override
-    public List<Shortener> findByShorten_id(long shorten_id) {
-        return shortenerDao.findByShorten_id(shorten_id);
-    }
-
-    @Override
     public List<Shortener> findByShort_url(String short_url) {
         return shortenerDao.findByShort_url(short_url);
     }

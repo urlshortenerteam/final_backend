@@ -11,7 +11,5 @@ public interface UsersService {
 
     Users findById(long id);
 
-    boolean doesNameExist(String name);
-
     Boolean register(String name, String password, String email);
 }
