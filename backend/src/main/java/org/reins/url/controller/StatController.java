@@ -1,21 +1,14 @@
 package org.reins.url.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import org.reins.url.entity.ShortenLog;
-import org.reins.url.entity.Shortener;
-import org.reins.url.entity.VisitLog;
+import io.jsonwebtoken.Claims;
 import org.reins.url.service.ShortenLogService;
 import org.reins.url.service.ShortenerService;
-import io.jsonwebtoken.Claims;
 import org.reins.url.service.StatService;
 import org.reins.url.service.VisitLogService;
 import org.reins.url.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 public class StatController {
@@ -82,6 +75,19 @@ public class StatController {
    * handle the request "/getUserStat" and return the information of all users.
    * It can only be requested by administrators.
    *
+   * @param jwt the jwt in requestHeader used for checking the user's type
+   * @return {data:[
+   *         {
+   *             id:Long,
+   *             name:String,
+   *             role:Integer,
+   *             visit_count:Long,
+   *         },
+   *         {……},
+   *         ……
+   *         ]
+   *      }
+   * @throws Exception when the string jwt can't be parsed as a JWT
    */
   @CrossOrigin
   @RequestMapping("/getUserStat")
@@ -102,7 +108,24 @@ public class StatController {
   }
 
   /**
-   * .
+   * handle the request "/getAllUrls" and return the statistics of all Urls.
+   * It's similar to "/getStat"
+   * It can only be requested by administrators.
+   *
+   * @param jwt the jwt in requestHeader used for checking the user's type
+   * @return {data:[
+   *         {
+   *             shortUrl:String,
+   *             longUrl:JSONArray
+   *             count:Integer,
+   *             creatorName:String,
+   *             createTime:String
+   *             },
+   *             {……},
+   *             ……
+   *          ]
+   *        }
+   * @throws Exception when the string jwt can't be parsed as a JWT
    */
   @CrossOrigin
   @RequestMapping("/getAllUrls")
@@ -123,7 +146,18 @@ public class StatController {
   }
 
   /**
-   * .
+   * handle the request "/getNumberCount" and return general statistics of the whole system.
+   * It can only be requested by administrators.
+   *
+   * @param jwt the jwt in requestHeader used for checking the user's type
+   * @return {data:{
+   *             userCount:Integer,
+   *             shortUrlCount:Integer,
+   *             visitCountTotal:Integer,
+   *             shortUrl:String,
+   *         }
+   *        }
+   * @throws Exception when the string jwt can't be parsed as a JWT
    */
   @CrossOrigin
   @RequestMapping("/getNumberCount")

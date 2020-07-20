@@ -3,14 +3,6 @@ package org.reins.url.controller;
 import com.alibaba.fastjson.JSONObject;
 import eu.bitwalker.useragentutils.DeviceType;
 import eu.bitwalker.useragentutils.UserAgent;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.reins.url.entity.ShortenLog;
 import org.reins.url.entity.Shortener;
 import org.reins.url.entity.Users;
@@ -20,6 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 @SuppressWarnings("checkstyle:Indentation")
 @RestController

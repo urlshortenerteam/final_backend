@@ -1,6 +1,5 @@
 package org.reins.url.service;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.reins.url.entity.Statistics;
 import org.reins.url.entity.Users;
