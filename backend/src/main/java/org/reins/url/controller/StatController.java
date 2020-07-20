@@ -1,36 +1,51 @@
 package org.reins.url.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import org.reins.url.entity.ShortenLog;
+import org.reins.url.entity.Shortener;
+import org.reins.url.entity.VisitLog;
+import org.reins.url.service.ShortenLogService;
+import org.reins.url.service.ShortenerService;
 import io.jsonwebtoken.Claims;
 import org.reins.url.service.StatService;
+import org.reins.url.service.VisitLogService;
 import org.reins.url.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 public class StatController {
   @Autowired
+  private ShortenLogService shorten_logService;
+  @Autowired
+  private ShortenerService shortenerService;
+  @Autowired
   private StatService statService;
+  @Autowired
+  private VisitLogService visit_logService;
 
   /**
    * handle the request "/getStat" and return the statistics of the user's Urls.
    *
    * @param id the id of the user who calls "/getStat"
    * @return {data:
-   *          [
-   *            {
-   *                shortUrl:String,
-   *                longUrl:JSONArray
-   *                count:Integer,
-   *                area_distr:JSONArray,
-   *                time_distr:JSONArray,
-   *                source_distr:JSONArray
-   *            },
-   *            {……},
-   *            ……
-   *          ]
-   *        }
+   * [
+   * {
+   * shortUrl:String,
+   * longUrl:JSONArray
+   * count:Integer,
+   * area_distr:JSONArray,
+   * time_distr:JSONArray,
+   * source_distr:JSONArray
+   * },
+   * {……},
+   * ……
+   * ]
+   * }
    */
   @CrossOrigin
   @RequestMapping("/getStat")
@@ -43,17 +58,17 @@ public class StatController {
   /**
    * handle the request "/getShortStat" and return the statistics of a single Url.
    *
-   * @param id the id of the user who calls "/getShortStat"
+   * @param id        the id of the user who calls "/getShortStat"
    * @param short_url the url whose statistics is required
    * @return {data:{
-   *             shortUrl:String,
-   *             longUrl:JSONArray
-   *             count:Integer,
-   *             area_distr:JSONArray,
-   *             time_distr:JSONArray,
-   *             source_distr:JSONArray
-   *             }
-   *         }
+   * shortUrl:String,
+   * longUrl:JSONArray
+   * count:Integer,
+   * area_distr:JSONArray,
+   * time_distr:JSONArray,
+   * source_distr:JSONArray
+   * }
+   * }
    */
   @CrossOrigin
   @RequestMapping("/getShortStat")
@@ -64,7 +79,9 @@ public class StatController {
   }
 
   /**
-   * handle the request "/getUserStat" and return .
+   * handle the request "/getUserStat" and return the information of all users.
+   * It can only be requested by administrators.
+   *
    */
   @CrossOrigin
   @RequestMapping("/getUserStat")
@@ -125,4 +142,6 @@ public class StatController {
     res.put("not_administrator", false);
     return res;
   }
+
+
 }

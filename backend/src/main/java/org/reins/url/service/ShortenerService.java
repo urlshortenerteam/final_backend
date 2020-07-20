@@ -2,14 +2,12 @@ package org.reins.url.service;
 
 import org.reins.url.entity.Shortener;
 
-import java.util.List;
-
 public interface ShortenerService {
-  void addShortener(long shorten_id, String short_url, String long_url);
+  void addShortener(long shortenId, String longUrl);
 
-  void changeLong_url(Shortener shortener);
+  void changeShortener(Shortener shortener);
 
-  void deleteShortener(String id);
+  Shortener findById(String id);
 
-  List<Shortener> findByShort_url(String short_url);
+
 }

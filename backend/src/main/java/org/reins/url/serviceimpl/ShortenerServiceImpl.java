@@ -6,30 +6,25 @@ import org.reins.url.service.ShortenerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class ShortenerServiceImpl implements ShortenerService {
   @Autowired
   private ShortenerDao shortenerDao;
 
   @Override
-  public void addShortener(long shorten_id, String short_url, String long_url) {
-    shortenerDao.addShortener(shorten_id, short_url, long_url);
+  public void addShortener(long shortenId, String longUrl) {
+    shortenerDao.addShortener(shortenId, longUrl);
   }
 
   @Override
-  public void changeLong_url(Shortener shortener) {
-    shortenerDao.changeLong_url(shortener);
+  public void changeShortener(Shortener shortener) {
+    shortenerDao.changeShortener(shortener);
   }
 
   @Override
-  public void deleteShortener(String id) {
-    shortenerDao.deleteShortener(id);
+  public Shortener findById(String id) {
+    return shortenerDao.findById(id);
   }
 
-  @Override
-  public List<Shortener> findByShort_url(String short_url) {
-    return shortenerDao.findByShort_url(short_url);
-  }
+
 }

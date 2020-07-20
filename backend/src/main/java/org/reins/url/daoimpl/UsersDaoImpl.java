@@ -28,13 +28,13 @@ public class UsersDaoImpl implements UsersDao {
       users.setPassword(usersOptional.get().getPassword());
       users.setEmail(usersOptional.get().getEmail());
       users.setRole(role);
-      users.setVisit_count(usersOptional.get().getVisit_count());
+      users.setVisitCount(usersOptional.get().getVisitCount());
       usersRepository.save(users);
     }
   }
 
   @Override
-  public void changeVisit_count(long id) {
+  public void changeVisitCount(long id) {
     Optional<Users> usersOptional = usersRepository.findById(id);
     if (usersOptional.isPresent()) {
       Users users = new Users();
@@ -43,7 +43,7 @@ public class UsersDaoImpl implements UsersDao {
       users.setPassword(usersOptional.get().getPassword());
       users.setEmail(usersOptional.get().getEmail());
       users.setRole(usersOptional.get().getRole());
-      users.setVisit_count(usersOptional.get().getVisit_count() + 1);
+      users.setVisitCount(usersOptional.get().getVisitCount() + 1);
       usersRepository.save(users);
     }
   }
@@ -64,14 +64,12 @@ public class UsersDaoImpl implements UsersDao {
 
   @Override
   public Users findById(long id) {
-    Optional<Users> users = usersRepository.findById(id);
-    return users.orElse(null);
+    return usersRepository.findById(id).orElse(null);
   }
 
   @Override
   public boolean doesNameExist(String name) {
-    Optional<Users> user = usersRepository.findByName(name);
-    return user.isPresent();
+    return usersRepository.findByName(name).isPresent();
   }
 
   @Override
@@ -81,7 +79,7 @@ public class UsersDaoImpl implements UsersDao {
     user.setPassword(password);
     user.setEmail(email);
     user.setRole(1);
-    user.setVisit_count(0);
+    user.setVisitCount(0);
     usersRepository.save(user);
   }
 

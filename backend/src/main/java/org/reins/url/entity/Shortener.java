@@ -7,9 +7,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Shortener {
   @Id
   private String id;
-  private long shorten_id;
-  private String short_url;
-  private String long_url;
+  private long shortenId;
+  private String longUrl;
 
   public Shortener() {
   }
@@ -22,27 +21,19 @@ public class Shortener {
     this.id = id;
   }
 
-  public long getShorten_id() {
-    return shorten_id;
+  public long getShortenId() {
+    return shortenId;
   }
 
-  public void setShorten_id(long shorten_id) {
-    this.shorten_id = shorten_id;
+  public void setShortenId(long shortenId) {
+    this.shortenId = shortenId;
   }
 
-  public String getShort_url() {
-    return short_url;
+  public String getLongUrl() {
+    return longUrl;
   }
 
-  public void setShort_url(String short_url) {
-    this.short_url = short_url;
-  }
-
-  public String getLong_url() {
-    return long_url;
-  }
-
-  public void setLong_url(String long_url) {
-    this.long_url = long_url;
+  public void setLongUrl(String longUrl) {
+    this.longUrl = longUrl;
   }
 }

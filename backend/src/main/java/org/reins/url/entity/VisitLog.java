@@ -7,15 +7,15 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@Table(name = "visit_log")
-public class Visit_log implements Serializable {
+@Table(name = "visitLog")
+public class VisitLog implements Serializable {
   private long id;
-  private String shortener_id;
-  private Date visit_time;
+  private String shortenerId;
+  private Date visitTime;
   private String ip;
   private Boolean device;
 
-  public Visit_log() {
+  public VisitLog() {
   }
 
   @Id
@@ -29,20 +29,20 @@ public class Visit_log implements Serializable {
     this.id = id;
   }
 
-  public String getShortener_id() {
-    return shortener_id;
+  public String getShortenerId() {
+    return shortenerId;
   }
 
-  public void setShortener_id(String shortener_id) {
-    this.shortener_id = shortener_id;
+  public void setShortenerId(String shortenerId) {
+    this.shortenerId = shortenerId;
   }
 
-  public Date getVisit_time() {
-    return visit_time;
+  public Date getVisitTime() {
+    return visitTime;
   }
 
-  public void setVisit_time(Date visit_time) {
-    this.visit_time = visit_time;
+  public void setVisitTime(Date visitTime) {
+    this.visitTime = visitTime;
   }
 
   public String getIp() {

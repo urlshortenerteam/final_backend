@@ -10,7 +10,7 @@ import java.util.List;
 public interface StatService {
   List<Statistics> getStat(long id);
 
-  Statistics getShortStat(String short_url);
+  Statistics getShortStat(String shortUrl);
 
   List<Users> getUserStat();
 

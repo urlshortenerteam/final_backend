@@ -2,13 +2,15 @@ package org.reins.url.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
-public class Area_distr {
-  public String name;
-  public int code;
+public class TimeDistr {
+  public int time;
   public long value;
+
+  public TimeDistr() {
+    value = 0;
+    time = 0;
+  }
 }
