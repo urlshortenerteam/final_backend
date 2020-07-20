@@ -23,15 +23,15 @@ import java.util.Random;
 @RestController
 public class UrlController {
     @Autowired
-    private EditLogService edit_logService;
-    @Autowired
-    private ShortenLogService shorten_logService;
+    private EditLogService editLogService;
     @Autowired
     private ShortenerService shortenerService;
     @Autowired
+    private ShortenLogService shortenLogService;
+    @Autowired
     private UsersService usersService;
     @Autowired
-    private VisitLogService visit_logService;
+    private VisitLogService visitLogService;
 
     public String long2short(String longUrl) {
         Xeger xeger = new Xeger("[A-Za-z0-9]{6}", new Random(0));
@@ -56,10 +56,8 @@ public class UrlController {
     @RequestMapping("/getShort")
     public JSONObject generateShort(@RequestParam("id") long id, @RequestBody List<String> longUrls) {
         List<String> shortUrls = new ArrayList<>();
-        for (String longUrl : longUrls) {
-            shortUrls.add(long2short(longUrl));
-        }
-        shorten_logService.addShortenLog(id, shortUrls, longUrls);
+        for (String longUrl : longUrls) shortUrls.add(long2short(longUrl));
+        shortenLogService.addShortenLog(id, shortUrls, longUrls);
         JSONObject res = new JSONObject();
         res.put("data", shortUrls);
         return res;
@@ -71,8 +69,8 @@ public class UrlController {
         String longUrl = longUrls.get((int) (Math.random() * longUrls.size()));
         String shortUrl = long2short(longUrl);
         List<String> shortUrls = new ArrayList<>();
-        for (int i = 0; i < longUrls.size(); ++i) shortUrls.add(shortUrl);
-        shorten_logService.addShortenLog(id, shortUrls, longUrls);
+        for (int i = 0; i < longUrls.size(); i++) shortUrls.add(shortUrl);
+        shortenLogService.addShortenLog(id, shortUrls, longUrls);
         JSONObject res = new JSONObject();
         res.put("data", shortUrl);
         return res;
@@ -82,15 +80,18 @@ public class UrlController {
     @RequestMapping("/{[A-Za-z0-9]{6}}")
     public void getLong(HttpServletRequest req, HttpServletResponse resp) {
         String shortUrl = req.getRequestURI().substring(1);
-        List<Shortener> longUrls = shortenerService.findByShort_url(shortUrl);
-        if (longUrls.isEmpty() || longUrls.get(0).getLongUrl().equals("BANNED")) return;
-        Shortener longUrl = longUrls.get((int) (Math.random() * longUrls.size()));
-        ShortenLog shorten_log = shorten_logService.findById(longUrl.getShortenId());
-        if (shorten_log == null) return;
+        ShortenLog shortenLog = shortenLogService.findByShortUrl(shortUrl);
+        if (shortenLog == null) return;
+        List<Shortener> longUrls = shortenLog.getShortener();
+        if (longUrls.isEmpty()) return;
+        Shortener longUrl = longUrls.get(0);
+        if (!longUrl.getLongUrl().equals("BANNED")) longUrl = longUrls.get((int) (Math.random() * longUrls.size()));
         Boolean device = (UserAgent.parseUserAgentString(req.getHeader("User-Agent")).getOperatingSystem().getDeviceType() != DeviceType.COMPUTER);
+        shortenLog.setVisitCount(shortenLog.getVisitCount() + 1);
         try {
-            visit_logService.addVisitLog(longUrl.getId(), req.getRemoteAddr(), device);
-            usersService.changeVisitCount(shorten_log.getCreatorId());
+            shortenLogService.changeShortenLog(shortenLog);
+            usersService.changeVisitCount(shortenLog.getCreatorId());
+            visitLogService.addVisitLog(longUrl.getId(), req.getRemoteAddr(), device);
             resp.sendRedirect(longUrl.getLongUrl());
         } catch (IOException e) {
             e.printStackTrace();
@@ -103,42 +104,40 @@ public class UrlController {
         JSONObject res = new JSONObject();
         JSONObject status = new JSONObject();
         Users user = usersService.findById(id);
-        List<Shortener> shortenerList = shortenerService.findByShort_url(shortUrl);
-        if (user == null || shortenerList.isEmpty()) {
+        ShortenLog shortenLog = shortenLogService.findByShortUrl(shortUrl);
+        if (shortenLog == null || user == null) {
             status.put("status", false);
             res.put("data", status);
             return res;
         }
-        Shortener shortener = shortenerList.get(0);
-        ShortenLog shorten_log = shorten_logService.findById(shortener.getShortenId());
-        if (shorten_log == null) {
+        List<Shortener> longUrls = shortenLog.getShortener();
+        if (longUrls.isEmpty()) {
             status.put("status", false);
             res.put("data", status);
             return res;
         }
+        Shortener shortener = longUrls.get(0);
         if (longUrl.equals("BANNED") || longUrl.equals("LIFT")) {
             boolean ban = longUrl.equals("BANNED");
             boolean shortenerBan = shortener.getLongUrl().equals("BANNED");
-            if ((user.getRole() > 0 && id != shorten_log.getCreatorId()) || (ban && shortenerBan) || (!ban && !shortenerBan)) {
+            if ((user.getRole() > 0 && id != shortenLog.getCreatorId()) || (ban && shortenerBan) || (!ban && !shortenerBan)) {
                 status.put("status", false);
                 res.put("data", status);
                 return res;
             }
-            if (ban) shortenerService.addShortener(shorten_log.getId(), shortUrl, longUrl);
-            else shortenerService.deleteShortener(shortener.getId());
-            edit_logService.addEditLog(id, shortener.getId());
+            shortenerService.addShortener(id, shortenLog.getId(), longUrl);
             status.put("status", true);
             res.put("data", status);
             return res;
         }
-        if (shortenerList.size() > 1 || id != shorten_log.getCreatorId()) {
+        if (longUrls.size() > 1 || id != shortenLog.getCreatorId()) {
             status.put("status", false);
             res.put("data", status);
             return res;
         }
         shortener.setLongUrl(longUrl);
+        editLogService.addEditLog(id, shortener.getId());
         shortenerService.changeShortener(shortener);
-        edit_logService.addEditLog(id, shortener.getId());
         status.put("status", true);
         res.put("data", status);
         return res;

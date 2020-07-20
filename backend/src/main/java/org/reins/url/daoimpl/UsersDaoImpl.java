@@ -22,13 +22,8 @@ public class UsersDaoImpl implements UsersDao {
     public void changeRole(long id, int role) {
         Optional<Users> usersOptional = usersRepository.findById(id);
         if (usersOptional.isPresent()) {
-            Users users = new Users();
-            users.setId(id);
-            users.setName(usersOptional.get().getName());
-            users.setPassword(usersOptional.get().getPassword());
-            users.setEmail(usersOptional.get().getEmail());
+            Users users = usersOptional.get();
             users.setRole(role);
-            users.setVisitCount(usersOptional.get().getVisitCount());
             usersRepository.save(users);
         }
     }
@@ -37,13 +32,8 @@ public class UsersDaoImpl implements UsersDao {
     public void changeVisitCount(long id) {
         Optional<Users> usersOptional = usersRepository.findById(id);
         if (usersOptional.isPresent()) {
-            Users users = new Users();
-            users.setId(id);
-            users.setName(usersOptional.get().getName());
-            users.setPassword(usersOptional.get().getPassword());
-            users.setEmail(usersOptional.get().getEmail());
-            users.setRole(usersOptional.get().getRole());
-            users.setVisitCount(usersOptional.get().getVisitCount() + 1);
+            Users users = usersOptional.get();
+            users.setVisitCount(users.getVisitCount() + 1);
             usersRepository.save(users);
         }
     }
@@ -51,6 +41,16 @@ public class UsersDaoImpl implements UsersDao {
     @Override
     public Users checkUser(String name, String password) {
         return usersRepository.checkUser(name, password);
+    }
+
+    @Override
+    public long count() {
+        return usersRepository.count();
+    }
+
+    @Override
+    public boolean doesNameExist(String name) {
+        return usersRepository.findByName(name) != null;
     }
 
     @Override
@@ -65,11 +65,6 @@ public class UsersDaoImpl implements UsersDao {
     @Override
     public Users findById(long id) {
         return usersRepository.findById(id).orElse(null);
-    }
-
-    @Override
-    public boolean doesNameExist(String name) {
-        return usersRepository.findByName(name).isPresent();
     }
 
     @Override

@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Transactional
 @Repository
@@ -67,12 +66,21 @@ public class ShortenLogDaoImpl implements ShortenLogDao {
     }
 
     @Override
-    public ShortenLog findById(long id) {
-        Optional<ShortenLog> shortenLogOptional = shortenLogRepository.findById(id);
-        if (!shortenLogOptional.isPresent()) return null;
-        ShortenLog shortenLog = shortenLogOptional.get();
-        shortenLog.setShortener(reorderShortenerList(shortenerRepository.findByShortenId(shortenLog.getId())));
-        return shortenLog;
+    public void changeShortenLog(ShortenLog shortenLog) {
+        shortenLogRepository.save(shortenLog);
+    }
+
+    @Override
+    public long count() {
+        return shortenLogRepository.count();
+    }
+
+    @Override
+    public List<ShortenLog> findAll() {
+        List<ShortenLog> list = shortenLogRepository.findAll();
+        for (ShortenLog value : list)
+            value.setShortener(reorderShortenerList(shortenerRepository.findByShortenId(value.getId())));
+        return list;
     }
 
     @Override
@@ -81,5 +89,18 @@ public class ShortenLogDaoImpl implements ShortenLogDao {
         for (ShortenLog value : list)
             value.setShortener(reorderShortenerList(shortenerRepository.findByShortenId(value.getId())));
         return list;
+    }
+
+    @Override
+    public ShortenLog findByShortUrl(String shortUrl) {
+        ShortenLog shortenLog = shortenLogRepository.findByShortUrl(shortUrl);
+        if (shortenLog == null) return null;
+        shortenLog.setShortener(reorderShortenerList(shortenerRepository.findByShortenId(shortenLog.getId())));
+        return shortenLog;
+    }
+
+    @Override
+    public long visitSum() {
+        return shortenLogRepository.visitSum();
     }
 }

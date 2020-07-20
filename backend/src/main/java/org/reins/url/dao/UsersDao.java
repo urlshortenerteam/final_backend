@@ -11,11 +11,13 @@ public interface UsersDao {
 
     Users checkUser(String name, String password);
 
+    long count();
+
+    boolean doesNameExist(String name);
+
     List<Users> findAllUserStat();
 
     Users findById(long id);
-
-    boolean doesNameExist(String name);
 
     void register(String name, String password, String email);
 }

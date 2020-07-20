@@ -10,4 +10,10 @@ import java.util.List;
 public interface ShortenLogRepository extends JpaRepository<ShortenLog, Long> {
     @Query("select s from ShortenLog s where s.creatorId=:creatorId")
     List<ShortenLog> findByCreatorId(@Param("creatorId") long creatorId);
+
+    @Query("select s from ShortenLog s where s.shortUrl=:shortUrl")
+    ShortenLog findByShortUrl(@Param("shortUrl") String shortUrl);
+
+    @Query("select sum(s.visitCount) from ShortenLog s")
+    long visitSum();
 }

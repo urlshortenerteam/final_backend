@@ -16,6 +16,8 @@ public class Statistics {
     public TimeDistr[] timeDistr;
     public List<SourceDistr> sourceDistr;
     public JSONArray longUrl;
+    public String creatorName;
+    public Date createTime;
 
     public Statistics() {
         areaDistr = new ArrayList<>();

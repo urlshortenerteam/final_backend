@@ -12,17 +12,12 @@ public class ShortenerServiceImpl implements ShortenerService {
     private ShortenerDao shortenerDao;
 
     @Override
-    public void addShortener(long shortenId, String longUrl) {
-        shortenerDao.addShortener(shortenId, longUrl);
+    public void addShortener(long editorId, long shortenId, String longUrl) {
+        shortenerDao.addShortener(editorId, shortenId, longUrl);
     }
 
     @Override
     public void changeShortener(Shortener shortener) {
         shortenerDao.changeShortener(shortener);
-    }
-
-    @Override
-    public Shortener findById(String id) {
-        return shortenerDao.findById(id);
     }
 }
