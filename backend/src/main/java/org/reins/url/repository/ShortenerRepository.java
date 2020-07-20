@@ -9,9 +9,6 @@ import java.util.List;
 
 @RepositoryRestResource(collectionResourceRel = "shortener", path = "shortener")
 public interface ShortenerRepository extends MongoRepository<Shortener, String> {
-    @Query(value = "{'shorten_id':?0}")
-    List<Shortener> findByShorten_id(long shorten_id);
-
-    @Query(value = "{'short_url':?0}")
-    List<Shortener> findByShort_url(String short_url);
+    @Query(value = "{'shortenId':?0}")
+    List<Shortener> findByShortenId(long shortenId);
 }

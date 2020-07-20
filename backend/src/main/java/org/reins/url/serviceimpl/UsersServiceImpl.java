@@ -17,8 +17,8 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Override
-    public void changeVisit_count(long id) {
-        usersDao.changeVisit_count(id);
+    public void changeVisitCount(long id) {
+        usersDao.changeVisitCount(id);
     }
 
     @Override

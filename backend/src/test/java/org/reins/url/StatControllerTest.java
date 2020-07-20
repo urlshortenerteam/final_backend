@@ -9,10 +9,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.reins.url.entity.*;
-import org.reins.url.repository.Shorten_logRepository;
+import org.reins.url.repository.ShortenLogRepository;
 import org.reins.url.repository.ShortenerRepository;
 import org.reins.url.repository.UsersRepository;
-import org.reins.url.repository.Visit_logRepository;
+import org.reins.url.repository.VisitLogRepository;
 import org.reins.url.service.ShortenerService;
 import org.reins.url.service.StatService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,11 +51,11 @@ public class StatControllerTest extends ApplicationTests {
     private ShortenerService shortenerService;
 
     @MockBean
-    private Shorten_logRepository shorten_logRepository;
+    private ShortenLogRepository shorten_logRepository;
     @MockBean
     private ShortenerRepository shortenerRepository;
     @MockBean
-    private Visit_logRepository visit_logRepository;
+    private VisitLogRepository visit_logRepository;
     @MockBean
     private UsersRepository usersRepository;
 
@@ -72,32 +72,32 @@ public class StatControllerTest extends ApplicationTests {
 
     @Test
     public void getStat() throws Exception {
-        List<Shorten_log> shorten_logs = new ArrayList<>();
-        Shorten_log tmp1 = new Shorten_log();
+        List<ShortenLog> shorten_logs = new ArrayList<>();
+        ShortenLog tmp1 = new ShortenLog();
         tmp1.setId(1);
-        tmp1.setCreator_id(1);
-        tmp1.setCreate_time(new Date());
+        tmp1.setCreatorId(1);
+        tmp1.setCreateTime(new Date());
         shorten_logs.add(tmp1);
-        when(shorten_logRepository.findByCreator_id(1)).thenReturn(shorten_logs);
+        when(shorten_logRepository.findByCreatorId(1)).thenReturn(shorten_logs);
 
         List<Shortener> shorteners = new ArrayList<>();
         Shortener tmp2 = new Shortener();
         tmp2.setId("1");
         tmp2.setShort_url("000000");
-        tmp2.setShorten_id(1);
-        tmp2.setLong_url("https://www.baidu.com");
+        tmp2.setShortenId(1);
+        tmp2.setLongUrl("https://www.baidu.com");
         shorteners.add(tmp2);
-        when(shortenerRepository.findByShorten_id(1)).thenReturn(shorteners);
+        when(shortenerRepository.findByShortenId(1)).thenReturn(shorteners);
 
-        List<Visit_log> visit_logs = new ArrayList<>();
-        Visit_log tmp3 = new Visit_log();
+        List<VisitLog> visit_logs = new ArrayList<>();
+        VisitLog tmp3 = new VisitLog();
         tmp3.setId(1);
-        tmp3.setShortener_id("1");
-        tmp3.setVisit_time(new Date());
+        tmp3.setShortenerId("1");
+        tmp3.setVisitTime(new Date());
         tmp3.setIp("127.0.0.1");
         tmp3.setDevice(true);
         visit_logs.add(tmp3);
-        when(visit_logRepository.findByShortener_id("1")).thenReturn(visit_logs);
+        when(visit_logRepository.findByShortenerId("1")).thenReturn(visit_logs);
 
         String res = mockMvc.perform(get("/getStat?id=1").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).header("Authorization", "SXSTQL"))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
@@ -106,7 +106,7 @@ public class StatControllerTest extends ApplicationTests {
         assertEquals(stats.size(), 1);
         assertEquals("000000", (stats.get(0).getString("shortUrl")));
         assertEquals((stats.get(0).getLong("count")), 1);
-        List<Time_distr> time_distrs = stats.get(0).getJSONArray("time_distr").toJavaList(Time_distr.class);
+        List<TimeDistr> time_distrs = stats.get(0).getJSONArray("time_distr").toJavaList(TimeDistr.class);
         assertEquals(time_distrs.size(), 24);
         for (int i = 0; i < 24; ++i) {
             assertEquals(i, time_distrs.get(i).time);
@@ -149,26 +149,26 @@ public class StatControllerTest extends ApplicationTests {
         Shortener tmp2 = new Shortener();
         tmp2.setId("1");
         tmp2.setShort_url("000000");
-        tmp2.setShorten_id(1);
-        tmp2.setLong_url("https://www.baidu.com");
+        tmp2.setShortenId(1);
+        tmp2.setLongUrl("https://www.baidu.com");
         shorteners.add(tmp2);
         when(shortenerRepository.findByShort_url("000000")).thenReturn(shorteners);
 
-        Shorten_log tmp1 = new Shorten_log();
+        ShortenLog tmp1 = new ShortenLog();
         tmp1.setId(1);
-        tmp1.setCreator_id(1);
-        tmp1.setCreate_time(new Date());
+        tmp1.setCreatorId(1);
+        tmp1.setCreateTime(new Date());
         when(shorten_logRepository.findById((long) 1)).thenReturn(java.util.Optional.of(tmp1));
 
-        List<Visit_log> visit_logs = new ArrayList<>();
-        Visit_log tmp3 = new Visit_log();
+        List<VisitLog> visit_logs = new ArrayList<>();
+        VisitLog tmp3 = new VisitLog();
         tmp3.setId(1);
-        tmp3.setShortener_id("1");
-        tmp3.setVisit_time(new Date());
+        tmp3.setShortenerId("1");
+        tmp3.setVisitTime(new Date());
         tmp3.setIp("127.0.0.1");
         tmp3.setDevice(true);
         visit_logs.add(tmp3);
-        when(visit_logRepository.findByShortener_id("1")).thenReturn(visit_logs);
+        when(visit_logRepository.findByShortenerId("1")).thenReturn(visit_logs);
 
         String shortUrl = "000000";
 
@@ -179,7 +179,7 @@ public class StatControllerTest extends ApplicationTests {
                 .getJSONObject("data");
         assertEquals((stat.getString("shortUrl")), "000000");
         assertEquals((stat.getLong("count")), 1);
-        List<Time_distr> time_distrs = stat.getJSONArray("time_distr").toJavaList(Time_distr.class);
+        List<TimeDistr> time_distrs = stat.getJSONArray("time_distr").toJavaList(TimeDistr.class);
         assertEquals(time_distrs.size(), 24);
         for (int i = 0; i < 24; ++i) {
             assertEquals(i, time_distrs.get(i).time);
@@ -224,7 +224,7 @@ public class StatControllerTest extends ApplicationTests {
         tmp.setPassword("");
         tmp.setEmail("123@sjtu.edu.cn");
         tmp.setRole(0);
-        tmp.setVisit_count(1);
+        tmp.setVisitCount(1);
         usersList.add(tmp);
         when(usersRepository.findAllUserStat()).thenReturn(usersList);
 

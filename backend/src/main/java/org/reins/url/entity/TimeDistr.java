@@ -5,11 +5,11 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class Time_distr {
+public class TimeDistr {
     public int time;
     public long value;
 
-    public Time_distr() {
+    public TimeDistr() {
         value = 0;
         time = 0;
     }

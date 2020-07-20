@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class UrlControllerTest extends ApplicationTests {
-  private final ObjectMapper om = new ObjectMapper();
+    private final ObjectMapper om = new ObjectMapper();
 
     @Test
     public void contextLoads() {
@@ -44,15 +44,16 @@ public class UrlControllerTest extends ApplicationTests {
     private WebApplicationContext context;
 
     @MockBean
-    private Edit_logRepository edit_logRepository;
+    private EditLogRepository edit_logRepository;
     @MockBean
     private ShortenerRepository shortenerRepository;
     @MockBean
-    private Shorten_logRepository shorten_logRepository;
+    private ShortenLogRepository shorten_logRepository;
     @MockBean
     private UsersRepository usersRepository;
     @MockBean
-    private Visit_logRepository visit_logRepository;
+    private VisitLogRepository visit_logRepository;
+
     @Before
     public void setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
@@ -65,7 +66,7 @@ public class UrlControllerTest extends ApplicationTests {
     @Test
     public void generateShort() throws Exception {
         when(shortenerRepository.insert(any(Shortener.class))).thenReturn(new Shortener());
-        when(shorten_logRepository.save(any(Shorten_log.class))).thenReturn(new Shorten_log());
+        when(shorten_logRepository.save(any(ShortenLog.class))).thenReturn(new ShortenLog());
 
         List<String> longUrls = new ArrayList<>();
         longUrls.add("https://www.baidu.com/");
@@ -82,7 +83,7 @@ public class UrlControllerTest extends ApplicationTests {
     @Test
     public void generateOneShort() throws Exception {
         when(shortenerRepository.insert(any(Shortener.class))).thenReturn(new Shortener());
-        when(shorten_logRepository.save(any(Shorten_log.class))).thenReturn(new Shorten_log());
+        when(shorten_logRepository.save(any(ShortenLog.class))).thenReturn(new ShortenLog());
 
         List<String> longUrls = new ArrayList<>();
         longUrls.add("https://www.baidu.com/");
@@ -98,23 +99,23 @@ public class UrlControllerTest extends ApplicationTests {
     public void getLong() throws Exception {
         when(shortenerRepository.findByShort_url("000000")).thenReturn(new ArrayList<>());
         Shortener shortener1 = new Shortener();
-        shortener1.setShorten_id(1);
-        shortener1.setLong_url("https://www.baidu.com/");
+        shortener1.setShortenId(1);
+        shortener1.setLongUrl("https://www.baidu.com/");
         List<Shortener> longUrls = new ArrayList<>();
         longUrls.add(shortener1);
         when(shortenerRepository.findByShort_url("000001")).thenReturn(longUrls);
-        Shorten_log shorten_log = new Shorten_log();
+        ShortenLog shorten_log = new ShortenLog();
         shorten_log.setId(1);
-        shorten_log.setCreator_id(1);
+        shorten_log.setCreatorId(1);
         when(shorten_logRepository.findById((long) 1)).thenReturn(Optional.of(shorten_log));
         Shortener shortener2 = new Shortener();
-        shortener2.setLong_url("BANNED");
+        shortener2.setLongUrl("BANNED");
         List<Shortener> shortenerList = new ArrayList<>();
         shortenerList.add(shortener1);
         shortenerList.add(shortener2);
-        when(shortenerRepository.findByShorten_id(1)).thenReturn(shortenerList);
+        when(shortenerRepository.findByShortenId(1)).thenReturn(shortenerList);
         when(usersRepository.findById((long) 1)).thenReturn(Optional.of(new Users()));
-        when(visit_logRepository.save(any(Visit_log.class))).thenReturn(new Visit_log());
+        when(visit_logRepository.save(any(VisitLog.class))).thenReturn(new VisitLog());
         when(usersRepository.save(any(Users.class))).thenReturn(new Users());
 
         mockMvc.perform(get("/000000").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -135,30 +136,30 @@ public class UrlControllerTest extends ApplicationTests {
         when(usersRepository.findById((long) 3)).thenReturn(Optional.of(user1));
         when(shortenerRepository.findByShort_url("000000")).thenReturn(new ArrayList<>());
         Shortener shortener1 = new Shortener();
-        shortener1.setShorten_id(1);
+        shortener1.setShortenId(1);
         List<Shortener> shortenerList1 = new ArrayList<>();
         shortenerList1.add(shortener1);
         when(shortenerRepository.findByShort_url("000001")).thenReturn(shortenerList1);
         Shortener shortener2 = new Shortener();
-        shortener2.setShorten_id(2);
+        shortener2.setShortenId(2);
         List<Shortener> shortenerList2 = new ArrayList<>();
         shortenerList2.add(shortener2);
         when(shortenerRepository.findByShort_url("000002")).thenReturn(shortenerList2);
         Shortener shortener3 = new Shortener();
-        shortener3.setShorten_id(1);
-        shortener3.setLong_url("BANNED");
+        shortener3.setShortenId(1);
+        shortener3.setLongUrl("BANNED");
         List<Shortener> shortenerList3 = new ArrayList<>();
         shortenerList3.add(shortener1);
         shortenerList3.add(shortener3);
         when(shortenerRepository.findByShort_url("000003")).thenReturn(shortenerList3);
-        Shorten_log shorten_log = new Shorten_log();
+        ShortenLog shorten_log = new ShortenLog();
         shorten_log.setId(1);
-        shorten_log.setCreator_id(2);
+        shorten_log.setCreatorId(2);
         when(shorten_logRepository.findById((long) 1)).thenReturn(Optional.of(shorten_log));
-        when(shortenerRepository.findByShorten_id(1)).thenReturn(new ArrayList<>());
+        when(shortenerRepository.findByShortenId(1)).thenReturn(new ArrayList<>());
         when(shorten_logRepository.findById((long) 2)).thenReturn(Optional.empty());
         when(shortenerRepository.save(any(Shortener.class))).thenReturn(new Shortener());
-        when(edit_logRepository.save(any(Edit_log.class))).thenReturn(new Edit_log());
+        when(edit_logRepository.save(any(EditLog.class))).thenReturn(new EditLog());
         when(shortenerRepository.insert(any(Shortener.class))).thenReturn(new Shortener());
 
         String longUrl = "https://www.baidu.com/";

@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Source_distr {
+public class SourceDistr {
     public String source;
     public long value;
 }

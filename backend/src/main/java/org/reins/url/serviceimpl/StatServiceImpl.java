@@ -1,10 +1,10 @@
 package org.reins.url.serviceimpl;
 
 import com.alibaba.fastjson.JSONObject;
-import org.reins.url.dao.Shorten_logDao;
+import org.reins.url.dao.ShortenLogDao;
 import org.reins.url.dao.ShortenerDao;
 import org.reins.url.dao.UsersDao;
-import org.reins.url.dao.Visit_logDao;
+import org.reins.url.dao.VisitLogDao;
 import org.reins.url.entity.*;
 import org.reins.url.service.StatService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,36 +16,36 @@ import java.util.List;
 @Service
 public class StatServiceImpl implements StatService {
     @Autowired
-    private Shorten_logDao shorten_logDao;
-    @Autowired
     private ShortenerDao shortenerDao;
+    @Autowired
+    private ShortenLogDao shortenLogDao;
     @Autowired
     private UsersDao usersDao;
     @Autowired
-    private Visit_logDao visit_logDao;
+    private VisitLogDao visitLogDao;
 
     @Override
     public List<Statistics> getStat(long id) {
         List<Statistics> res = new ArrayList<>();
-        List<Shorten_log> shorten_logs = shorten_logDao.findByCreator_id(id);
-        for (Shorten_log s : shorten_logs) {
+        List<ShortenLog> shortenLogs = shortenLogDao.findByCreatorId(id);
+        for (ShortenLog s : shortenLogs) {
             Statistics statistics = new Statistics();
             if (s.getShortener().size() == 0) continue;
-            statistics.shortUrl = s.getShortener().get(0).getShort_url();
+            statistics.shortUrl = s.getShortUrl();
             for (Shortener shortener : s.getShortener()) {
-                List<Visit_log> visit_logs = visit_logDao.findByShortenerId(shortener.getId());
-                statistics.count += visit_logs.size();
+                List<VisitLog> visitLogs = visitLogDao.findByShortenerId(shortener.getId());
+                statistics.count += visitLogs.size();
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("url", shortener.getLong_url());
+                jsonObject.put("url", shortener.getLongUrl());
                 statistics.longUrl.add(jsonObject);
-                for (Visit_log v : visit_logs) {
+                for (VisitLog v : visitLogs) {
                     try {
-                        statistics.addArea_distr(v.getIp());
+                        statistics.addAreaDistr(v.getIp());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    statistics.addTime_distr(v.getVisit_time());
-                    statistics.addSource_distr(v.getIp());
+                    statistics.addTimeDistr(v.getVisitTime());
+                    statistics.addSourceDistr(v.getIp());
                 }
             }
             res.add(statistics);
@@ -54,31 +54,31 @@ public class StatServiceImpl implements StatService {
     }
 
     @Override
-    public Statistics getShortStat(String short_url) {
+    public Statistics getShortStat(String shortUrl) {
         Statistics statistics = new Statistics();
-        statistics.shortUrl = short_url;
-        List<Shortener> shorteners = shortenerDao.findByShort_url(short_url);
+        statistics.shortUrl = shortUrl;
+        List<Shortener> shorteners = shortenerDao.findByShort_url(shortUrl);
         if (shorteners.size() == 0) return statistics;
-        long shorten_id = shorteners.get(0).getShorten_id();
-        Shorten_log shorten_log = shorten_logDao.findById(shorten_id);
-        if (shorten_log == null) {
+        long shorten_id = shorteners.get(0).getShortenId();
+        ShortenLog shortenLog = shortenLogDao.findById(shorten_id);
+        if (shortenLog == null) {
             statistics.count = -1;
             return statistics;
         }
         for (Shortener shortener : shorteners) {
-            List<Visit_log> visit_logs = visit_logDao.findByShortenerId(shortener.getId());
-            statistics.count += visit_logs.size();
+            List<VisitLog> visitLogs = visitLogDao.findByShortenerId(shortener.getId());
+            statistics.count += visitLogs.size();
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("url", shortener.getLong_url());
+            jsonObject.put("url", shortener.getLongUrl());
             statistics.longUrl.add(jsonObject);
-            for (Visit_log v : visit_logs) {
+            for (VisitLog v : visitLogs) {
                 try {
-                    statistics.addArea_distr(v.getIp());
+                    statistics.addAreaDistr(v.getIp());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                statistics.addTime_distr(v.getVisit_time());
-                statistics.addSource_distr(v.getIp());
+                statistics.addTimeDistr(v.getVisitTime());
+                statistics.addSourceDistr(v.getIp());
             }
         }
         return statistics;

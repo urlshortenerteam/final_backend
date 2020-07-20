@@ -13,7 +13,7 @@ public class Users implements Serializable {
     private String password;
     private String email;
     private int role;
-    private long visit_count;
+    private long visitCount;
 
     public Users() {
     }
@@ -61,11 +61,11 @@ public class Users implements Serializable {
         this.role = role;
     }
 
-    public long getVisit_count() {
-        return visit_count;
+    public long getVisitCount() {
+        return visitCount;
     }
 
-    public void setVisit_count(long visit_count) {
-        this.visit_count = visit_count;
+    public void setVisitCount(long visitCount) {
+        this.visitCount = visitCount;
     }
 }
