@@ -10,16 +10,16 @@ import java.util.List;
 
 @Service
 public class Shorten_logServiceImpl implements Shorten_logService {
-    @Autowired
-    private Shorten_logDao shorten_logDao;
+  @Autowired
+  private Shorten_logDao shortenLogDao;
 
-    @Override
-    public void addShorten_log(long creator_id, List<String> shortUrls, List<String> longUrls) {
-        shorten_logDao.addShorten_log(creator_id, shortUrls, longUrls);
-    }
+  @Override
+  public void addShorten_log(long creatorId, List<String> shortUrls, List<String> longUrls) {
+    shortenLogDao.addShorten_log(creatorId, shortUrls, longUrls);
+  }
 
-    @Override
-    public Shorten_log findById(long id) {
-        return shorten_logDao.findById(id);
-    }
+  @Override
+  public Shorten_log findById(long id) {
+    return shortenLogDao.findById(id);
+  }
 }

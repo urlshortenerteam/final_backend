@@ -7,11 +7,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class Edit_logServiceImpl implements Edit_logService {
-    @Autowired
-    private Edit_logDao edit_logDao;
+  @Autowired
+  private Edit_logDao edit_logDao;
 
-    @Override
-    public void addEdit_log(long editor_id, String shortener_id) {
-        edit_logDao.addEdit_log(editor_id, shortener_id);
-    }
+  @Override
+  public void addEdit_log(long editor_id, String shortener_id) {
+    edit_logDao.addEdit_log(editor_id, shortener_id);
+  }
 }

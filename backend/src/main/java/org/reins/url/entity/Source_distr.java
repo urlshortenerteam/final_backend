@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Source_distr {
-    public String source;
-    public long value;
+  public String source;
+  public long value;
 }

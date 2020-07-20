@@ -7,11 +7,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class Visit_logServiceImpl implements Visit_logService {
-    @Autowired
-    private Visit_logDao visit_logDao;
+  @Autowired
+  private Visit_logDao visit_logDao;
 
-    @Override
-    public void addVisit_log(String shortener_id, String ip, Boolean device) {
-        visit_logDao.addVisit_log(shortener_id, ip, device);
-    }
+  @Override
+  public void addVisit_log(String shortener_id, String ip, Boolean device) {
+    visit_logDao.addVisit_log(shortener_id, ip, device);
+  }
 }

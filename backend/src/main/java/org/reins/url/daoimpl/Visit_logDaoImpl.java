@@ -15,21 +15,21 @@ import java.util.List;
 @Repository
 @Service
 public class Visit_logDaoImpl implements Visit_logDao {
-    @Autowired
-    private Visit_logRepository visit_logRepository;
+  @Autowired
+  private Visit_logRepository visit_logRepository;
 
-    @Override
-    public void addVisit_log(String shortener_id, String ip, Boolean device) {
-        Visit_log visit_log = new Visit_log();
-        visit_log.setShortener_id(shortener_id);
-        visit_log.setVisit_time(new Date());
-        visit_log.setIp(ip);
-        visit_log.setDevice(device);
-        visit_logRepository.save(visit_log);
-    }
+  @Override
+  public void addVisit_log(String shortener_id, String ip, Boolean device) {
+    Visit_log visit_log = new Visit_log();
+    visit_log.setShortener_id(shortener_id);
+    visit_log.setVisit_time(new Date());
+    visit_log.setIp(ip);
+    visit_log.setDevice(device);
+    visit_logRepository.save(visit_log);
+  }
 
-    @Override
-    public List<Visit_log> findByShortenerId(String shortener_id) {
-        return visit_logRepository.findByShortener_id(shortener_id);
-    }
+  @Override
+  public List<Visit_log> findByShortenerId(String shortener_id) {
+    return visit_logRepository.findByShortener_id(shortener_id);
+  }
 }

@@ -8,6 +8,8 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface Shorten_logRepository extends JpaRepository<Shorten_log, Long> {
-    @Query("select s from Shorten_log s where s.creator_id=:creator_id")
-    List<Shorten_log> findByCreator_id(@Param("creator_id") long creator_id);
+  @Query("select s from Shorten_log s where s.creator_id=:creator_id")
+  List<Shorten_log> findByCreator_id(@Param("creator_id") long creator_id);
+
+  long visitSum();
 }
