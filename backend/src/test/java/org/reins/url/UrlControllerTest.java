@@ -32,6 +32,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class UrlControllerTest extends ApplicationTests {
+  private final ObjectMapper om = new ObjectMapper();
+
     @Test
     public void contextLoads() {
     }
@@ -51,9 +53,6 @@ public class UrlControllerTest extends ApplicationTests {
     private UsersRepository usersRepository;
     @MockBean
     private Visit_logRepository visit_logRepository;
-
-    private final ObjectMapper om = new ObjectMapper();
-
     @Before
     public void setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
@@ -122,7 +121,7 @@ public class UrlControllerTest extends ApplicationTests {
                 .andExpect(status().isOk()).andReturn();
 
         mockMvc.perform(get("/000001").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isMovedTemporarily()).andReturn();
+                .andExpect(status().isFound()).andReturn();
     }
 
     @Test
