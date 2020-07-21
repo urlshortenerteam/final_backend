@@ -7,5 +7,7 @@ import java.util.List;
 public interface ShortenLogService {
   void addShortenLog(long creatorId, List<String> shortUrls, List<String> longUrls);
 
-  ShortenLog findById(long id);
+  void changeShortenLog(ShortenLog shortenLog);
+
+  ShortenLog findByShortUrl(String shortUrl);
 }

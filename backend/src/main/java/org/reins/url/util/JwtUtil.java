@@ -13,7 +13,6 @@ import javax.crypto.spec.SecretKeySpec;
 import java.util.Date;
 
 /*借鉴https://blog.csdn.net/AdminGuan/article/details/100147488#JWT%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F*/
-@SuppressWarnings("ALL")
 @Component
 public class JwtUtil {
 
@@ -34,18 +33,18 @@ public class JwtUtil {
   }
 
   // 生成签名
-  public static String sign(long id, String username, int role) {
+  public static String sign(long id, String username, int type) {
     System.out.println("生成签名方法开始执行！");
     try {
       // 设置过期时间,单位毫秒
       Date expTime = new Date(System.currentTimeMillis() + EXPIRE_TIME);
       // 私钥和加密算法
-//            Algorithm algorithm = Algorithm.HMAC256(password); //使用用户输入的密码
+      // Algorithm algorithm = Algorithm.HMAC256(password); //使用用户输入的密码
       Algorithm algorithm = Algorithm.HMAC256(TOKEN_SECRET);
       // 设置头部信息,也可以不用设置头部信息jwt会自动生成
-//			Map<String, Object> header = new HashMap<String, Object>();
-//			header.put("typ", "JWT");
-//			header.put("alg", "HS256");
+      //Map<String, Object> header = new HashMap<String, Object>();
+      //header.put("typ", "JWT");
+      //header.put("alg", "HS256");
       // 或
       // header.put("Type", "JWT");
       //	header.put("alg", "HS256");
@@ -54,10 +53,10 @@ public class JwtUtil {
       // 返回token字符串
       System.out.println("生成签名方法结束执行！");
       return JWT.create() // 表示new一个Jwt，设置jwt的body
-//					.withHeader(header) // 设置头部信息
+              // .withHeader(header) // 设置头部信息
               .withClaim("id", id) // 数据库中用户的id
               .withClaim("username", username) // 前端输入的用户名
-              .withClaim("role", role) //用户的等级
+              .withClaim("role", type)
               .withIssuedAt(issuedAt) // jwt的签发时间
               .withExpiresAt(expTime) // jwt过期时间
               .sign(algorithm);
@@ -71,9 +70,9 @@ public class JwtUtil {
   public static boolean verify(String token) {
     System.out.println("进入检验token是否正确方法！");
     try {
-//          Algorithm algorithm = Algorithm.HMAC256(password); //使用用户输入的密码
+      //Algorithm algorithm = Algorithm.HMAC256(password); //使用用户输入的密码
       Algorithm algorithm = Algorithm.HMAC256(TOKEN_SECRET);
-//          JWTVerifier verifier = JWT.require(algorithm).withClaim("id", id).build();
+      //JWTVerifier verifier = JWT.require(algorithm).withClaim("id", id).build();
       JWTVerifier verifier = JWT.require(algorithm).build();
       verifier.verify(token);
       System.out.println("token正确！");

@@ -14,6 +14,8 @@ import java.util.Map;
 public class UsersController {
   @Autowired
   private UsersService usersService;
+  @Autowired
+  private JwtUtil jwtUtil;
 
   /**
    * handle the request "/register" and return the result of registration.
@@ -21,14 +23,14 @@ public class UsersController {
    *
    * @param params a map that contains the name, password and email
    *               {
-   *                  name:String,
-   *                  password:String,
-   *                  email:String
-   *              }
+   *               name:String,
+   *               password:String,
+   *               email:String
+   *               }
    * @return {data:{
-   *            success:Boolean
-   *          }
-   *        }
+   * success:Boolean
+   * }
+   * }
    */
   @CrossOrigin
   @RequestMapping("/register")
@@ -47,15 +49,14 @@ public class UsersController {
    * handle the request "/loginReq" ,check the user's information and return the result of login.
    * If login is successful, it will sign a JWT which works for ten minutes and send it to the user.
    *
-   *
    * @param params a map that contains the name and password {name:USERNAMEEXAMPLE,password:PASSWORDEXAMPLE}
    * @return {data:{
-   *            loginStatus:Boolean,
-   *            type:Integer,
-   *            id:Long,
-   *            token:String
-   *           }
-   *        }
+   * loginStatus:Boolean,
+   * type:Integer,
+   * id:Long,
+   * token:String
+   * }
+   * }
    */
   @CrossOrigin
   @RequestMapping("/loginReq")
@@ -97,19 +98,19 @@ public class UsersController {
    * It can only be requested by administrators.
    * It can ban or unban a user who is not an administrator
    *
-   * @param jwt the jwt in requestHeader used for checking the user's type
-   * @param id the id of the user who calls the request
+   * @param jwt    the jwt in requestHeader used for checking the user's type
+   * @param id     the id of the user who calls the request
    * @param ban_id the id of the user who should be banned or unbanned
-   * @param ban wether the user should be banned or unbanned
+   * @param ban    wether the user should be banned or unbanned
    * @return {data:{
-   *            status:Boolean
-   *           }
-   *        }
+   * status:Boolean
+   * }
+   * }
    * @throws Exception when the string jwt can't be parsed as a JWT
    */
   @CrossOrigin
   @RequestMapping("/banUser")
-  public JSONObject banUser(@RequestHeader("Authorization") String jwt,@RequestParam("id") long id, @RequestParam("ban_id") long ban_id, @RequestParam("ban") boolean ban) throws Exception {
+  public JSONObject banUser(@RequestHeader("Authorization") String jwt, @RequestParam("id") long id, @RequestParam("ban_id") long ban_id, @RequestParam("ban") boolean ban) throws Exception {
     if (!jwt.equals("SXSTQL")) {
       Claims c = JwtUtil.parseJWT(jwt);
       if ((int) c.get("role") != 0) {

@@ -2,7 +2,6 @@ package org.reins.url.serviceimpl;
 
 import com.alibaba.fastjson.JSONObject;
 import org.reins.url.dao.ShortenLogDao;
-import org.reins.url.dao.ShortenerDao;
 import org.reins.url.dao.UsersDao;
 import org.reins.url.dao.VisitLogDao;
 import org.reins.url.entity.*;
@@ -12,12 +11,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class StatServiceImpl implements StatService {
-  @Autowired
-  private ShortenerDao shortenerDao;
   @Autowired
   private ShortenLogDao shortenLogDao;
   @Autowired
@@ -58,12 +54,13 @@ public class StatServiceImpl implements StatService {
   public Statistics getShortStat(String shortUrl) {
     Statistics statistics = new Statistics();
     statistics.shortUrl = shortUrl;
-    Optional<ShortenLog> shortenLog = shortenLogDao.findByShortUrl(shortUrl);
-    if (!shortenLog.isPresent()) {
+    ShortenLog shortenLog = shortenLogDao.findByShortUrl(shortUrl);
+    if (shortenLog == null) {
       statistics.count = -1;
       return statistics;
     }
-    List<Shortener> shorteners = shortenerDao.findByShortenId(shortenLog.get().getId());
+    statistics.count=shortenLog.getVisitCount();
+    List<Shortener> shorteners = shortenLog.getShortener();
     for (Shortener shortener : shorteners) {
       List<VisitLog> visitLogs = visitLogDao.findByShortenerId(shortener.getId());
       JSONObject jsonObject = new JSONObject();
@@ -93,7 +90,6 @@ public class StatServiceImpl implements StatService {
     List<ShortenLog> shortenLogs = shortenLogDao.findAll();
     for (ShortenLog s : shortenLogs) {
       Statistics statistics = new Statistics();
-
       statistics.shortUrl = s.getShortUrl();
       statistics.creatorName = usersDao.findById(s.getCreatorId()).getName();
       statistics.createTime = s.getCreateTime();

@@ -21,6 +21,7 @@ create table shortenLog
 	createTime datetime not null,
 	visitCount bigint not null,
 	primary key (id),
+	unique key (shortUrl),
 	foreign key (creatorId) references users(id) on delete cascade
 );
 create table visitLog

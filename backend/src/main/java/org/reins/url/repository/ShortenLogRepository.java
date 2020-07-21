@@ -6,14 +6,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ShortenLogRepository extends JpaRepository<ShortenLog, Long> {
   @Query("select s from ShortenLog s where s.creatorId=:creatorId")
   List<ShortenLog> findByCreatorId(@Param("creatorId") long creatorId);
 
   @Query("select s from ShortenLog s where s.shortUrl=:shortUrl")
-  Optional<ShortenLog> findByShortUrl(@Param("shortUrl") String shortUrl);
+  ShortenLog findByShortUrl(@Param("shortUrl") String shortUrl);
 
   @Query("select sum(s.visitCount) from ShortenLog s")
   long visitSum();

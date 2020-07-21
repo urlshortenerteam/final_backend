@@ -2,10 +2,7 @@ package org.reins.url.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import io.jsonwebtoken.Claims;
-import org.reins.url.service.ShortenLogService;
-import org.reins.url.service.ShortenerService;
 import org.reins.url.service.StatService;
-import org.reins.url.service.VisitLogService;
 import org.reins.url.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -13,13 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class StatController {
   @Autowired
-  private ShortenLogService shorten_logService;
-  @Autowired
-  private ShortenerService shortenerService;
-  @Autowired
   private StatService statService;
-  @Autowired
-  private VisitLogService visit_logService;
 
   /**
    * handle the request "/getStat" and return the statistics of the user's Urls.
@@ -77,16 +68,16 @@ public class StatController {
    *
    * @param jwt the jwt in requestHeader used for checking the user's type
    * @return {data:[
-   *         {
-   *             id:Long,
-   *             name:String,
-   *             role:Integer,
-   *             visit_count:Long,
-   *         },
-   *         {……},
-   *         ……
-   *         ]
-   *      }
+   * {
+   * id:Long,
+   * name:String,
+   * role:Integer,
+   * visit_count:Long,
+   * },
+   * {……},
+   * ……
+   * ]
+   * }
    * @throws Exception when the string jwt can't be parsed as a JWT
    */
   @CrossOrigin
@@ -114,17 +105,17 @@ public class StatController {
    *
    * @param jwt the jwt in requestHeader used for checking the user's type
    * @return {data:[
-   *         {
-   *             shortUrl:String,
-   *             longUrl:JSONArray
-   *             count:Integer,
-   *             creatorName:String,
-   *             createTime:String
-   *             },
-   *             {……},
-   *             ……
-   *          ]
-   *        }
+   * {
+   * shortUrl:String,
+   * longUrl:JSONArray
+   * count:Integer,
+   * creatorName:String,
+   * createTime:String
+   * },
+   * {……},
+   * ……
+   * ]
+   * }
    * @throws Exception when the string jwt can't be parsed as a JWT
    */
   @CrossOrigin
@@ -151,12 +142,12 @@ public class StatController {
    *
    * @param jwt the jwt in requestHeader used for checking the user's type
    * @return {data:{
-   *             userCount:Integer,
-   *             shortUrlCount:Integer,
-   *             visitCountTotal:Integer,
-   *             shortUrl:String,
-   *         }
-   *        }
+   * userCount:Integer,
+   * shortUrlCount:Integer,
+   * visitCountTotal:Integer,
+   * shortUrl:String,
+   * }
+   * }
    * @throws Exception when the string jwt can't be parsed as a JWT
    */
   @CrossOrigin
