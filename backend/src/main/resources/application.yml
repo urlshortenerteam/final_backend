@@ -1,3 +1,7 @@
+jasypt:
+  encryptor:
+    password: ${JASYPT_ENCRYPTOR_PASSWORD:}
+    algorithm: PBEWithMD5AndDES
 spring:
   profiles:
     active: dev
@@ -11,12 +15,15 @@ spring:
     show-sql: true
     open-in-view: false
   datasource:
+    url: ENC(grMCWwygMDkOd+TdWje1yasCGpnL/JAKA5z6DNllIeRt/Yr3G5LFPlcztotvLWKe+ogRiCvrjGjJ/y8FwFuhHfPpaTZuxBkIJRgmQOZaqLK+HAWyibUZ9RNp8a6xCao5LDmK/VFWCY6rAme0f+K55I3Nkh1J7IgiYd4cENiE+r+ejehGjqwyDs2UeOp/NpGJUUQ7B74dehI=)
+    username: ENC(MLP/TP22ctJOa5wmYmXu/Q==)
+    password: ENC(9B5FdPpKGp9rUrdEQVZF1SPc34zblIaO)
 #    url: jdbc:mysql://reevoo-test-beta.crvfzsr4389e.us-east-1.rds.amazonaws.com:3306/test?useUnicode=true&characterEncoding=UTF-8&serverTimezone=CST
 #    username: admin
 #    password: reevoo2020
-    url: jdbc:mysql://127.0.0.1:3306/url?useUnicode=true&characterEncoding=UTF-8&serverTimezone=CST
-    username: root
-    password: root
+#    url: jdbc:mysql://127.0.0.1:3306/url?useUnicode=true&characterEncoding=UTF-8&serverTimezone=CST
+#    username: root
+#    password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
   data:
     mongodb:

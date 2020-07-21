@@ -20,10 +20,10 @@ jobs:
           MYSQL_DATABASE: url
         ports:
           - 3306
-        options: >- 
-          --health-cmd "mysqladmin ping" 
-          --health-interval 10s 
-          --health-timeout 5s 
+        options: >-
+          --health-cmd "mysqladmin ping"
+          --health-interval 10s
+          --health-timeout 5s
           --health-retries 3
     strategy:
       matrix:
@@ -46,8 +46,12 @@ jobs:
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
     - name: Run the Maven verify phase
+      env:
+        JASYPT_ENCRYPTOR_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
       run: mvn -B verify --file backend/pom.xml
     - name: Build with Maven
+      env:
+        JASYPT_ENCRYPTOR_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
       run: mvn -B package --file backend/pom.xml
     - name: Run java checkstyle
       uses: nikitasavinov/checkstyle-action@0.3.0

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.jasypt.encryption.StringEncryptor;
 import org.junit.Before;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.Test;
@@ -365,11 +366,29 @@ public class StatControllerTest extends ApplicationTests {
 
     }
 
+    @Autowired
+    StringEncryptor encryptor;
+    @Test
+    public void getEncryptor() {
+        //对敏感信息进行加密
+        String url = encryptor.encrypt("jdbc:mysql://reevoo-test-beta.crvfzsr4389e.us-east-1.rds.amazonaws.com:3306/test?useUnicode=true&characterEncoding=UTF-8&serverTimezone=CST");
+        String name = encryptor.encrypt("admin");
+        String password = encryptor.encrypt("reevoo2020");
+        System.out.println(url);
+        System.out.println(name);
+        System.out.println(password);
+    }
+
     @Test
     public void getNumberCount() throws Exception {
         when(usersRepository.count()).thenReturn((long) 1551);
         when(shortenLogRepository.count()).thenReturn((long) 2333);
         when(shortenLogRepository.visitSum()).thenReturn((long) 31415926);
+
+        ShortenLog shortenLog=new ShortenLog();
+        shortenLog.setShortUrl("SXSTQL");
+//        when(shortenLogRepository.findTopByVisitCount()).thenReturn(shortenLog);
+
         String res = mockMvc.perform(get("/getNumberCount").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         JSONObject stats = om.readValue(res, new TypeReference<JSONObject>() {
@@ -377,5 +396,6 @@ public class StatControllerTest extends ApplicationTests {
         assertEquals(stats.getLong("userCount"), 1551);
         assertEquals(stats.getLong("shortUrlCount"), 2333);
         assertEquals(stats.getLong("visitCountTotal"), 31415926);
+//        assertEquals(stats.getString("shortUrl"), "SXSTQL");
     }
 }
