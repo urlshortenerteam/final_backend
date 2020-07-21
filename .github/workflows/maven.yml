@@ -47,11 +47,11 @@ jobs:
         restore-keys: ${{ runner.os }}-m2
     - name: Run the Maven verify phase
       env:
-        super_secret: ${{ secrets.DATABASE_PASSWORD }}
+        JASYPT_ENCRYPTOR_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
       run: mvn -B verify --file backend/pom.xml
     - name: Build with Maven
       env:
-        super_secret: ${{ secrets.DATABASE_PASSWORD }}
+        JASYPT_ENCRYPTOR_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
       run: mvn -B package --file backend/pom.xml
     - name: Run java checkstyle
       uses: nikitasavinov/checkstyle-action@0.3.0
