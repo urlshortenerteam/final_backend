@@ -13,8 +13,6 @@ import org.reins.url.repository.ShortenLogRepository;
 import org.reins.url.repository.ShortenerRepository;
 import org.reins.url.repository.UsersRepository;
 import org.reins.url.repository.VisitLogRepository;
-import org.reins.url.service.ShortenerService;
-import org.reins.url.service.StatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -27,6 +25,7 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -44,11 +43,6 @@ public class StatControllerTest extends ApplicationTests {
 
     @Autowired
     private WebApplicationContext context;
-
-    @Autowired
-    private ShortenerService shortenerService;
-    @Autowired
-    private StatService statService;
 
     @MockBean
     private ShortenerRepository shortenerRepository;
@@ -86,7 +80,7 @@ public class StatControllerTest extends ApplicationTests {
         Shortener tmp2 = new Shortener();
         tmp2.setId("1");
         tmp2.setShortenId(1);
-        tmp2.setLongUrl("https://www.baidu.com");
+        tmp2.setLongUrl("https://www.baidu.com/");
         shorteners.add(tmp2);
         when(shortenerRepository.findByShortenId(1)).thenReturn(shorteners);
 
@@ -107,17 +101,17 @@ public class StatControllerTest extends ApplicationTests {
         assertEquals(stats.size(), 1);
         assertEquals("000000", (stats.get(0).getString("shortUrl")));
         assertEquals((stats.get(0).getLong("count")), 1);
-        List<TimeDistr> time_distrs = stats.get(0).getJSONArray("time_distr").toJavaList(TimeDistr.class);
-        assertEquals(time_distrs.size(), 24);
+        List<TimeDistr> timeDistrs = stats.get(0).getJSONArray("timeDistr").toJavaList(TimeDistr.class);
+        assertEquals(timeDistrs.size(), 24);
         for (int i = 0; i < 24; ++i) {
-            assertEquals(i, time_distrs.get(i).time);
-            assertTrue(time_distrs.get(i).value >= 0 && time_distrs.get(i).value <= 1);
+            assertEquals(i, timeDistrs.get(i).time);
+            assertTrue(timeDistrs.get(i).value >= 0 && timeDistrs.get(i).value <= 1);
         }
         JSONArray longUrl = stats.get(0).getJSONArray("longUrl");
         int size = longUrl.size();
         assertEquals(size, 1);
         String l = longUrl.getJSONObject(0).getString("url");
-        assertEquals("https://www.baidu.com", l);
+        assertEquals("https://www.baidu.com/", l);
 
 
 //        String res = mockMvc.perform(get("/getStat?id=1").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -127,11 +121,11 @@ public class StatControllerTest extends ApplicationTests {
 //        for (JSONObject jsonObject : stats) {
 //            assertTrue((jsonObject.getString("shortUrl")).matches("[A-Za-z0-9]{6}"));
 //            assertTrue((jsonObject.getLong("count")) >= 0);
-//            List<Time_distr> time_distrs = jsonObject.getJSONArray("time_distr").toJavaList(Time_distr.class);
-//            assertEquals(time_distrs.size(), 24);
+//            List<Time_distr> timeDistrs = jsonObject.getJSONArray("timeDistr").toJavaList(Time_distr.class);
+//            assertEquals(timeDistrs.size(), 24);
 //            for (int i = 0; i < 24; ++i) {
-//                assertEquals(i, time_distrs.get(i).time);
-//                assertTrue(time_distrs.get(i).value >= 0);
+//                assertEquals(i, timeDistrs.get(i).time);
+//                assertTrue(timeDistrs.get(i).value >= 0);
 //            }
 //            JSONArray longUrl = jsonObject.getJSONArray("longUrl");
 //            int size = longUrl.size();
@@ -149,7 +143,7 @@ public class StatControllerTest extends ApplicationTests {
         Shortener tmp2 = new Shortener();
         tmp2.setId("1");
         tmp2.setShortenId(1);
-        tmp2.setLongUrl("https://www.baidu.com");
+        tmp2.setLongUrl("https://www.baidu.com/");
         shorteners.add(tmp2);
         when(shortenerRepository.findByShortenId(1)).thenReturn(shorteners);
 
@@ -180,26 +174,27 @@ public class StatControllerTest extends ApplicationTests {
                 .getJSONObject("data");
         assertEquals((stat.getString("shortUrl")), "000000");
         assertEquals((stat.getLong("count")), 1);
-        List<TimeDistr> time_distrs = stat.getJSONArray("time_distr").toJavaList(TimeDistr.class);
-        assertEquals(time_distrs.size(), 24);
+        List<TimeDistr> timeDistrs = stat.getJSONArray("timeDistr").toJavaList(TimeDistr.class);
+        assertEquals(timeDistrs.size(), 24);
         for (int i = 0; i < 24; ++i) {
-            assertEquals(i, time_distrs.get(i).time);
-            assertTrue(time_distrs.get(i).value >= 0);
+            assertEquals(i, timeDistrs.get(i).time);
+            assertTrue(timeDistrs.get(i).value >= 0);
         }
         JSONArray longurl = stat.getJSONArray("longUrl");
         int size = longurl.size();
         assertEquals(size, 1);
         String l = longurl.getJSONObject(0).getString("url");
-        assertEquals(l, "https://www.baidu.com");
+        assertEquals(l, "https://www.baidu.com/");
 
 
-        when(shortenLogRepository.findByShortUrl("000000")).thenReturn(null);
+        when(shortenLogRepository.findByShortUrl("000001")).thenReturn(null);
 
-        String res2 = mockMvc.perform(get("/getShortStat?id=1&short=" + shortUrl).contentType(MediaType.APPLICATION_JSON_VALUE).header("Authorization", "SXSTQL"))
+        String res2 = mockMvc.perform(get("/getShortStat?id=1&short=000001").contentType(MediaType.APPLICATION_JSON_VALUE).header("Authorization", "SXSTQL"))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         JSONObject stat2 = om.readValue(res2, new TypeReference<JSONObject>() {
         })
                 .getJSONObject("data");
+        assertEquals((stat2.getLong("count")), -1);
 
 
 //        String shortUrl = "B7VAfa";
@@ -211,11 +206,11 @@ public class StatControllerTest extends ApplicationTests {
 //                .getJSONObject("data");
 //        assertTrue((stat.getString("shortUrl")).matches("[A-Za-z0-9]{6}"));
 //        assertTrue((stat.getLong("count")) >= 0);
-//        List<Time_distr> time_distrs = stat.getJSONArray("time_distr").toJavaList(Time_distr.class);
-//        assertEquals(time_distrs.size(), 24);
+//        List<Time_distr> timeDistrs = stat.getJSONArray("time_distr").toJavaList(Time_distr.class);
+//        assertEquals(timeDistrs.size(), 24);
 //        for (int i = 0; i < 24; ++i) {
-//            assertEquals(i, time_distrs.get(i).time);
-//            assertTrue(time_distrs.get(i).value >= 0);
+//            assertEquals(i, timeDistrs.get(i).time);
+//            assertTrue(timeDistrs.get(i).value >= 0);
 //        }
 //        JSONArray longurl = stat.getJSONArray("longUrl");
 //        int size = longurl.size();
@@ -248,7 +243,7 @@ public class StatControllerTest extends ApplicationTests {
         assertEquals("", users.get(0).getString("password"));
         assertEquals("123@sjtu.edu.cn", users.get(0).getString("email"));
         assertEquals(users.get(0).getInteger("role"), 0);
-        assertEquals(users.get(0).getLong("visit_count"), 1);
+        assertEquals(users.get(0).getLong("visitCount"), 1);
         assertEquals(users.get(0).getLong("id"), 1);
 
 //        String res = mockMvc.perform(get("/getUserStat").contentType(MediaType.APPLICATION_JSON_VALUE).header("Authorization", "SXSTQL"))
@@ -267,6 +262,49 @@ public class StatControllerTest extends ApplicationTests {
     }
 
     @Test
+    public void getReal() throws Exception {
+        VisitLog visitLog = new VisitLog();
+        visitLog.setShortenerId("000000000000000000000000");
+        List<VisitLog> visitLogList = new ArrayList<>();
+        for (int i = 0; i < 6; i++) visitLogList.add(visitLog);
+        when(visitLogRepository.findAllOrderByVisitTime()).thenReturn(visitLogList);
+        Shortener shortener = new Shortener();
+        shortener.setShortenId(1);
+        shortener.setLongUrl("https://www.baidu.com/");
+        when(shortenerRepository.findById("000000000000000000000000")).thenReturn(Optional.of(shortener));
+        ShortenLog shortenLog = new ShortenLog();
+        shortenLog.setCreatorId(1);
+        when(shortenLogRepository.findById((long) 1)).thenReturn(Optional.of(shortenLog));
+
+        String res = mockMvc.perform(get("/getReal?id=1").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+        JSONArray logs = om.readValue(res, new TypeReference<JSONObject>() {
+        }).getJSONObject("data").getJSONArray("logs");
+        assertEquals(5, logs.size());
+    }
+
+    @Test
+    public void getTopTen() throws Exception {
+        ShortenLog shortenLog = new ShortenLog();
+        shortenLog.setId(1);
+        shortenLog.setShortUrl("000000");
+        List<ShortenLog> shortenLogList = new ArrayList<>();
+        for (int i = 0; i < 11; i++) shortenLogList.add(shortenLog);
+        when(shortenLogRepository.findAllOrderByVisitCount()).thenReturn(shortenLogList);
+        Shortener shortener = new Shortener();
+        shortener.setLongUrl("https://www.baidu.com/");
+        List<Shortener> shortenerList = new ArrayList<>();
+        shortenerList.add(shortener);
+        when(shortenerRepository.findByShortenId(1)).thenReturn(shortenerList);
+
+        String res = mockMvc.perform(get("/getTopTen").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+        JSONArray data = om.readValue(res, new TypeReference<JSONObject>() {
+        }).getJSONArray("data");
+        assertEquals(10, data.size());
+    }
+
+    @Test
     public void getAllUrls() throws Exception {
         List<ShortenLog> shorten_logs = new ArrayList<>();
         ShortenLog tmp1 = new ShortenLog();
@@ -282,7 +320,7 @@ public class StatControllerTest extends ApplicationTests {
         Shortener tmp2 = new Shortener();
         tmp2.setId("1");
         tmp2.setShortenId(1);
-        tmp2.setLongUrl("https://www.baidu.com");
+        tmp2.setLongUrl("https://www.baidu.com/");
         shorteners.add(tmp2);
         when(shortenerRepository.findByShortenId(1)).thenReturn(shorteners);
 
@@ -313,17 +351,17 @@ public class StatControllerTest extends ApplicationTests {
         assertEquals("000000", (stats.get(0).getString("shortUrl")));
         assertEquals(stats.get(0).getLong("count"), 1);
         assertEquals(stats.get(0).getString("creatorName"), "SXS");
-        List<TimeDistr> time_distrs = stats.get(0).getJSONArray("time_distr").toJavaList(TimeDistr.class);
-        assertEquals(time_distrs.size(), 24);
+        List<TimeDistr> timeDistrs = stats.get(0).getJSONArray("timeDistr").toJavaList(TimeDistr.class);
+        assertEquals(timeDistrs.size(), 24);
         for (int i = 0; i < 24; ++i) {
-            assertEquals(i, time_distrs.get(i).time);
-            assertTrue(time_distrs.get(i).value >= 0 && time_distrs.get(i).value <= 1);
+            assertEquals(i, timeDistrs.get(i).time);
+            assertTrue(timeDistrs.get(i).value >= 0 && timeDistrs.get(i).value <= 1);
         }
         JSONArray longurl = stats.get(0).getJSONArray("longUrl");
         int size = longurl.size();
         assertEquals(size, 1);
         String l = longurl.getJSONObject(0).getString("url");
-        assertEquals("https://www.baidu.com", l);
+        assertEquals("https://www.baidu.com/", l);
 
     }
 
@@ -332,13 +370,12 @@ public class StatControllerTest extends ApplicationTests {
         when(usersRepository.count()).thenReturn((long) 1551);
         when(shortenLogRepository.count()).thenReturn((long) 2333);
         when(shortenLogRepository.visitSum()).thenReturn((long) 31415926);
-        String res = mockMvc.perform(get("/getAllUrls").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE))
+        String res = mockMvc.perform(get("/getNumberCount").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         JSONObject stats = om.readValue(res, new TypeReference<JSONObject>() {
         }).getJSONObject("data");
         assertEquals(stats.getLong("userCount"), 1551);
         assertEquals(stats.getLong("shortUrlCount"), 2333);
         assertEquals(stats.getLong("visitCountTotal"), 31415926);
-
     }
 }

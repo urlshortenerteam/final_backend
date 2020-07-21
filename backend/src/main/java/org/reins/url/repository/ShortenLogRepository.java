@@ -8,6 +8,9 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface ShortenLogRepository extends JpaRepository<ShortenLog, Long> {
+    @Query("select s from ShortenLog s order by s.visitCount desc")
+    List<ShortenLog> findAllOrderByVisitCount();
+
     @Query("select s from ShortenLog s where s.creatorId=:creatorId")
     List<ShortenLog> findByCreatorId(@Param("creatorId") long creatorId);
 

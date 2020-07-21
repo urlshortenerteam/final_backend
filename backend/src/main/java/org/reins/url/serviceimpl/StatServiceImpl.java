@@ -59,6 +59,7 @@ public class StatServiceImpl implements StatService {
             statistics.count = -1;
             return statistics;
         }
+        statistics.count = shortenLog.getVisitCount();
         List<Shortener> shorteners = shortenLog.getShortener();
         for (Shortener shortener : shorteners) {
             List<VisitLog> visitLogs = visitLogDao.findByShortenerId(shortener.getId());

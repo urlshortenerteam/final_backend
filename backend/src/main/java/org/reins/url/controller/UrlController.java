@@ -52,6 +52,17 @@ public class UrlController {
         return res.get((int) (Math.random() * 4));
     }
 
+    /**
+     * handle the request "/getShort" and generate short urls.
+     *
+     * @param id       the id in requestParam used for checking the user's id
+     * @param longUrls the long urls that needs to be generated to short urls
+     * @return {data:[
+     * "000000",
+     * ...
+     * ]
+     * }
+     */
     @CrossOrigin
     @RequestMapping("/getShort")
     public JSONObject generateShort(@RequestParam("id") long id, @RequestBody List<String> longUrls) {
@@ -63,6 +74,15 @@ public class UrlController {
         return res;
     }
 
+    /**
+     * handle the request "/getOneShort" and generate one short url.
+     *
+     * @param id       the id in requestParam used for checking the user's id
+     * @param longUrls the long urls that needs to be generated to the short url
+     * @return {data:
+     * shortUrl
+     * }
+     */
     @CrossOrigin
     @RequestMapping("/getOneShort")
     public JSONObject generateOneShort(@RequestParam("id") long id, @RequestBody List<String> longUrls) {
@@ -76,6 +96,9 @@ public class UrlController {
         return res;
     }
 
+    /**
+     * handle the request "/{[A-Za-z0-9]{6}}" and redirect to the long url.
+     */
     @CrossOrigin
     @RequestMapping("/{[A-Za-z0-9]{6}}")
     public void getLong(HttpServletRequest req, HttpServletResponse resp) {
@@ -98,6 +121,17 @@ public class UrlController {
         }
     }
 
+    /**
+     * handle the request "/editUrl" and edit the information of Urls.
+     *
+     * @param id       the id in requestParam used for checking the user's id
+     * @param shortUrl the short url used to find the shorten log
+     * @param longUrl  the long url that needs to be edited
+     * @return {data:{
+     * status:Boolean
+     * }
+     * }
+     */
     @CrossOrigin
     @RequestMapping("/editUrl")
     public JSONObject editUrl(@Param("id") long id, @Param("shortUrl") String shortUrl, @RequestBody String longUrl) {

@@ -6,4 +6,6 @@ public interface ShortenerService {
     void addShortener(long editorId, long shortenId, String longUrl);
 
     void changeShortener(Shortener shortener);
+
+    Shortener findById(String id);
 }

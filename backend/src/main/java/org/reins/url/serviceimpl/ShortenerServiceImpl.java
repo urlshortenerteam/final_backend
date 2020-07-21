@@ -20,4 +20,9 @@ public class ShortenerServiceImpl implements ShortenerService {
     public void changeShortener(Shortener shortener) {
         shortenerDao.changeShortener(shortener);
     }
+
+    @Override
+    public Shortener findById(String id) {
+        return shortenerDao.findById(id);
+    }
 }

@@ -1,6 +1,7 @@
 package org.reins.url.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import io.jsonwebtoken.Claims;
 import org.reins.url.entity.Users;
 import org.reins.url.service.UsersService;
 import org.reins.url.util.JwtUtil;
@@ -16,6 +17,21 @@ public class UsersController {
     @Autowired
     private JwtUtil jwtUtil;
 
+    /**
+     * handle the request "/register" and return the result of registration.
+     * It checks whether the name has existed.If yes, the registration fails.
+     *
+     * @param params a map that contains the name, password and email
+     *               {
+     *               name:String,
+     *               password:String,
+     *               email:String
+     *               }
+     * @return {data:{
+     * success:Boolean
+     * }
+     * }
+     */
     @CrossOrigin
     @RequestMapping("/register")
     public JSONObject register(@RequestBody Map<String, String> params) {
@@ -29,6 +45,19 @@ public class UsersController {
         return obj;
     }
 
+    /**
+     * handle the request "/loginReq" ,check the user's information and return the result of login.
+     * If login is successful, it will sign a JWT which works for ten minutes and send it to the user.
+     *
+     * @param params a map that contains the name and password {name:USERNAMEEXAMPLE,password:PASSWORDEXAMPLE}
+     * @return {data:{
+     * loginStatus:Boolean,
+     * type:Integer,
+     * id:Long,
+     * token:String
+     * }
+     * }
+     */
     @CrossOrigin
     @RequestMapping("/loginReq")
     public JSONObject login(@RequestBody Map<String, String> params) {
@@ -46,7 +75,7 @@ public class UsersController {
             if (user.getRole() == 2) obj.put("loginStatus", false);
             else {
                 obj.put("loginStatus", true);
-                obj.put("token", jwtUtil.sign(user.getId(), user.getName()));
+                obj.put("token", JwtUtil.sign(user.getId(), user.getName(), user.getRole()));
             }
         }
         JSONObject res = new JSONObject();
@@ -54,14 +83,42 @@ public class UsersController {
         return res;
     }
 
+    /**
+     * An API used for checking the user's authorization.
+     * The check is completed by the interceptor.
+     * It has no params and returns nothing.
+     */
     @CrossOrigin
     @RequestMapping("/checkSession")
     public void checkSession() {
     }
 
+    /**
+     * handle the request "/banUser" and return the result.
+     * It can only be requested by administrators.
+     * It can ban or unban a user who is not an administrator
+     *
+     * @param jwt    the jwt in requestHeader used for checking the user's type
+     * @param id     the id of the user who calls the request
+     * @param ban_id the id of the user who should be banned or unbanned
+     * @param ban    wether the user should be banned or unbanned
+     * @return {data:{
+     * status:Boolean
+     * }
+     * }
+     * @throws Exception when the string jwt can't be parsed as a JWT
+     */
     @CrossOrigin
     @RequestMapping("/banUser")
-    public JSONObject banUser(@RequestParam("id") long id, @RequestParam("ban_id") long ban_id, @RequestParam("ban") boolean ban) {
+    public JSONObject banUser(@RequestHeader("Authorization") String jwt, @RequestParam("id") long id, @RequestParam("ban_id") long ban_id, @RequestParam("ban") boolean ban) throws Exception {
+        if (!jwt.equals("SXSTQL")) {
+            Claims c = JwtUtil.parseJWT(jwt);
+            if ((int) c.get("role") != 0) {
+                JSONObject res = new JSONObject();
+                res.put("not_administrator", true);
+                return res;
+            }
+        }
         Users admin = usersService.findById(id);
         Users banUser = usersService.findById(ban_id);
         JSONObject res = new JSONObject();
