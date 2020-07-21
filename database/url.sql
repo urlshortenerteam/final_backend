@@ -1,6 +1,6 @@
-drop table if exists editLog;
-drop table if exists visitLog;
-drop table if exists shortenLog;
+drop table if exists edit_log;
+drop table if exists visit_log;
+drop table if exists shorten_log;
 drop table if exists users;
 create table users
 (
@@ -9,36 +9,36 @@ create table users
 	password varchar(50) not null,
 	email varchar(50) not null,
 	role int not null,
-	visitCount bigint not null,
+	visit_count bigint not null,
 	primary key (id),
 	unique key (name)
 );
-create table shortenLog
+create table shorten_log
 (
 	id bigint auto_increment,
-	shortUrl varchar(6) not null,
-	creatorId bigint not null,
-	createTime datetime not null,
-	visitCount bigint not null,
+	short_url varchar(6) not null,
+	creator_id bigint not null,
+	create_time datetime not null,
+	visit_count bigint not null,
 	primary key (id),
-	unique key (shortUrl),
-	foreign key (creatorId) references users(id) on delete cascade
+	unique key (short_url),
+	foreign key (creator_id) references users(id) on delete cascade
 );
-create table visitLog
+create table visit_log
 (
 	id bigint auto_increment,
-	shortenerId varchar(24) not null,
-	visitTime datetime not null,
+	shortener_id varchar(24) not null,
+	visit_time datetime not null,
 	ip varchar(15) not null,
 	device tinyint not null,
 	primary key (id)
 );
-create table editLog
+create table edit_log
 (
 	id bigint auto_increment,
-	editorId bigint not null,
-	editTime datetime not null,
-	shortenerId varchar(24) not null,
+	editor_id bigint not null,
+	edit_time datetime not null,
+	shortener_id varchar(24) not null,
 	primary key (id),
-	foreign key (editorId) references users(id) on delete cascade
+	foreign key (editor_id) references users(id) on delete cascade
 );

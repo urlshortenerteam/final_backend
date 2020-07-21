@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@Table(name = "editLog")
+@Table(name = "edit_log")
 public class EditLog implements Serializable {
     private long id;
     private long editorId;

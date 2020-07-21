@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@Table(name = "visitLog")
+@Table(name = "visit_log")
 public class VisitLog implements Serializable {
     private long id;
     private String shortenerId;

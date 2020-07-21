@@ -289,8 +289,8 @@ public class StatControllerTest extends ApplicationTests {
         shortenLog.setId(1);
         shortenLog.setShortUrl("000000");
         List<ShortenLog> shortenLogList = new ArrayList<>();
-        for (int i = 0; i < 11; i++) shortenLogList.add(shortenLog);
-        when(shortenLogRepository.findAllOrderByVisitCount()).thenReturn(shortenLogList);
+        for (int i = 0; i < 10; i++) shortenLogList.add(shortenLog);
+        when(shortenLogRepository.findTopTenOrderByVisitCount()).thenReturn(shortenLogList);
         Shortener shortener = new Shortener();
         shortener.setLongUrl("https://www.baidu.com/");
         List<Shortener> shortenerList = new ArrayList<>();

@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "shortenLog")
+@Table(name = "shorten_log")
 public class ShortenLog implements Serializable {
     private long id;
     private String shortUrl;

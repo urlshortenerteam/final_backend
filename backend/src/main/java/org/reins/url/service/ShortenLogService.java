@@ -9,9 +9,9 @@ public interface ShortenLogService {
 
     void changeShortenLog(ShortenLog shortenLog);
 
-    List<ShortenLog> findAllOrderByVisitCount();
-
     ShortenLog findById(long id);
 
     ShortenLog findByShortUrl(String shortUrl);
+
+    List<ShortenLog> findTopTenOrderByVisitCount();
 }

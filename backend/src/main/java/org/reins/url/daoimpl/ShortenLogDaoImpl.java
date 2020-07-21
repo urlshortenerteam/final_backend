@@ -84,14 +84,6 @@ public class ShortenLogDaoImpl implements ShortenLogDao {
     }
 
     @Override
-    public List<ShortenLog> findAllOrderByVisitCount() {
-        List<ShortenLog> shortenLogList = shortenLogRepository.findAllOrderByVisitCount();
-        for (ShortenLog shortenLog : shortenLogList)
-            shortenLog.setShortener(reorderShortenerList(shortenerRepository.findByShortenId(shortenLog.getId())));
-        return shortenLogList;
-    }
-
-    @Override
     public List<ShortenLog> findByCreatorId(long creatorId) {
         List<ShortenLog> shortenLogList = shortenLogRepository.findByCreatorId(creatorId);
         for (ShortenLog shortenLog : shortenLogList)
@@ -110,6 +102,14 @@ public class ShortenLogDaoImpl implements ShortenLogDao {
         if (shortenLog == null) return null;
         shortenLog.setShortener(reorderShortenerList(shortenerRepository.findByShortenId(shortenLog.getId())));
         return shortenLog;
+    }
+
+    @Override
+    public List<ShortenLog> findTopTenOrderByVisitCount() {
+        List<ShortenLog> shortenLogList = shortenLogRepository.findTopTenOrderByVisitCount();
+        for (ShortenLog shortenLog : shortenLogList)
+            shortenLog.setShortener(reorderShortenerList(shortenerRepository.findByShortenId(shortenLog.getId())));
+        return shortenLogList;
     }
 
     @Override

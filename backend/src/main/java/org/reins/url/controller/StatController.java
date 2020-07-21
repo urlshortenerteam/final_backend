@@ -198,7 +198,7 @@ public class StatController {
                 return res;
             }
         }
-        List<ShortenLog> shortenLogList = shortenLogService.findAllOrderByVisitCount();
+        List<ShortenLog> shortenLogList = shortenLogService.findTopTenOrderByVisitCount();
         JSONArray data = new JSONArray();
         for (ShortenLog shortenLog : shortenLogList) {
             List<Shortener> shortenerList = shortenLog.getShortener();
@@ -213,7 +213,6 @@ public class StatController {
             tmp.put("longUrl", longUrls);
             tmp.put("count", shortenLog.getVisitCount());
             data.add(tmp);
-            if (data.size() >= 10) break;
         }
         JSONObject res = new JSONObject();
         res.put("data", data);
