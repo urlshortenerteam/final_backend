@@ -1,3 +1,6 @@
+jasypt:
+  encryptor:
+    password: ${JASYPT_ENCRYPTOR_PASSWORD:}
 spring:
   profiles:
     active: dev
@@ -10,9 +13,9 @@ spring:
         enable_lazy_load_no_trans: true
     show-sql: true
   datasource:
-     url: ENC(Z9MzrUHlBCmeiMUzHMeiVnpHvL81pukUi6b0AHBBES8TZ0O08A8dnFNOHptwQNToT0wydZ2+lYbZfKuRtNrTnxA1xusLTkfLVTVh4W2yp3ogN4ZgegRF9MH2UbgUh/IOye0KYabKE+n0tOZcut48Jld/PPCZqDgyIiaKFOgE6KpAEXR3pf73m2dP7EYyw+lvNfb5j6u2C5Y=)
-     username: ENC(24R+NAmWxYHDBObe0CRCPg==)
-     password: ENC(6V2MhYGnasxbZvcIBsK8jo+Vi3dLCNtm)
+    url: ENC(grMCWwygMDkOd+TdWje1yasCGpnL/JAKA5z6DNllIeRt/Yr3G5LFPlcztotvLWKe+ogRiCvrjGjJ/y8FwFuhHfPpaTZuxBkIJRgmQOZaqLK+HAWyibUZ9RNp8a6xCao5LDmK/VFWCY6rAme0f+K55I3Nkh1J7IgiYd4cENiE+r+ejehGjqwyDs2UeOp/NpGJUUQ7B74dehI=)
+    username: ENC(MLP/TP22ctJOa5wmYmXu/Q==)
+    password: ENC(9B5FdPpKGp9rUrdEQVZF1SPc34zblIaO)
 #    url: jdbc:mysql://reevoo-test-beta.crvfzsr4389e.us-east-1.rds.amazonaws.com:3306/test?useUnicode=true&characterEncoding=UTF-8&serverTimezone=CST
 #    username: admin
 #    password: reevoo2020

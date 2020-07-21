@@ -26,6 +26,7 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -80,7 +81,7 @@ public class StatControllerTest extends ApplicationTests {
         Shortener tmp2 = new Shortener();
         tmp2.setId("1");
         tmp2.setShortenId(1);
-        tmp2.setLongUrl("https://www.baidu.com");
+        tmp2.setLongUrl("https://www.baidu.com/");
         shorteners.add(tmp2);
         when(shortenerRepository.findByShortenId(1)).thenReturn(shorteners);
 
@@ -111,7 +112,7 @@ public class StatControllerTest extends ApplicationTests {
         int size = longUrl.size();
         assertEquals(size, 1);
         String l = longUrl.getJSONObject(0).getString("url");
-        assertEquals("https://www.baidu.com", l);
+        assertEquals("https://www.baidu.com/", l);
 
 
 //        String res = mockMvc.perform(get("/getStat?id=1").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -143,7 +144,7 @@ public class StatControllerTest extends ApplicationTests {
         Shortener tmp2 = new Shortener();
         tmp2.setId("1");
         tmp2.setShortenId(1);
-        tmp2.setLongUrl("https://www.baidu.com");
+        tmp2.setLongUrl("https://www.baidu.com/");
         shorteners.add(tmp2);
         when(shortenerRepository.findByShortenId(1)).thenReturn(shorteners);
 
@@ -184,7 +185,7 @@ public class StatControllerTest extends ApplicationTests {
         int size = longurl.size();
         assertEquals(size, 1);
         String l = longurl.getJSONObject(0).getString("url");
-        assertEquals(l, "https://www.baidu.com");
+        assertEquals(l, "https://www.baidu.com/");
 
 
         when(shortenLogRepository.findByShortUrl("000001")).thenReturn(null);
@@ -262,6 +263,49 @@ public class StatControllerTest extends ApplicationTests {
     }
 
     @Test
+    public void getReal() throws Exception {
+        VisitLog visitLog = new VisitLog();
+        visitLog.setShortenerId("000000000000000000000000");
+        List<VisitLog> visitLogList = new ArrayList<>();
+        for (int i = 0; i < 6; i++) visitLogList.add(visitLog);
+        when(visitLogRepository.findAllOrderByVisitTime()).thenReturn(visitLogList);
+        Shortener shortener = new Shortener();
+        shortener.setShortenId(1);
+        shortener.setLongUrl("https://www.baidu.com/");
+        when(shortenerRepository.findById("000000000000000000000000")).thenReturn(Optional.of(shortener));
+        ShortenLog shortenLog = new ShortenLog();
+        shortenLog.setCreatorId(1);
+        when(shortenLogRepository.findById((long) 1)).thenReturn(Optional.of(shortenLog));
+
+        String res = mockMvc.perform(get("/getReal?id=1").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+        JSONArray logs = om.readValue(res, new TypeReference<JSONObject>() {
+        }).getJSONObject("data").getJSONArray("logs");
+        assertEquals(5, logs.size());
+    }
+
+    @Test
+    public void getTopTen() throws Exception {
+        ShortenLog shortenLog = new ShortenLog();
+        shortenLog.setId(1);
+        shortenLog.setShortUrl("000000");
+        List<ShortenLog> shortenLogList = new ArrayList<>();
+        for (int i = 0; i < 11; i++) shortenLogList.add(shortenLog);
+        when(shortenLogRepository.findAllOrderByVisitCount()).thenReturn(shortenLogList);
+        Shortener shortener = new Shortener();
+        shortener.setLongUrl("https://www.baidu.com/");
+        List<Shortener> shortenerList = new ArrayList<>();
+        shortenerList.add(shortener);
+        when(shortenerRepository.findByShortenId(1)).thenReturn(shortenerList);
+
+        String res = mockMvc.perform(get("/getTopTen").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+        JSONArray data = om.readValue(res, new TypeReference<JSONObject>() {
+        }).getJSONArray("data");
+        assertEquals(10, data.size());
+    }
+
+    @Test
     public void getAllUrls() throws Exception {
         List<ShortenLog> shorten_logs = new ArrayList<>();
         ShortenLog tmp1 = new ShortenLog();
@@ -277,7 +321,7 @@ public class StatControllerTest extends ApplicationTests {
         Shortener tmp2 = new Shortener();
         tmp2.setId("1");
         tmp2.setShortenId(1);
-        tmp2.setLongUrl("https://www.baidu.com");
+        tmp2.setLongUrl("https://www.baidu.com/");
         shorteners.add(tmp2);
         when(shortenerRepository.findByShortenId(1)).thenReturn(shorteners);
 
@@ -318,8 +362,21 @@ public class StatControllerTest extends ApplicationTests {
         int size = longurl.size();
         assertEquals(size, 1);
         String l = longurl.getJSONObject(0).getString("url");
-        assertEquals("https://www.baidu.com", l);
+        assertEquals("https://www.baidu.com/", l);
 
+    }
+
+    @Autowired
+    StringEncryptor encryptor;
+    @Test
+    public void getEncryptor() {
+        //对敏感信息进行加密
+        String url = encryptor.encrypt("jdbc:mysql://reevoo-test-beta.crvfzsr4389e.us-east-1.rds.amazonaws.com:3306/test?useUnicode=true&characterEncoding=UTF-8&serverTimezone=CST");
+        String name = encryptor.encrypt("admin");
+        String password = encryptor.encrypt("reevoo2020");
+        System.out.println(url);
+        System.out.println(name);
+        System.out.println(password);
     }
 
     @Test
@@ -327,6 +384,11 @@ public class StatControllerTest extends ApplicationTests {
         when(usersRepository.count()).thenReturn((long) 1551);
         when(shortenLogRepository.count()).thenReturn((long) 2333);
         when(shortenLogRepository.visitSum()).thenReturn((long) 31415926);
+
+        ShortenLog shortenLog=new ShortenLog();
+        shortenLog.setShortUrl("SXSTQL");
+//        when(shortenLogRepository.findTopByVisitCount()).thenReturn(shortenLog);
+
         String res = mockMvc.perform(get("/getNumberCount").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         JSONObject stats = om.readValue(res, new TypeReference<JSONObject>() {
@@ -334,5 +396,6 @@ public class StatControllerTest extends ApplicationTests {
         assertEquals(stats.getLong("userCount"), 1551);
         assertEquals(stats.getLong("shortUrlCount"), 2333);
         assertEquals(stats.getLong("visitCountTotal"), 31415926);
+//        assertEquals(stats.getString("shortUrl"), "SXSTQL");
     }
 }

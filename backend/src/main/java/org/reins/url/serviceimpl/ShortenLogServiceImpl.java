@@ -24,6 +24,16 @@ public class ShortenLogServiceImpl implements ShortenLogService {
     }
 
     @Override
+    public List<ShortenLog> findAllOrderByVisitCount() {
+        return shortenLogDao.findAllOrderByVisitCount();
+    }
+
+    @Override
+    public ShortenLog findById(long id) {
+        return shortenLogDao.findById(id);
+    }
+
+    @Override
     public ShortenLog findByShortUrl(String shortUrl) {
         return shortenLogDao.findByShortUrl(shortUrl);
     }

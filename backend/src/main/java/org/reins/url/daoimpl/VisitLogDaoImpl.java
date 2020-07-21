@@ -29,6 +29,11 @@ public class VisitLogDaoImpl implements VisitLogDao {
     }
 
     @Override
+    public List<VisitLog> findAllOrderByVisitTime() {
+        return visitLogRepository.findAllOrderByVisitTime();
+    }
+
+    @Override
     public List<VisitLog> findByShortenerId(String shortenerId) {
         return visitLogRepository.findByShortenerId(shortenerId);
     }

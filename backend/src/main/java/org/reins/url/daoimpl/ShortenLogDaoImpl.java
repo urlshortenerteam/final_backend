@@ -77,18 +77,31 @@ public class ShortenLogDaoImpl implements ShortenLogDao {
 
     @Override
     public List<ShortenLog> findAll() {
-        List<ShortenLog> list = shortenLogRepository.findAll();
-        for (ShortenLog value : list)
-            value.setShortener(reorderShortenerList(shortenerRepository.findByShortenId(value.getId())));
-        return list;
+        List<ShortenLog> shortenLogList = shortenLogRepository.findAll();
+        for (ShortenLog shortenLog : shortenLogList)
+            shortenLog.setShortener(reorderShortenerList(shortenerRepository.findByShortenId(shortenLog.getId())));
+        return shortenLogList;
+    }
+
+    @Override
+    public List<ShortenLog> findAllOrderByVisitCount() {
+        List<ShortenLog> shortenLogList = shortenLogRepository.findAllOrderByVisitCount();
+        for (ShortenLog shortenLog : shortenLogList)
+            shortenLog.setShortener(reorderShortenerList(shortenerRepository.findByShortenId(shortenLog.getId())));
+        return shortenLogList;
     }
 
     @Override
     public List<ShortenLog> findByCreatorId(long creatorId) {
-        List<ShortenLog> list = shortenLogRepository.findByCreatorId(creatorId);
-        for (ShortenLog value : list)
-            value.setShortener(reorderShortenerList(shortenerRepository.findByShortenId(value.getId())));
-        return list;
+        List<ShortenLog> shortenLogList = shortenLogRepository.findByCreatorId(creatorId);
+        for (ShortenLog shortenLog : shortenLogList)
+            shortenLog.setShortener(reorderShortenerList(shortenerRepository.findByShortenId(shortenLog.getId())));
+        return shortenLogList;
+    }
+
+    @Override
+    public ShortenLog findById(long id) {
+        return shortenLogRepository.findById(id).orElse(null);
     }
 
     @Override
@@ -103,4 +116,9 @@ public class ShortenLogDaoImpl implements ShortenLogDao {
     public long visitSum() {
         return shortenLogRepository.visitSum();
     }
+
+//    @Override
+//    public ShortenLog findTopByVisitCount(){
+//        return shortenLogRepository.findTopByVisitCount();
+//    }
 }

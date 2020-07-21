@@ -13,9 +13,15 @@ public interface ShortenLogDao {
 
     List<ShortenLog> findAll();
 
+    List<ShortenLog> findAllOrderByVisitCount();
+
     List<ShortenLog> findByCreatorId(long creatorId);
 
+    ShortenLog findById(long id);
+
     ShortenLog findByShortUrl(String shortUrl);
+
+//    ShortenLog findTopByVisitCount();
 
     long visitSum();
 }
