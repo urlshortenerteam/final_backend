@@ -1,5 +1,6 @@
 package org.reins.url.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import eu.bitwalker.useragentutils.DeviceType;
 import eu.bitwalker.useragentutils.UserAgent;
@@ -62,7 +63,8 @@ public class UrlController {
      * ...
      * ]
      * }
-     */@CrossOrigin
+     */
+    @CrossOrigin
     @RequestMapping("/getShort")
     public JSONObject generateShort(@RequestParam("id") long id, @RequestBody List<String> longUrls) {
         List<String> shortUrls = new ArrayList<>();
@@ -81,7 +83,8 @@ public class UrlController {
      * @return {data:
      * shortUrl
      * }
-     */@CrossOrigin
+     */
+    @CrossOrigin
     @RequestMapping("/getOneShort")
     public JSONObject generateOneShort(@RequestParam("id") long id, @RequestBody List<String> longUrls) {
         String longUrl = longUrls.get((int) (Math.random() * longUrls.size()));
@@ -96,7 +99,8 @@ public class UrlController {
 
     /**
      * handle the request "/{[A-Za-z0-9]{6}}" and redirect to the long url.
-     */@CrossOrigin
+     */
+    @CrossOrigin
     @RequestMapping("/{[A-Za-z0-9]{6}}")
     public void getLong(HttpServletRequest req, HttpServletResponse resp) {
         String shortUrl = req.getRequestURI().substring(1);
@@ -128,7 +132,8 @@ public class UrlController {
      * status:Boolean
      * }
      * }
-     */@CrossOrigin
+     */
+    @CrossOrigin
     @RequestMapping("/editUrl")
     public JSONObject editUrl(@Param("id") long id, @Param("shortUrl") String shortUrl, @RequestBody String longUrl) {
         JSONObject res = new JSONObject();
@@ -147,6 +152,7 @@ public class UrlController {
             return res;
         }
         Shortener shortener = longUrls.get(0);
+        longUrl = JSON.parse(longUrl).toString();
         if (longUrl.equals("BANNED") || longUrl.equals("LIFT")) {
             boolean ban = longUrl.equals("BANNED");
             boolean shortenerBan = shortener.getLongUrl().equals("BANNED");

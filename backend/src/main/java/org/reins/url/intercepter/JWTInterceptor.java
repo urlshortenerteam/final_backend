@@ -48,13 +48,18 @@ public class JWTInterceptor implements HandlerInterceptor {
                 if (jwt.equals("SXSTQL"))
                     return true;
                 //System.out.println("结束进入拦截器检验jwt头部是否含有Authorization方法！");
-                return jWTUtil.verify(jwt);
+                if (jWTUtil.verify(jwt)) return true;
+                else {
+                    response.setStatus(404);
+                    return false;
+                }
             }
             //System.out.println("token解析错误，验证失败");
             response.getWriter().write("未登录，请重新登录后操作");
         } catch (Exception e) {
             e.printStackTrace();
         }
+        response.setStatus(404);
         return false;
     }
 
