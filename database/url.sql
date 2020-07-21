@@ -7,15 +7,21 @@ create table users
 	id bigint auto_increment,
 	name varchar(50) not null,
 	password varchar(50) not null,
+	email varchar(50) not null,
+	role int not null,
+	visit_count bigint not null,
 	primary key (id),
 	unique key (name)
 );
 create table shorten_log
 (
 	id bigint auto_increment,
+	short_url varchar(6) not null,
 	creator_id bigint not null,
 	create_time datetime not null,
+	visit_count bigint not null,
 	primary key (id),
+	unique key (short_url),
 	foreign key (creator_id) references users(id) on delete cascade
 );
 create table visit_log

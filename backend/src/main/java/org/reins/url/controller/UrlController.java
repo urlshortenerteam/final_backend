@@ -1,81 +1,175 @@
 package org.reins.url.controller;
-import org.reins.url.entity.Shorten_log;
+
+import com.alibaba.fastjson.JSONObject;
+import eu.bitwalker.useragentutils.DeviceType;
+import eu.bitwalker.useragentutils.UserAgent;
+import org.reins.url.entity.ShortenLog;
 import org.reins.url.entity.Shortener;
-import org.reins.url.service.UrlService;
+import org.reins.url.entity.Users;
+import org.reins.url.service.*;
+import org.reins.url.xeger.Xeger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Random;
+
 @RestController
 public class UrlController {
     @Autowired
-    UrlService urlService;
-    private String long2short(String longUrl) {
-        String key="azhe";
-        String chars="abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        String hex=DigestUtils.md5DigestAsHex((key+longUrl).getBytes());
-        List<String> res=new ArrayList<>();
-        for (int i=0;i<4;i++) {
-            long hexLong=0x3fffffff&Long.parseLong(hex.substring(i*8,i*8+8),16);
-            StringBuilder outChars=new StringBuilder();
-            for (int j=0;j<6;j++) {
-                long index=0x3d&hexLong;
-                outChars.append(chars,(int)index,(int)index+1);
-                hexLong>>=5;
+    private EditLogService editLogService;
+    @Autowired
+    private ShortenerService shortenerService;
+    @Autowired
+    private ShortenLogService shortenLogService;
+    @Autowired
+    private UsersService usersService;
+    @Autowired
+    private VisitLogService visitLogService;
+
+    public String long2short(String longUrl) {
+        Xeger xeger = new Xeger("[A-Za-z0-9]{6}", new Random(0));
+        String hex = DigestUtils.md5DigestAsHex((xeger.generate() + longUrl).getBytes());
+        List<String> res = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
+            long hexLong = 0x3fffffff & Long.parseLong(hex.substring(i * 8, i * 8 + 8), 16);
+            StringBuilder outChars = new StringBuilder();
+            for (int j = 0; j < 6; j++) {
+                long index = 0x3d & hexLong;
+                if (index < 26) outChars.append((char) ('A' + index));
+                else if (index < 52) outChars.append((char) ('a' + index - 26));
+                else outChars.append((char) ('0' + index - 52));
+                hexLong >>= 5;
             }
             res.add(outChars.toString());
         }
-        return res.get((int)(Math.random()*4));
+        return res.get((int) (Math.random() * 4));
     }
-    @CrossOrigin
+
+    /**
+     * handle the request "/getShort" and generate short urls.
+     *
+     * @param id       the id in requestParam used for checking the user's id
+     * @param longUrls the long urls that needs to be generated to short urls
+     * @return {data:[
+     * "000000",
+     * ...
+     * ]
+     * }
+     */@CrossOrigin
     @RequestMapping("/getShort")
-    public Map<String,List<String>> generateShort(@RequestParam("id") long id,@RequestBody List<String> longUrls) {
-        List<String> shortUrls=new ArrayList<>();
-        for (int i=0;i<longUrls.size();i++) {
-            String longUrl=longUrls.get(i);
-            shortUrls.add(long2short(longUrl));
-        }
-        urlService.addLog(id,shortUrls,longUrls);
-        Map<String,List<String>> res=new HashMap<>();
-        res.put("data",shortUrls);
+    public JSONObject generateShort(@RequestParam("id") long id, @RequestBody List<String> longUrls) {
+        List<String> shortUrls = new ArrayList<>();
+        for (String longUrl : longUrls) shortUrls.add(long2short(longUrl));
+        shortenLogService.addShortenLog(id, shortUrls, longUrls);
+        JSONObject res = new JSONObject();
+        res.put("data", shortUrls);
         return res;
     }
-    @CrossOrigin
+
+    /**
+     * handle the request "/getOneShort" and generate one short url.
+     *
+     * @param id       the id in requestParam used for checking the user's id
+     * @param longUrls the long urls that needs to be generated to the short url
+     * @return {data:
+     * shortUrl
+     * }
+     */@CrossOrigin
     @RequestMapping("/getOneShort")
-    public Map<String,String> generateOneShort(@RequestParam("id") long id,@RequestBody List<String> longUrls) {
-        String longUrl=longUrls.get((int)(Math.random()*longUrls.size()));
-        String shortUrl=long2short(longUrl);
-        List<String> shortUrls=new ArrayList<>();
-        for (int i=0;i<longUrls.size();++i) shortUrls.add(shortUrl);
-        urlService.addLog(id,shortUrls,longUrls);
-        Map<String,String> res=new HashMap<>();
-        res.put("data",shortUrl);
+    public JSONObject generateOneShort(@RequestParam("id") long id, @RequestBody List<String> longUrls) {
+        String longUrl = longUrls.get((int) (Math.random() * longUrls.size()));
+        String shortUrl = long2short(longUrl);
+        List<String> shortUrls = new ArrayList<>();
+        for (int i = 0; i < longUrls.size(); i++) shortUrls.add(shortUrl);
+        shortenLogService.addShortenLog(id, shortUrls, longUrls);
+        JSONObject res = new JSONObject();
+        res.put("data", shortUrl);
         return res;
     }
-    @CrossOrigin
+
+    /**
+     * handle the request "/{[A-Za-z0-9]{6}}" and redirect to the long url.
+     */@CrossOrigin
     @RequestMapping("/{[A-Za-z0-9]{6}}")
-    public void getLong(HttpServletRequest req,HttpServletResponse resp) {
-        String shortUrl=req.getRequestURI().substring(1);
-        List<Shorten_log> shorten_logList=urlService.getLog();
-        List<String> longUrls=new ArrayList<>();
-        for (int i=0;i<shorten_logList.size();i++) {
-            List<Shortener> shortenerList=shorten_logList.get(i).getShortener();
-            for (int j=0;j<shortenerList.size();j++) {
-                Shortener shortener=shortenerList.get(j);
-                if (shortener.getShort_url().equals(shortUrl)) longUrls.add(shortener.getLong_url());
-            }
-        }
+    public void getLong(HttpServletRequest req, HttpServletResponse resp) {
+        String shortUrl = req.getRequestURI().substring(1);
+        ShortenLog shortenLog = shortenLogService.findByShortUrl(shortUrl);
+        if (shortenLog == null) return;
+        List<Shortener> longUrls = shortenLog.getShortener();
         if (longUrls.isEmpty()) return;
+        Shortener longUrl = longUrls.get(0);
+        if (!longUrl.getLongUrl().equals("BANNED")) longUrl = longUrls.get((int) (Math.random() * longUrls.size()));
+        Boolean device = (UserAgent.parseUserAgentString(req.getHeader("User-Agent")).getOperatingSystem().getDeviceType() != DeviceType.COMPUTER);
+        shortenLog.setVisitCount(shortenLog.getVisitCount() + 1);
         try {
-            resp.sendRedirect(longUrls.get((int)(Math.random()*longUrls.size())));
+            shortenLogService.changeShortenLog(shortenLog);
+            usersService.changeVisitCount(shortenLog.getCreatorId());
+            visitLogService.addVisitLog(longUrl.getId(), req.getRemoteAddr(), device);
+            resp.sendRedirect(longUrl.getLongUrl());
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * handle the request "/editUrl" and edit the information of Urls.
+     *
+     * @param id       the id in requestParam used for checking the user's id
+     * @param shortUrl the short url used to find the shorten log
+     * @param longUrl  the long url that needs to be edited
+     * @return {data:{
+     * status:Boolean
+     * }
+     * }
+     */@CrossOrigin
+    @RequestMapping("/editUrl")
+    public JSONObject editUrl(@Param("id") long id, @Param("shortUrl") String shortUrl, @RequestBody String longUrl) {
+        JSONObject res = new JSONObject();
+        JSONObject status = new JSONObject();
+        Users user = usersService.findById(id);
+        ShortenLog shortenLog = shortenLogService.findByShortUrl(shortUrl);
+        if (shortenLog == null || user == null) {
+            status.put("status", false);
+            res.put("data", status);
+            return res;
+        }
+        List<Shortener> longUrls = shortenLog.getShortener();
+        if (longUrls.isEmpty()) {
+            status.put("status", false);
+            res.put("data", status);
+            return res;
+        }
+        Shortener shortener = longUrls.get(0);
+        if (longUrl.equals("BANNED") || longUrl.equals("LIFT")) {
+            boolean ban = longUrl.equals("BANNED");
+            boolean shortenerBan = shortener.getLongUrl().equals("BANNED");
+            if ((user.getRole() > 0 && id != shortenLog.getCreatorId()) || (ban && shortenerBan) || (!ban && !shortenerBan)) {
+                status.put("status", false);
+                res.put("data", status);
+                return res;
+            }
+            shortenerService.addShortener(id, shortenLog.getId(), longUrl);
+            status.put("status", true);
+            res.put("data", status);
+            return res;
+        }
+        if (longUrls.size() > 1 || id != shortenLog.getCreatorId()) {
+            status.put("status", false);
+            res.put("data", status);
+            return res;
+        }
+        shortener.setLongUrl(longUrl);
+        editLogService.addEditLog(id, shortener.getId());
+        shortenerService.changeShortener(shortener);
+        status.put("status", true);
+        res.put("data", status);
+        return res;
     }
 }
