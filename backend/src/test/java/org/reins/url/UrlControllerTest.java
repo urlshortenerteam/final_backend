@@ -148,32 +148,32 @@ public class UrlControllerTest extends ApplicationTests {
         when(editLogRepository.save(any(EditLog.class))).thenReturn(new EditLog());
         when(shortenerRepository.insert(any(Shortener.class))).thenReturn(new Shortener());
 
-        String res = mockMvc.perform(post("/editUrl?id=0&shortUrl=000000").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).content(longUrl))
+        String res = mockMvc.perform(post("/editUrl?id=0&shortUrl=000000").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString(longUrl)))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         assertFalse(om.readValue(res, new TypeReference<JSONObject>() {
         }).getJSONObject("data").getBooleanValue("status"));
 
-        res = mockMvc.perform(post("/editUrl?id=1&shortUrl=000001").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).content(longUrl))
+        res = mockMvc.perform(post("/editUrl?id=1&shortUrl=000001").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString(longUrl)))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         assertFalse(om.readValue(res, new TypeReference<JSONObject>() {
         }).getJSONObject("data").getBooleanValue("status"));
 
-        res = mockMvc.perform(post("/editUrl?id=3&shortUrl=000000").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).content(longUrl))
+        res = mockMvc.perform(post("/editUrl?id=3&shortUrl=000000").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString(longUrl)))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         assertFalse(om.readValue(res, new TypeReference<JSONObject>() {
         }).getJSONObject("data").getBooleanValue("status"));
 
-        res = mockMvc.perform(post("/editUrl?id=2&shortUrl=000000").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).content(longUrl))
+        res = mockMvc.perform(post("/editUrl?id=2&shortUrl=000000").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString(longUrl)))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         assertTrue(om.readValue(res, new TypeReference<JSONObject>() {
         }).getJSONObject("data").getBooleanValue("status"));
 
-        res = mockMvc.perform(post("/editUrl?id=1&shortUrl=000000").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).content("LIFT"))
+        res = mockMvc.perform(post("/editUrl?id=1&shortUrl=000000").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString("LIFT")))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         assertFalse(om.readValue(res, new TypeReference<JSONObject>() {
         }).getJSONObject("data").getBooleanValue("status"));
 
-        res = mockMvc.perform(post("/editUrl?id=1&shortUrl=000000").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).content("BANNED"))
+        res = mockMvc.perform(post("/editUrl?id=1&shortUrl=000000").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString("BANNED")))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         assertTrue(om.readValue(res, new TypeReference<JSONObject>() {
         }).getJSONObject("data").getBooleanValue("status"));
