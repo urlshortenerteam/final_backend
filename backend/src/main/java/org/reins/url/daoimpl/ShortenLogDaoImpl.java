@@ -117,8 +117,8 @@ public class ShortenLogDaoImpl implements ShortenLogDao {
         return shortenLogRepository.visitSum();
     }
 
-//    @Override
-//    public ShortenLog findTopByVisitCount(){
-//        return shortenLogRepository.findTopByVisitCount();
-//    }
+    @Override
+    public List<ShortenLog> findTopOneOrderByVisitCount(){
+        return shortenLogRepository.findTopOneOrderByVisitCount();
+    }
 }

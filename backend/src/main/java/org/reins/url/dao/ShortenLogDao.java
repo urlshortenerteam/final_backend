@@ -21,5 +21,7 @@ public interface ShortenLogDao {
 
     List<ShortenLog> findTopTenOrderByVisitCount();
 
+    List<ShortenLog> findTopOneOrderByVisitCount();
+
     long visitSum();
 }

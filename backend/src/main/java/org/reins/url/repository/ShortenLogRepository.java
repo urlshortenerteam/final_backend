@@ -17,6 +17,9 @@ public interface ShortenLogRepository extends JpaRepository<ShortenLog, Long> {
     @Query(value = "select s from ShortenLog s order by s.visitCount desc limit 10", nativeQuery = true)
     List<ShortenLog> findTopTenOrderByVisitCount();
 
+    @Query(value = "select s from ShortenLog s order by s.visitCount desc limit 1", nativeQuery = true)
+    List<ShortenLog> findTopOneOrderByVisitCount();
+
     @Query("select sum(s.visitCount) from ShortenLog s")
     long visitSum();
 }

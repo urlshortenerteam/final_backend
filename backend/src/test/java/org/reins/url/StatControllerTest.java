@@ -387,7 +387,9 @@ public class StatControllerTest extends ApplicationTests {
 
         ShortenLog shortenLog=new ShortenLog();
         shortenLog.setShortUrl("SXSTQL");
-//        when(shortenLogRepository.findTopByVisitCount()).thenReturn(shortenLog);
+        List<ShortenLog> shortenLogs=new ArrayList<>();
+        shortenLogs.add(shortenLog);
+        when(shortenLogRepository.findTopOneOrderByVisitCount()).thenReturn(shortenLogs);
 
         String res = mockMvc.perform(get("/getNumberCount").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
@@ -396,6 +398,6 @@ public class StatControllerTest extends ApplicationTests {
         assertEquals(stats.getLong("userCount"), 1551);
         assertEquals(stats.getLong("shortUrlCount"), 2333);
         assertEquals(stats.getLong("visitCountTotal"), 31415926);
-//        assertEquals(stats.getString("shortUrl"), "SXSTQL");
+        assertEquals(stats.getString("shortUrl"), "SXSTQL");
     }
 }
