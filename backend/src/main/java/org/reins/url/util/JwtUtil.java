@@ -16,71 +16,71 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-  // 过期时间，单位毫秒
-  private static final long EXPIRE_TIME = 15 * 60 * 1000; // 15分钟
+    // 过期时间，单位毫秒
+    private static final long EXPIRE_TIME = 15 * 60 * 1000; // 15分钟
 
-  // 加密密文，私钥
-  private static final String TOKEN_SECRET = "SXSNB";
+    // 加密密文，私钥
+    private static final String TOKEN_SECRET = "SXSNB";
 
-  // 由字符串生成加密key
-  public static SecretKey generalKey() {
-    System.out.println("进入由字符串生成加密key方法！");
-    // 本地的密码解码
-    byte[] encodedKey = Base64.decodeBase64(TOKEN_SECRET);
-    // 根据给定的字节数组使用AES加密算法构造一个密钥
-    SecretKey key = new SecretKeySpec(encodedKey, 0, encodedKey.length, "AES");
-    return key;
-  }
-
-  // 生成签名
-  public static String sign(long id, String username, int type) {
-    System.out.println("生成签名方法开始执行！");
-    try {
-      // 设置过期时间,单位毫秒
-      Date expTime = new Date(System.currentTimeMillis() + EXPIRE_TIME);
-      // 私钥和加密算法
-      // Algorithm algorithm = Algorithm.HMAC256(password); //使用用户输入的密码
-      Algorithm algorithm = Algorithm.HMAC256(TOKEN_SECRET);
-      // 设置头部信息,也可以不用设置头部信息jwt会自动生成
-      //Map<String, Object> header = new HashMap<String, Object>();
-      //header.put("typ", "JWT");
-      //header.put("alg", "HS256");
-      // 或
-      // header.put("Type", "JWT");
-      //	header.put("alg", "HS256");
-      // 生成JWT的时间
-      Date issuedAt = new Date(System.currentTimeMillis());
-      // 返回token字符串
-      System.out.println("生成签名方法结束执行！");
-      return JWT.create() // 表示new一个Jwt，设置jwt的body
-              // .withHeader(header) // 设置头部信息
-              .withClaim("id", id) // 数据库中用户的id
-              .withClaim("username", username) // 前端输入的用户名
-              .withClaim("role", type)
-              .withIssuedAt(issuedAt) // jwt的签发时间
-              .withExpiresAt(expTime) // jwt过期时间
-              .sign(algorithm);
-    } catch (Exception e) {
-      e.printStackTrace();
-      return null;
+    // 由字符串生成加密key
+    public static SecretKey generalKey() {
+        System.out.println("进入由字符串生成加密key方法！");
+        // 本地的密码解码
+        byte[] encodedKey = Base64.decodeBase64(TOKEN_SECRET);
+        // 根据给定的字节数组使用AES加密算法构造一个密钥
+        SecretKey key = new SecretKeySpec(encodedKey, 0, encodedKey.length, "AES");
+        return key;
     }
-  }
 
-
-  public static boolean verify(String token) {
-    System.out.println("进入检验token是否正确方法！");
-    try {
-      //Algorithm algorithm = Algorithm.HMAC256(password); //使用用户输入的密码
-      Algorithm algorithm = Algorithm.HMAC256(TOKEN_SECRET);
-      //JWTVerifier verifier = JWT.require(algorithm).withClaim("id", id).build();
-      JWTVerifier verifier = JWT.require(algorithm).build();
-      verifier.verify(token);
-      System.out.println("token正确！");
-      return true;
-    } catch (Exception e) {
-      return false;
+    // 生成签名
+    public static String sign(long id, String username, int type) {
+        System.out.println("生成签名方法开始执行！");
+        try {
+            // 设置过期时间,单位毫秒
+            Date expTime = new Date(System.currentTimeMillis() + EXPIRE_TIME);
+            // 私钥和加密算法
+            // Algorithm algorithm = Algorithm.HMAC256(password); //使用用户输入的密码
+            Algorithm algorithm = Algorithm.HMAC256(TOKEN_SECRET);
+            // 设置头部信息,也可以不用设置头部信息jwt会自动生成
+            //Map<String, Object> header = new HashMap<String, Object>();
+            //header.put("typ", "JWT");
+            //header.put("alg", "HS256");
+            // 或
+            // header.put("Type", "JWT");
+            //	header.put("alg", "HS256");
+            // 生成JWT的时间
+            Date issuedAt = new Date(System.currentTimeMillis());
+            // 返回token字符串
+            System.out.println("生成签名方法结束执行！");
+            return JWT.create() // 表示new一个Jwt，设置jwt的body
+                    // .withHeader(header) // 设置头部信息
+                    .withClaim("id", id) // 数据库中用户的id
+                    .withClaim("username", username) // 前端输入的用户名
+                    .withClaim("role", type)
+                    .withIssuedAt(issuedAt) // jwt的签发时间
+                    .withExpiresAt(expTime) // jwt过期时间
+                    .sign(algorithm);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
-  }
+
+
+    public static boolean verify(String token) {
+        System.out.println("进入检验token是否正确方法！");
+        try {
+            //Algorithm algorithm = Algorithm.HMAC256(password); //使用用户输入的密码
+            Algorithm algorithm = Algorithm.HMAC256(TOKEN_SECRET);
+            //JWTVerifier verifier = JWT.require(algorithm).withClaim("id", id).build();
+            JWTVerifier verifier = JWT.require(algorithm).build();
+            verifier.verify(token);
+            System.out.println("token正确！");
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
 //    // 获取登录名
 //    public String getUsername(String token) {
@@ -93,14 +93,14 @@ public class JwtUtil {
 //        }
 //    }
 
-  // 解密jwt
-  public static Claims parseJWT(String jwt) throws Exception {
-    //System.out.println("进入解密jwt方法！");
-    SecretKey key = generalKey(); // 签名秘钥，和生成的签名的秘钥一模一样
-    Claims claims = Jwts.parser() // 得到DefaultJwtParser
-            .setSigningKey(key) // 设置签名的秘钥
-            .parseClaimsJws(jwt).getBody(); // 设置需要解析的jwt
-    return claims;
-  }
+    // 解密jwt
+    public static Claims parseJWT(String jwt) throws Exception {
+        //System.out.println("进入解密jwt方法！");
+        SecretKey key = generalKey(); // 签名秘钥，和生成的签名的秘钥一模一样
+        Claims claims = Jwts.parser() // 得到DefaultJwtParser
+                .setSigningKey(key) // 设置签名的秘钥
+                .parseClaimsJws(jwt).getBody(); // 设置需要解析的jwt
+        return claims;
+    }
 
 }

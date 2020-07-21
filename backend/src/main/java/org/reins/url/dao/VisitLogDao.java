@@ -5,7 +5,7 @@ import org.reins.url.entity.VisitLog;
 import java.util.List;
 
 public interface VisitLogDao {
-  void addVisitLog(String shortenerId, String ip, Boolean device);
+    void addVisitLog(String shortenerId, String ip, Boolean device);
 
-  List<VisitLog> findByShortenerId(String shortenerId);
+    List<VisitLog> findByShortenerId(String shortenerId);
 }

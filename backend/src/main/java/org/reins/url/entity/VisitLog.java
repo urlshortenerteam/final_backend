@@ -12,55 +12,55 @@ import java.util.Date;
 @Entity
 @Table(name = "visitLog")
 public class VisitLog implements Serializable {
-  private long id;
-  private String shortenerId;
-  private Date visitTime;
-  private String ip;
-  private Boolean device;
+    private long id;
+    private String shortenerId;
+    private Date visitTime;
+    private String ip;
+    private Boolean device;
 
-  public VisitLog() {
-  }
+    public VisitLog() {
+    }
 
-  @Id
-  @GeneratedValue(generator = "increment")
-  @GenericGenerator(name = "increment", strategy = "increment")
-  public long getId() {
-    return id;
-  }
+    @Id
+    @GeneratedValue(generator = "increment")
+    @GenericGenerator(name = "increment", strategy = "increment")
+    public long getId() {
+        return id;
+    }
 
-  public void setId(long id) {
-    this.id = id;
-  }
+    public void setId(long id) {
+        this.id = id;
+    }
 
-  public String getShortenerId() {
-    return shortenerId;
-  }
+    public String getShortenerId() {
+        return shortenerId;
+    }
 
-  public void setShortenerId(String shortenerId) {
-    this.shortenerId = shortenerId;
-  }
+    public void setShortenerId(String shortenerId) {
+        this.shortenerId = shortenerId;
+    }
 
-  public Date getVisitTime() {
-    return visitTime;
-  }
+    public Date getVisitTime() {
+        return visitTime;
+    }
 
-  public void setVisitTime(Date visitTime) {
-    this.visitTime = visitTime;
-  }
+    public void setVisitTime(Date visitTime) {
+        this.visitTime = visitTime;
+    }
 
-  public String getIp() {
-    return ip;
-  }
+    public String getIp() {
+        return ip;
+    }
 
-  public void setIp(String ip) {
-    this.ip = ip;
-  }
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
 
-  public Boolean getDevice() {
-    return device;
-  }
+    public Boolean getDevice() {
+        return device;
+    }
 
-  public void setDevice(Boolean device) {
-    this.device = device;
-  }
+    public void setDevice(Boolean device) {
+        this.device = device;
+    }
 }

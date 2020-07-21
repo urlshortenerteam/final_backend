@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.jasypt.encryption.StringEncryptor;
 import org.junit.Before;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.Test;

@@ -8,16 +8,16 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ShortenerServiceImpl implements ShortenerService {
-  @Autowired
-  private ShortenerDao shortenerDao;
+    @Autowired
+    private ShortenerDao shortenerDao;
 
-  @Override
-  public void addShortener(long editorId, long shortenId, String longUrl) {
-    shortenerDao.addShortener(editorId, shortenId, longUrl);
-  }
+    @Override
+    public void addShortener(long editorId, long shortenId, String longUrl) {
+        shortenerDao.addShortener(editorId, shortenId, longUrl);
+    }
 
-  @Override
-  public void changeShortener(Shortener shortener) {
-    shortenerDao.changeShortener(shortener);
-  }
+    @Override
+    public void changeShortener(Shortener shortener) {
+        shortenerDao.changeShortener(shortener);
+    }
 }

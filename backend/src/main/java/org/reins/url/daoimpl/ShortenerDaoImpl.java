@@ -16,26 +16,26 @@ import java.util.Date;
 @Repository
 @Service
 public class ShortenerDaoImpl implements ShortenerDao {
-  @Autowired
-  private EditLogRepository editLogRepository;
-  @Autowired
-  private ShortenerRepository shortenerRepository;
+    @Autowired
+    private EditLogRepository editLogRepository;
+    @Autowired
+    private ShortenerRepository shortenerRepository;
 
-  @Override
-  public void addShortener(long editorId, long shortenId, String longUrl) {
-    Shortener shortener = new Shortener();
-    shortener.setShortenId(shortenId);
-    shortener.setLongUrl(longUrl);
-    shortenerRepository.insert(shortener);
-    EditLog editLog = new EditLog();
-    editLog.setEditorId(editorId);
-    editLog.setEditTime(new Date());
-    editLog.setShortenerId(shortener.getId());
-    editLogRepository.save(editLog);
-  }
+    @Override
+    public void addShortener(long editorId, long shortenId, String longUrl) {
+        Shortener shortener = new Shortener();
+        shortener.setShortenId(shortenId);
+        shortener.setLongUrl(longUrl);
+        shortenerRepository.insert(shortener);
+        EditLog editLog = new EditLog();
+        editLog.setEditorId(editorId);
+        editLog.setEditTime(new Date());
+        editLog.setShortenerId(shortener.getId());
+        editLogRepository.save(editLog);
+    }
 
-  @Override
-  public void changeShortener(Shortener shortener) {
-    shortenerRepository.save(shortener);
-  }
+    @Override
+    public void changeShortener(Shortener shortener) {
+        shortenerRepository.save(shortener);
+    }
 }
