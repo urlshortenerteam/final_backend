@@ -374,7 +374,7 @@ public class StatControllerTest extends ApplicationTests {
 //        String url = encryptor.encrypt("jdbc:mysql://reevoo-test-beta.crvfzsr4389e.us-east-1.rds.amazonaws.com:3306/test?useUnicode=true&characterEncoding=UTF-8&serverTimezone=CST");
 //        String name = encryptor.encrypt("admin");
 //        String password = encryptor.encrypt("reevoo2020");
-//        System.out.println(encryptor.encrypt("mongodb://52.91.119.239:27017"));
+//        System.out.println(encryptor.encrypt("mongodb://52.91.119.239:27017/url"));
 //        System.out.println(name);
 //        System.out.println(password);
 //    }
