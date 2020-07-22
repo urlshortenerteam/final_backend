@@ -118,7 +118,7 @@ public class ShortenLogDaoImpl implements ShortenLogDao {
     }
 
     @Override
-    public List<ShortenLog> findTopOneOrderByVisitCount(){
+    public List<ShortenLog> findTopOneOrderByVisitCount() {
         return shortenLogRepository.findTopOneOrderByVisitCount();
     }
 }

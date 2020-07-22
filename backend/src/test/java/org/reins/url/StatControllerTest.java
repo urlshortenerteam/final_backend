@@ -227,7 +227,7 @@ public class StatControllerTest extends ApplicationTests {
         Users tmp = new Users();
         tmp.setId(1);
         tmp.setName("test");
-        tmp.setPassword("");
+        tmp.setPassword("test");
         tmp.setEmail("123@sjtu.edu.cn");
         tmp.setRole(0);
         tmp.setVisitCount(1);
@@ -241,7 +241,7 @@ public class StatControllerTest extends ApplicationTests {
                 .getJSONArray("data").toJavaList(JSONObject.class);
         assertEquals(users.size(), 1);
         assertEquals("test", users.get(0).getString("name"));
-        assertEquals("", users.get(0).getString("password"));
+        assertNull(users.get(0).getString("password"));
         assertEquals("123@sjtu.edu.cn", users.get(0).getString("email"));
         assertEquals(users.get(0).getInteger("role"), 0);
         assertEquals(users.get(0).getLong("visitCount"), 1);
@@ -385,9 +385,9 @@ public class StatControllerTest extends ApplicationTests {
         when(shortenLogRepository.count()).thenReturn((long) 2333);
         when(shortenLogRepository.visitSum()).thenReturn((long) 31415926);
 
-        ShortenLog shortenLog=new ShortenLog();
+        ShortenLog shortenLog = new ShortenLog();
         shortenLog.setShortUrl("SXSTQL");
-        List<ShortenLog> shortenLogs=new ArrayList<>();
+        List<ShortenLog> shortenLogs = new ArrayList<>();
         shortenLogs.add(shortenLog);
         when(shortenLogRepository.findTopOneOrderByVisitCount()).thenReturn(shortenLogs);
 
