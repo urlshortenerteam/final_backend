@@ -9,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.*;
 public class LoginConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new JWTInterceptor()).addPathPatterns("/**").excludePathPatterns("/loginReq", "/register", "/static/**");
+        registry.addInterceptor(new JWTInterceptor()).addPathPatterns("/**").excludePathPatterns("/loginReq", "/register", "/static/**", "/??????");
         WebMvcConfigurer.super.addInterceptors(registry);
     }
 
