@@ -5,7 +5,9 @@ import org.reins.url.entity.ShortenLog;
 import java.util.List;
 
 public interface ShortenLogDao {
-    void addShortenLog(long creatorId, List<String> shortUrls, List<String> longUrls);
+    String addOneShortenLog(long creatorId, List<String> longUrls);
+
+    List<String> addShortenLog(long creatorId, List<String> longUrls);
 
     void changeShortenLog(ShortenLog shortenLog);
 
