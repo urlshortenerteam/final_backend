@@ -368,6 +368,7 @@ public class StatControllerTest extends ApplicationTests {
 
     @Autowired
     StringEncryptor encryptor;
+
     @Test
     public void getEncryptor() {
         String url = encryptor.encrypt("jdbc:mysql://reevoo-test-beta.crvfzsr4389e.us-east-1.rds.amazonaws.com:3306/test?useUnicode=true&characterEncoding=UTF-8&serverTimezone=CST");
