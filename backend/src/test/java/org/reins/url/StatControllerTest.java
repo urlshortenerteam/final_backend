@@ -366,18 +366,19 @@ public class StatControllerTest extends ApplicationTests {
 
     }
 
-//    @Autowired
-//    StringEncryptor encryptor;
-//    @Test
-//    public void getEncryptor() {
-//        //对敏感信息进行加密
-//        String url = encryptor.encrypt("jdbc:mysql://reevoo-test-beta.crvfzsr4389e.us-east-1.rds.amazonaws.com:3306/test?useUnicode=true&characterEncoding=UTF-8&serverTimezone=CST");
-//        String name = encryptor.encrypt("admin");
-//        String password = encryptor.encrypt("reevoo2020");
-//        System.out.println(url);
-//        System.out.println(name);
-//        System.out.println(password);
-//    }
+    @Autowired
+    StringEncryptor encryptor;
+    @Test
+    public void getEncryptor() {
+        String url = encryptor.encrypt("jdbc:mysql://reevoo-test-beta.crvfzsr4389e.us-east-1.rds.amazonaws.com:3306/test?useUnicode=true&characterEncoding=UTF-8&serverTimezone=CST");
+        String name = encryptor.encrypt("admin");
+        String password = encryptor.encrypt("reevoo2020");
+        String urlMongo = encryptor.encrypt("mongodb://54.165.181.57:27017/url");
+        System.out.println(url);
+        System.out.println(name);
+        System.out.println(password);
+        System.out.println(urlMongo);
+    }
 
     @Test
     public void getNumberCount() throws Exception {

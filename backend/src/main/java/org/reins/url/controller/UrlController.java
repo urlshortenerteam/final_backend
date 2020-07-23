@@ -8,18 +8,14 @@ import org.reins.url.entity.ShortenLog;
 import org.reins.url.entity.Shortener;
 import org.reins.url.entity.Users;
 import org.reins.url.service.*;
-import org.reins.url.xeger.Xeger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
-import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 @RestController
 public class UrlController {
@@ -33,25 +29,6 @@ public class UrlController {
     private UsersService usersService;
     @Autowired
     private VisitLogService visitLogService;
-
-    public String long2short(String longUrl) {
-        Xeger xeger = new Xeger("[A-Za-z0-9]{6}", new Random(0));
-        String hex = DigestUtils.md5DigestAsHex((xeger.generate() + longUrl).getBytes());
-        List<String> res = new ArrayList<>();
-        for (int i = 0; i < 4; i++) {
-            long hexLong = 0x3fffffff & Long.parseLong(hex.substring(i * 8, i * 8 + 8), 16);
-            StringBuilder outChars = new StringBuilder();
-            for (int j = 0; j < 6; j++) {
-                long index = 0x3d & hexLong;
-                if (index < 26) outChars.append((char) ('A' + index));
-                else if (index < 52) outChars.append((char) ('a' + index - 26));
-                else outChars.append((char) ('0' + index - 52));
-                hexLong >>= 5;
-            }
-            res.add(outChars.toString());
-        }
-        return res.get((int) (Math.random() * 4));
-    }
 
     /**
      * handle the request "/getShort" and generate short urls.
@@ -67,11 +44,8 @@ public class UrlController {
     @CrossOrigin
     @RequestMapping("/getShort")
     public JSONObject generateShort(@RequestParam("id") long id, @RequestBody List<String> longUrls) {
-        List<String> shortUrls = new ArrayList<>();
-        for (String longUrl : longUrls) shortUrls.add(long2short(longUrl));
-        shortenLogService.addShortenLog(id, shortUrls, longUrls);
         JSONObject res = new JSONObject();
-        res.put("data", shortUrls);
+        res.put("data", shortenLogService.addShortenLog(id, longUrls));
         return res;
     }
 
@@ -87,13 +61,8 @@ public class UrlController {
     @CrossOrigin
     @RequestMapping("/getOneShort")
     public JSONObject generateOneShort(@RequestParam("id") long id, @RequestBody List<String> longUrls) {
-        String longUrl = longUrls.get((int) (Math.random() * longUrls.size()));
-        String shortUrl = long2short(longUrl);
-        List<String> shortUrls = new ArrayList<>();
-        for (int i = 0; i < longUrls.size(); i++) shortUrls.add(shortUrl);
-        shortenLogService.addShortenLog(id, shortUrls, longUrls);
         JSONObject res = new JSONObject();
-        res.put("data", shortUrl);
+        res.put("data", shortenLogService.addOneShortenLog(id, longUrls));
         return res;
     }
 

@@ -14,8 +14,13 @@ public class ShortenLogServiceImpl implements ShortenLogService {
     private ShortenLogDao shortenLogDao;
 
     @Override
-    public void addShortenLog(long creatorId, List<String> shortUrls, List<String> longUrls) {
-        shortenLogDao.addShortenLog(creatorId, shortUrls, longUrls);
+    public String addOneShortenLog(long creatorId, List<String> longUrls) {
+        return shortenLogDao.addOneShortenLog(creatorId, longUrls);
+    }
+
+    @Override
+    public List<String> addShortenLog(long creatorId, List<String> longUrls) {
+        return shortenLogDao.addShortenLog(creatorId, longUrls);
     }
 
     @Override
