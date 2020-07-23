@@ -1,73 +1,128 @@
 package org.reins.url.serviceimpl;
-import org.reins.url.dao.StatDao;
-import org.reins.url.dao.VisitDao;
-import org.reins.url.entity.Shorten_log;
-import org.reins.url.entity.Shortener;
-import org.reins.url.entity.Statistics;
-import org.reins.url.entity.Visit_log;
+
+import com.alibaba.fastjson.JSONObject;
+import org.reins.url.dao.ShortenLogDao;
+import org.reins.url.dao.UsersDao;
+import org.reins.url.dao.VisitLogDao;
+import org.reins.url.entity.*;
 import org.reins.url.service.StatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
 @Service
 public class StatServiceImpl implements StatService {
     @Autowired
-    StatDao statDao;
+    private ShortenLogDao shortenLogDao;
     @Autowired
-    VisitDao visitDao;
+    private UsersDao usersDao;
+    @Autowired
+    private VisitLogDao visitLogDao;
+
     @Override
-    public List<Statistics> getStat() {
-        List<Statistics> res=new ArrayList<>();
-        List<Shorten_log> shorten_logs=statDao.findAll();
-        for (Shorten_log s:shorten_logs) {
-            Statistics statistics=new Statistics();
-            if (s.getShortener().size()==0) continue;
-            statistics.shortUrl=s.getShortener().get(0).getShort_url();
-            for (Shortener shortener:s.getShortener()) {
-                List<Visit_log> visit_logs=visitDao.findByShortenerId(shortener.getId());
-                statistics.visit_count+=visit_logs.size();
-                for (Visit_log v:visit_logs) {
+    public List<Statistics> getStat(long id) {
+        List<Statistics> res = new ArrayList<>();
+        List<ShortenLog> shortenLogs = shortenLogDao.findByCreatorId(id);
+        for (ShortenLog s : shortenLogs) {
+            Statistics statistics = new Statistics();
+            if (s.getShortener().size() == 0) continue;
+            statistics.shortUrl = s.getShortUrl();
+            statistics.count = s.getVisitCount();
+            for (Shortener shortener : s.getShortener()) {
+                List<VisitLog> visitLogs = visitLogDao.findByShortenerId(shortener.getId());
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("url", shortener.getLongUrl());
+                statistics.longUrl.add(jsonObject);
+                for (VisitLog v : visitLogs) {
                     try {
-                        statistics.addArea_distr(v.getIp());
+                        statistics.addAreaDistr(v.getIp());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    statistics.addTime_distr(v.getVisit_time());
-                    statistics.addSource_distr(v.getIp());
+                    statistics.addTimeDistr(v.getVisitTime());
+                    statistics.addSourceDistr(v.getIp());
                 }
             }
             res.add(statistics);
         }
         return res;
     }
+
     @Override
-    public Statistics getShortStat(String short_url) {
-        Statistics statistics=new Statistics();
-        statistics.shortUrl=short_url;
-        List<Shortener> shorteners=statDao.findShortenerByShortUrl(short_url);
-        if (shorteners.size()==0) return statistics;
-        long shorten_id=shorteners.get(0).getShorten_id();
-        Optional<Shorten_log> shorten_log=statDao.findById(shorten_id);
-        if (!shorten_log.isPresent()) {
-            statistics.visit_count=-1;
+    public Statistics getShortStat(String shortUrl) {
+        Statistics statistics = new Statistics();
+        statistics.shortUrl = shortUrl;
+        ShortenLog shortenLog = shortenLogDao.findByShortUrl(shortUrl);
+        if (shortenLog == null) {
+            statistics.count = -1;
             return statistics;
         }
-        for (Shortener shortener:shorteners) {
-            List<Visit_log> visit_logs=visitDao.findByShortenerId(shortener.getId());
-            statistics.visit_count+=visit_logs.size();
-            for (Visit_log v:visit_logs) {
+        statistics.count = shortenLog.getVisitCount();
+        List<Shortener> shorteners = shortenLog.getShortener();
+        for (Shortener shortener : shorteners) {
+            List<VisitLog> visitLogs = visitLogDao.findByShortenerId(shortener.getId());
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("url", shortener.getLongUrl());
+            statistics.longUrl.add(jsonObject);
+            for (VisitLog v : visitLogs) {
                 try {
-                    statistics.addArea_distr(v.getIp());
+                    statistics.addAreaDistr(v.getIp());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                statistics.addTime_distr(v.getVisit_time());
-                statistics.addSource_distr(v.getIp());
+                statistics.addTimeDistr(v.getVisitTime());
+                statistics.addSourceDistr(v.getIp());
             }
         }
         return statistics;
+    }
+
+    @Override
+    public List<Users> getUserStat() {
+        return usersDao.findAllUserStat();
+    }
+
+    @Override
+    public List<Statistics> getAllUrls() {
+        List<Statistics> res = new ArrayList<>();
+        List<ShortenLog> shortenLogs = shortenLogDao.findAll();
+        for (ShortenLog s : shortenLogs) {
+            Statistics statistics = new Statistics();
+            statistics.shortUrl = s.getShortUrl();
+            statistics.creatorName = usersDao.findById(s.getCreatorId()).getName();
+            statistics.createTime = s.getCreateTime();
+            statistics.count = s.getVisitCount();
+            for (Shortener shortener : s.getShortener()) {
+                List<VisitLog> visitLogs = visitLogDao.findByShortenerId(shortener.getId());
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("url", shortener.getLongUrl());
+                statistics.longUrl.add(jsonObject);
+                for (VisitLog v : visitLogs) {
+                    try {
+                        statistics.addAreaDistr(v.getIp());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    statistics.addTimeDistr(v.getVisitTime());
+                    statistics.addSourceDistr(v.getIp());
+                }
+            }
+            res.add(statistics);
+        }
+        return res;
+    }
+
+    @Override
+    public JSONObject getNumberCount() {
+        JSONObject res = new JSONObject();
+        res.put("userCount", usersDao.count());
+        res.put("shortUrlCount", shortenLogDao.count());
+        res.put("visitCountTotal", shortenLogDao.visitSum());
+        ShortenLog shortenLog = shortenLogDao.findTopOneOrderByVisitCount();
+        if (shortenLog != null)
+            res.put("shortUrl", shortenLog.getShortUrl());
+        return res;
     }
 }
