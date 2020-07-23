@@ -18,17 +18,14 @@ spring:
     url: ENC(grMCWwygMDkOd+TdWje1yasCGpnL/JAKA5z6DNllIeRt/Yr3G5LFPlcztotvLWKe+ogRiCvrjGjJ/y8FwFuhHfPpaTZuxBkIJRgmQOZaqLK+HAWyibUZ9RNp8a6xCao5LDmK/VFWCY6rAme0f+K55I3Nkh1J7IgiYd4cENiE+r+ejehGjqwyDs2UeOp/NpGJUUQ7B74dehI=)
     username: ENC(MLP/TP22ctJOa5wmYmXu/Q==)
     password: ENC(9B5FdPpKGp9rUrdEQVZF1SPc34zblIaO)
-#    url: jdbc:mysql://reevoo-test-beta.crvfzsr4389e.us-east-1.rds.amazonaws.com:3306/test?useUnicode=true&characterEncoding=UTF-8&serverTimezone=CST
-#    username: admin
-#    password: reevoo2020
 #    url: jdbc:mysql://127.0.0.1:3306/url?useUnicode=true&characterEncoding=UTF-8&serverTimezone=CST
 #    username: root
 #    password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
   data:
     mongodb:
-      uri: ENC(oXP9fk+yNko2l92kV1iYRx5dLqL5pzYM3nEwN0g+YqoH+LVsPQMDWYgGGMHgsZbI)
-#      uri: mongodb://52.91.119.239:27017/url
+      uri: ENC(1zazKbKzFOxo61wNUW7nqbHhHf15PxCekmA/V47k/iFcKlt5l24i2i9ng/FZbLqc)
+#      uri: mongodb://test:test@127.0.0.1:27017/url?authSource=mydb
 server:
   port: 4000
   tomcat:

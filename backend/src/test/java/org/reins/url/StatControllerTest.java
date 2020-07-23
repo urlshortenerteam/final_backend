@@ -291,7 +291,7 @@ public class StatControllerTest extends ApplicationTests {
         shortenLog.setShortUrl("000000");
         List<ShortenLog> shortenLogList = new ArrayList<>();
         for (int i = 0; i < 10; i++) shortenLogList.add(shortenLog);
-        when(shortenLogRepository.findTopTenOrderByVisitCount()).thenReturn(shortenLogList);
+        when(shortenLogRepository.findTop10ByOrderByVisitCountDesc()).thenReturn(shortenLogList);
         Shortener shortener = new Shortener();
         shortener.setLongUrl("https://www.baidu.com/");
         List<Shortener> shortenerList = new ArrayList<>();
@@ -366,18 +366,20 @@ public class StatControllerTest extends ApplicationTests {
 
     }
 
-//    @Autowired
-//    StringEncryptor encryptor;
-//    @Test
-//    public void getEncryptor() {
-        //对敏感信息进行加密
-//        String url = encryptor.encrypt("jdbc:mysql://reevoo-test-beta.crvfzsr4389e.us-east-1.rds.amazonaws.com:3306/test?useUnicode=true&characterEncoding=UTF-8&serverTimezone=CST");
-//        String name = encryptor.encrypt("admin");
-//        String password = encryptor.encrypt("reevoo2020");
-//        System.out.println(encryptor.encrypt("mongodb://52.91.119.239:27017/url"));
-//        System.out.println(name);
-//        System.out.println(password);
-//    }
+    @Autowired
+    StringEncryptor encryptor;
+
+    @Test
+    public void getEncryptor() {
+        String url = encryptor.encrypt("jdbc:mysql://reevoo-test-beta.crvfzsr4389e.us-east-1.rds.amazonaws.com:3306/test?useUnicode=true&characterEncoding=UTF-8&serverTimezone=CST");
+        String name = encryptor.encrypt("admin");
+        String password = encryptor.encrypt("reevoo2020");
+        String urlMongo = encryptor.encrypt("mongodb://54.165.181.57:27017/url");
+        System.out.println(url);
+        System.out.println(name);
+        System.out.println(password);
+        System.out.println(urlMongo);
+    }
 
     @Test
     public void getNumberCount() throws Exception {
@@ -387,9 +389,7 @@ public class StatControllerTest extends ApplicationTests {
 
         ShortenLog shortenLog = new ShortenLog();
         shortenLog.setShortUrl("SXSTQL");
-        List<ShortenLog> shortenLogs = new ArrayList<>();
-        shortenLogs.add(shortenLog);
-        when(shortenLogRepository.findTopOneOrderByVisitCount()).thenReturn(shortenLogs);
+        when(shortenLogRepository.findTopByOrderByVisitCountDesc()).thenReturn(shortenLog);
 
         String res = mockMvc.perform(get("/getNumberCount").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();

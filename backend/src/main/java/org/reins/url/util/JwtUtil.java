@@ -33,7 +33,7 @@ public class JwtUtil {
         System.out.println("生成签名方法开始执行！");
         long nowMillis = System.currentTimeMillis();
         Date now = new Date(nowMillis);
-        Date expTime = new Date(isRefresh ? nowMillis + EXPIRE_TIME + 5 * 60 * 1000 : nowMillis + EXPIRE_TIME);
+        Date expTime = new Date(isRefresh ? nowMillis + EXPIRE_TIME + 10 * 60 * 1000 : nowMillis + EXPIRE_TIME);
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
         SecretKey secretKey = generalKey();
         JwtBuilder builder = Jwts.builder()
