@@ -21,7 +21,7 @@ public interface ShortenLogDao {
 
     ShortenLog findByShortUrl(String shortUrl);
 
-    List<ShortenLog> findTopOneOrderByVisitCount();
+    ShortenLog findTopOneOrderByVisitCount();
 
     List<ShortenLog> findTopTenOrderByVisitCount();
 

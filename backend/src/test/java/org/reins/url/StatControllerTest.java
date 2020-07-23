@@ -291,7 +291,7 @@ public class StatControllerTest extends ApplicationTests {
         shortenLog.setShortUrl("000000");
         List<ShortenLog> shortenLogList = new ArrayList<>();
         for (int i = 0; i < 10; i++) shortenLogList.add(shortenLog);
-        when(shortenLogRepository.findTopTenOrderByVisitCount()).thenReturn(shortenLogList);
+        when(shortenLogRepository.findTop10ByOrderByVisitCountDesc()).thenReturn(shortenLogList);
         Shortener shortener = new Shortener();
         shortener.setLongUrl("https://www.baidu.com/");
         List<Shortener> shortenerList = new ArrayList<>();
@@ -389,9 +389,7 @@ public class StatControllerTest extends ApplicationTests {
 
         ShortenLog shortenLog = new ShortenLog();
         shortenLog.setShortUrl("SXSTQL");
-        List<ShortenLog> shortenLogs = new ArrayList<>();
-        shortenLogs.add(shortenLog);
-        when(shortenLogRepository.findTopOneOrderByVisitCount()).thenReturn(shortenLogs);
+        when(shortenLogRepository.findTopByOrderByVisitCountDesc()).thenReturn(shortenLog);
 
         String res = mockMvc.perform(get("/getNumberCount").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();

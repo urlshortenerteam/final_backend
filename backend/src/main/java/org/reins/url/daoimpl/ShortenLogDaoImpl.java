@@ -28,7 +28,8 @@ public class ShortenLogDaoImpl implements ShortenLogDao {
     private ShortenerRepository shortenerRepository;
 
     private String long2short(String longUrl) {
-        Xeger xeger = new Xeger("[A-Za-z0-9]{6}", new Random(0));
+        Date date = new Date();
+        Xeger xeger = new Xeger("[A-Za-z0-9]{6}", new Random(date.getTime()));
         String hex = DigestUtils.md5DigestAsHex((xeger.generate() + longUrl).getBytes());
         List<String> res = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
@@ -74,8 +75,8 @@ public class ShortenLogDaoImpl implements ShortenLogDao {
         shortenLog.setCreateTime(new Date());
         shortenLog.setVisitCount(0);
         while (true) {
-            shortenLog.setShortUrl(long2short(longUrls.get((int) (Math.random() * longUrls.size()))));
             try {
+                shortenLog.setShortUrl(long2short(longUrls.get((int) (Math.random() * longUrls.size()))));
                 shortenLogRepository.save(shortenLog);
                 break;
             } catch (ConstraintViolationException e) {
@@ -101,8 +102,8 @@ public class ShortenLogDaoImpl implements ShortenLogDao {
             shortenLog.setCreateTime(new Date());
             shortenLog.setVisitCount(0);
             while (true) {
-                shortenLog.setShortUrl(long2short(longUrl));
                 try {
+                    shortenLog.setShortUrl(long2short(longUrl));
                     shortenLogRepository.save(shortenLog);
                     break;
                 } catch (ConstraintViolationException e) {
@@ -158,13 +159,13 @@ public class ShortenLogDaoImpl implements ShortenLogDao {
     }
 
     @Override
-    public List<ShortenLog> findTopOneOrderByVisitCount() {
-        return shortenLogRepository.findTopOneOrderByVisitCount();
+    public ShortenLog findTopOneOrderByVisitCount() {
+        return shortenLogRepository.findTopByOrderByVisitCountDesc();
     }
 
     @Override
     public List<ShortenLog> findTopTenOrderByVisitCount() {
-        List<ShortenLog> shortenLogList = shortenLogRepository.findTopTenOrderByVisitCount();
+        List<ShortenLog> shortenLogList = shortenLogRepository.findTop10ByOrderByVisitCountDesc();
         for (ShortenLog shortenLog : shortenLogList)
             shortenLog.setShortener(reorderShortenerList(shortenerRepository.findByShortenId(shortenLog.getId())));
         return shortenLogList;
