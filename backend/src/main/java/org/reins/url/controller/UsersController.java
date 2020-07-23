@@ -148,7 +148,6 @@ public class UsersController {
      *
      * @throws Exception when the string jwt can't be parsed as a JWT
      */
-
     @CrossOrigin
     @RequestMapping("/refresh")
     public JSONObject refresh(@RequestBody Map<String, String> params) throws Exception {
@@ -166,7 +165,6 @@ public class UsersController {
             return res;
         }
         res.put("success", true);
-
 
         JSONObject obj = new JSONObject();
         obj.put("token", JwtUtil.sign(users.getId(), users.getName(), users.getRole(), false));
