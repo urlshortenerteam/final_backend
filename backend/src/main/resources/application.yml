@@ -25,7 +25,7 @@ spring:
   data:
     mongodb:
       uri: ENC(1zazKbKzFOxo61wNUW7nqbHhHf15PxCekmA/V47k/iFcKlt5l24i2i9ng/FZbLqc)
-#      uri: mongodb://52.91.119.239:27017/url
+#      uri: mongodb://test:test@127.0.0.1:27017/url?authSource=mydb
 server:
   port: 4000
   tomcat:
