@@ -27,7 +27,8 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   data:
     mongodb:
-      uri: mongodb://test:test@127.0.0.1:27017/url?authSource=mydb
+      uri: ENC(oXP9fk+yNko2l92kV1iYRx5dLqL5pzYM3nEwN0g+YqoH+LVsPQMDWYgGGMHgsZbI)
+#      uri: mongodb://52.91.119.239:27017/url
 server:
   port: 4000
   tomcat:

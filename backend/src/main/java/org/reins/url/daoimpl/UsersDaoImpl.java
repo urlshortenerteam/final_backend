@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,10 +57,17 @@ public class UsersDaoImpl implements UsersDao {
     @Override
     public List<Users> findAllUserStat() {
         List<Users> users = usersRepository.findAllUserStat();
-        for (Users u : users) {
-            u.setPassword("");
+        List<Users> res = new ArrayList<>();
+        for (Users user : users) {
+            Users tmp = new Users();
+            tmp.setId(user.getId());
+            tmp.setName(user.getName());
+            tmp.setEmail(user.getEmail());
+            tmp.setRole(user.getRole());
+            tmp.setVisitCount(user.getVisitCount());
+            res.add(tmp);
         }
-        return users;
+        return res;
     }
 
     @Override

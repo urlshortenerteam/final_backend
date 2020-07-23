@@ -14,6 +14,6 @@ public interface UsersRepository extends JpaRepository<Users, Long> {
     @Query("select u from Users u")
     List<Users> findAllUserStat();
 
-    @Query("select u.id from Users u where u.name=:name")
+    @Query("select u from Users u where u.name=:name")
     Users findByName(@Param("name") String name);
 }
