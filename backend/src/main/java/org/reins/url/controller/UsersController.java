@@ -14,8 +14,6 @@ import java.util.Map;
 public class UsersController {
     @Autowired
     private UsersService usersService;
-    @Autowired
-    private JwtUtil jwtUtil;
 
     /**
      * handle the request "/register" and return the result of registration.
@@ -75,7 +73,8 @@ public class UsersController {
             if (user.getRole() == 2) obj.put("loginStatus", false);
             else {
                 obj.put("loginStatus", true);
-                obj.put("token", JwtUtil.sign(user.getId(), user.getName(), user.getRole()));
+                obj.put("token", JwtUtil.sign(user.getId(), user.getName(), user.getRole(), false));
+                obj.put("refresh-token", JwtUtil.sign(user.getId(), user.getName(), user.getRole(), true));
             }
         }
         JSONObject res = new JSONObject();
@@ -131,6 +130,48 @@ public class UsersController {
         usersService.changeRole(ban_id, ban ? 2 : 1);
         status.put("status", true);
         res.put("data", status);
+        return res;
+    }
+
+    /**
+     * handle the request "/refresh" and return refreshed tokens.
+     * It checks whether the token is correct and the user's type. Then it generates new access-token and refresh-token.
+     *
+     * @param params It cotains "refresh":the old refresh-token
+     * @return {
+     *     data:{
+     *             token:String
+     *             refresh-token:String
+     *         },
+     *      success:boolean
+     * }
+     *
+     * @throws Exception when the string jwt can't be parsed as a JWT
+     */
+
+    @CrossOrigin
+    @RequestMapping("/refresh")
+    public JSONObject refresh(@RequestBody Map<String, String> params) throws Exception {
+        String oldRefresh = params.get("refresh");
+        JSONObject res = new JSONObject();
+        if (!JwtUtil.verify(oldRefresh)) {
+            res.put("success", false);
+            return res;
+        }
+        Claims c = JwtUtil.parseJWT(oldRefresh);
+        long userId = (long) c.get("id");
+        Users users = usersService.findById(userId);
+        if (users == null || users.getRole() == 2) {
+            res.put("success", false);
+            return res;
+        }
+        res.put("success", true);
+
+
+        JSONObject obj = new JSONObject();
+        obj.put("token", JwtUtil.sign(users.getId(), users.getName(), users.getRole(), false));
+        obj.put("refresh-token", JwtUtil.sign(users.getId(), users.getName(), users.getRole(), true));
+        res.put("data", obj);
         return res;
     }
 }

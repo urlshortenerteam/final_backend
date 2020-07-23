@@ -1,23 +1,17 @@
 package org.reins.url.intercepter;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.reins.url.entity.Users;
-import org.reins.url.service.UsersService;
 import org.reins.url.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import io.jsonwebtoken.Claims;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @Component
 public class JWTInterceptor implements HandlerInterceptor {
 
-    @Autowired
-    private JwtUtil jWTUtil;
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object obj, Exception e) throws Exception {
@@ -38,9 +32,7 @@ public class JWTInterceptor implements HandlerInterceptor {
         //System.out.println(jwt);
         try {
             // 检测请求头是否为空
-            if (jwt == null) {
-                //System.out.println("用户未登录，验证失败");
-            } else {
+            if (jwt != null) {
 //                Claims c = jWTUtil.parseJWT(jwt);
 //                Users user = usersService.findById((Long) c.get("id"));
 //                if (user==null)
@@ -48,7 +40,7 @@ public class JWTInterceptor implements HandlerInterceptor {
                 if (jwt.equals("SXSTQL"))
                     return true;
                 //System.out.println("结束进入拦截器检验jwt头部是否含有Authorization方法！");
-                if (jWTUtil.verify(jwt)) return true;
+                if (JwtUtil.verify(jwt)) return true;
                 else {
                     response.setStatus(404);
                     return false;

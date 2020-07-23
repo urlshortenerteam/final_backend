@@ -1,8 +1,5 @@
 package org.reins.url.util;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
 import io.jsonwebtoken.*;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Component;
@@ -32,17 +29,18 @@ public class JwtUtil {
     }
 
     // 生成签名
-    public static String sign(long id, String username, int type) {
+    public static String sign(long id, String username, int type, boolean isRefresh) {
         System.out.println("生成签名方法开始执行！");
         long nowMillis = System.currentTimeMillis();
         Date now = new Date(nowMillis);
-        Date expTime = new Date(nowMillis + EXPIRE_TIME);
+        Date expTime = new Date(isRefresh ? nowMillis + EXPIRE_TIME + 5 * 60 * 1000 : nowMillis + EXPIRE_TIME);
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
         SecretKey secretKey = generalKey();
         JwtBuilder builder = Jwts.builder()
                 .claim("id", id)
                 .claim("username", username) // 前端输入的用户名
                 .claim("role", type)
+                .claim("isRefresh", isRefresh)
                 .setSubject(username)   // 主题
                 .setIssuer("user")     // 签发者
                 .setIssuedAt(now)      // 签发时间
@@ -50,7 +48,6 @@ public class JwtUtil {
                 .signWith(signatureAlgorithm, secretKey); // 签名算法以及密匙
         return builder.compact();
     }
-
 
     public static boolean verify(String token) {
         System.out.println("进入检验token是否正确方法！");
