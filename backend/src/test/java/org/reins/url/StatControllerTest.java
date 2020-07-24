@@ -409,7 +409,7 @@ public class StatControllerTest extends ApplicationTests {
 
 //    @Test
 //    public void areaDistrTest(){
-//        Statistics statistics=new Statistics();
+//        Statistics statistics = new Statistics();
 //        statistics.addAreaDistr("111.186.44.71");
 //        List<ShortenLog> shortenLogs = shortenLogRepository.findByCreatorId(2);
 //        String res = mockMvc.perform(get("/getStat?id=2").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE))
