@@ -400,4 +400,10 @@ public class StatControllerTest extends ApplicationTests {
         assertEquals(stats.getLong("visitCountTotal"), 31415926);
         assertEquals(stats.getString("shortUrl"), "SXSTQL");
     }
+
+    @Test
+    public void areaDistrTest() throws Exception {
+        Statistics statistics=new Statistics();
+        statistics.addAreaDistr("111.186.44.71");
+    }
 }
