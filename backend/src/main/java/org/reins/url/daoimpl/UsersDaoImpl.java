@@ -1,5 +1,6 @@
 package org.reins.url.daoimpl;
 
+import org.jasypt.encryption.StringEncryptor;
 import org.reins.url.dao.UsersDao;
 import org.reins.url.entity.Users;
 import org.reins.url.repository.UsersRepository;
@@ -17,6 +18,8 @@ import java.util.Optional;
 @Service
 public class UsersDaoImpl implements UsersDao {
   @Autowired
+    private StringEncryptor stringEncryptor;
+    @Autowired
   private UsersRepository usersRepository;
 
   @Override
@@ -41,7 +44,9 @@ public class UsersDaoImpl implements UsersDao {
 
   @Override
   public Users checkUser(String name, String password) {
-    return usersRepository.checkUser(name, password);
+    Users user = usersRepository.findByName(name);
+        if (user == null || stringEncryptor.decrypt(user.getPassword()).equals(password)) return user;
+        return null;
   }
 
   @Override

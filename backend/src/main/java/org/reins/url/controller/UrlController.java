@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import eu.bitwalker.useragentutils.DeviceType;
 import eu.bitwalker.useragentutils.UserAgent;
+import io.jsonwebtoken.Claims;
 import org.reins.url.entity.ShortenLog;
 import org.reins.url.entity.Shortener;
 import org.reins.url.entity.Users;
@@ -12,6 +13,7 @@ import org.reins.url.service.ShortenLogService;
 import org.reins.url.service.ShortenerService;
 import org.reins.url.service.UsersService;
 import org.reins.url.service.VisitLogService;
+import org.reins.url.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -24,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class UrlController {
@@ -41,36 +44,40 @@ public class UrlController {
   /**
    * handle the request "/getShort" and generate short urls.
    *
-   * @param id       the id in requestParam used for checking the user's id
+   * @param jwt      the jwt in requestHeader used for checking the user's id
    * @param longUrls the long urls that needs to be generated to short urls
    * @return {data:[
    * "000000",
    * ...
    * ]
    * }
+     * @throws Exception when the string jwt can't be parsed as a JWT
    */
   @CrossOrigin
   @RequestMapping("/getShort")
-  public JSONObject generateShort(@RequestParam("id") long id, @RequestBody List<String> longUrls) {
+  public JSONObject generateShort(@RequestHeader("Authorization") String jwt, @RequestBody List<String> longUrls) throws Exception {
+        Claims c = JwtUtil.parseJWT(jwt);
     JSONObject res = new JSONObject();
-    res.put("data", shortenLogService.addShortenLog(id, longUrls));
+    res.put("data", shortenLogService.addShortenLog(Long.parseLong(c.get("id").toString()), longUrls));
     return res;
   }
 
   /**
    * handle the request "/getOneShort" and generate one short url.
    *
-   * @param id       the id in requestParam used for checking the user's id
+   * @param jwt      the jwt in requestHeader used for checking the user's id
    * @param longUrls the long urls that needs to be generated to the short url
    * @return {data:
    * shortUrl
    * }
+     * @throws Exception when the string jwt can't be parsed as a JWT
    */
   @CrossOrigin
   @RequestMapping("/getOneShort")
-  public JSONObject generateOneShort(@RequestParam("id") long id, @RequestBody List<String> longUrls) {
+  public JSONObject generateOneShort(@RequestHeader("Authorization") String jwt, @RequestBody List<String> longUrls) throws Exception {
+        Claims c = JwtUtil.parseJWT(jwt);
     JSONObject res = new JSONObject();
-    res.put("data", shortenLogService.addOneShortenLog(id, longUrls));
+    res.put("data", shortenLogService.addOneShortenLog(Long.parseLong(c.get("id").toString()), longUrls));
     return res;
   }
 
@@ -117,34 +124,38 @@ public class UrlController {
   /**
    * handle the request "/editUrl" and edit the information of Urls.
    *
-   * @param id       the id in requestParam used for checking the user's id
-   * @param shortUrl the short url used to find the shorten log
-   * @param longUrl  the long url that needs to be edited
-   * @return {data:{
-   * status:Boolean
-   * }
-   * }
+   * @param jwt      the jwt in requestHeader used for checking the user's id
+     * @param shortUrl the short url used to find the shorten log
+     * @param longUrl  the long url that needs to be edited
+     * @return {data:{
+     * status:Boolean
+     * }
+     * }
+     * @throws Exception when the string jwt can't be parsed as a JWT
    */
   @CrossOrigin
   @RequestMapping("/editUrl")
-  public JSONObject editUrl(@Param("id") long id, @Param("shortUrl") String shortUrl, @RequestBody String longUrl) {
-    JSONObject res = new JSONObject();
-    JSONObject status = new JSONObject();
-    Users user = usersService.findById(id);
-    ShortenLog shortenLog = shortenLogService.findByShortUrl(shortUrl);
-    if (shortenLog == null || user == null) {
-      status.put("status", false);
-      res.put("data", status);
-      return res;
-    }
-    List<Shortener> longUrls = shortenLog.getShortener();
-    if (longUrls.isEmpty()) {
-      status.put("status", false);
-      res.put("data", status);
-      return res;
-    }
-    Shortener shortener = longUrls.get(0);
-    longUrl = JSON.parse(longUrl).toString();
+  public JSONObject editUrl(@RequestHeader("Authorization") String jwt, @RequestBody Map<String, String> params) throws Exception {
+        Claims c = JwtUtil.parseJWT(jwt);
+        long id = Long.parseLong(c.get("id").toString());
+        String shortUrl = params.get("shortUrl");
+        String longUrl = JSON.parse(params.get("longUrl")).toString();
+        JSONObject res = new JSONObject();
+        JSONObject status = new JSONObject();
+        Users user = usersService.findById(id);
+        ShortenLog shortenLog = shortenLogService.findByShortUrl(shortUrl);
+        if (shortenLog == null || user == null) {
+            status.put("status", false);
+            res.put("data", status);
+            return res;
+        }
+        List<Shortener> longUrls = shortenLog.getShortener();
+        if (longUrls.isEmpty()) {
+            status.put("status", false);
+            res.put("data", status);
+            return res;
+        }
+        Shortener shortener = longUrls.get(0);
     if (longUrl.equals("BANNED") || longUrl.equals("LIFT")) {
       boolean ban = longUrl.equals("BANNED");
       boolean shortenerBan = shortener.getLongUrl().equals("BANNED");

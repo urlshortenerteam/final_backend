@@ -120,7 +120,7 @@ public class StatControllerTest extends ApplicationTests {
     assertEquals("https://www.baidu.com/", l);
 
 
-//        String res = mockMvc.perform(get("/getStat?id=1").header("Authorization", JwtUtil.sign(1,"ao7777",0,false)).contentType(MediaType.APPLICATION_JSON_VALUE))
+//        String res = mockMvc.perform(get("/getStat?id=1").header("Authorization", JwtUtil.sign(1, "ao7777", 0, false)).contentType(MediaType.APPLICATION_JSON_VALUE))
 //                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
 //        List<JSONObject> stats = om.readValue(res, new TypeReference<JSONObject>() {
 //        }).getJSONArray("data").toJavaList(JSONObject.class);
@@ -205,7 +205,7 @@ public class StatControllerTest extends ApplicationTests {
 
 //        String shortUrl = "B7VAfa";
 //
-//        String res = mockMvc.perform(get("/getShortStat?id=1&short=" + shortUrl).contentType(MediaType.APPLICATION_JSON_VALUE).header("Authorization", JwtUtil.sign(1,"ao7777",0,false)))
+//        String res = mockMvc.perform(get("/getShortStat?id=1&short=" + shortUrl).contentType(MediaType.APPLICATION_JSON_VALUE).header("Authorization", JwtUtil.sign(1, "ao7777", 0, false)))
 //                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
 //        JSONObject stat = om.readValue(res, new TypeReference<JSONObject>() {
 //        })
@@ -239,7 +239,7 @@ public class StatControllerTest extends ApplicationTests {
     usersList.add(tmp);
     when(usersRepository.findAllUserStat()).thenReturn(usersList);
 
-    String res = mockMvc.perform(get("/getUserStat").contentType(MediaType.APPLICATION_JSON_VALUE).header("Authorization", "SXSTQL"))
+    String res = mockMvc.perform(get("/getUserStat").contentType(MediaType.APPLICATION_JSON_VALUE).header("Authorization", JwtUtil.sign(1, "ao7777", 0, false)))
             .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
     List<JSONObject> users = om.readValue(res, new TypeReference<JSONObject>() {
     })
@@ -252,7 +252,7 @@ public class StatControllerTest extends ApplicationTests {
     assertEquals(users.get(0).getLong("visitCount"), 1);
     assertEquals(users.get(0).getLong("id"), 1);
 
-//        String res = mockMvc.perform(get("/getUserStat").contentType(MediaType.APPLICATION_JSON_VALUE).header("Authorization", "SXSTQL"))
+//        String res = mockMvc.perform(get("/getUserStat").contentType(MediaType.APPLICATION_JSON_VALUE).header("Authorization", JwtUtil.sign(1, "ao7777", 0, false)))
 //                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
 //        List<JSONObject> users = om.readValue(res, new TypeReference<JSONObject>() {})
 //                .getJSONArray("data").toJavaList(JSONObject.class);
@@ -283,7 +283,7 @@ public class StatControllerTest extends ApplicationTests {
         shortenLog.setCreatorId(1);
         when(shortenLogRepository.findById((long) 1)).thenReturn(Optional.of(shortenLog));
 
-    String res = mockMvc.perform(get("/getReal?id=1").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE))
+    String res = mockMvc.perform(get("/getReal?id=1").header("Authorization", JwtUtil.sign(1, "ao7777", 0, false)).contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
     JSONArray logs = om.readValue(res, new TypeReference<JSONObject>() {
     }).getJSONObject("data").getJSONArray("logs");
@@ -304,7 +304,7 @@ public class StatControllerTest extends ApplicationTests {
     shortenerList.add(shortener);
     when(shortenerRepository.findByShortenId(1)).thenReturn(shortenerList);
 
-    String res = mockMvc.perform(get("/getTopTen").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE))
+    String res = mockMvc.perform(get("/getTopTen").header("Authorization", JwtUtil.sign(1, "ao7777", 0, false)).contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
     JSONArray data = om.readValue(res, new TypeReference<JSONObject>() {
     }).getJSONArray("data");
@@ -350,7 +350,7 @@ public class StatControllerTest extends ApplicationTests {
     tmp4.setEmail("ao7777@sjtu.edu.cn");
     when(usersRepository.findById((long) 1)).thenReturn(java.util.Optional.of(tmp4));
 
-    String res = mockMvc.perform(get("/getAllUrls").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE))
+    String res = mockMvc.perform(get("/getAllUrls").header("Authorization", JwtUtil.sign(1, "ao7777", 0, false)).contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
     List<JSONObject> stats = om.readValue(res, new TypeReference<JSONObject>() {
     }).getJSONArray("data").toJavaList(JSONObject.class);
@@ -394,17 +394,17 @@ public class StatControllerTest extends ApplicationTests {
     when(shortenLogRepository.visitSum()).thenReturn((long) 31415926);
 
     ShortenLog shortenLog = new ShortenLog();
-    shortenLog.setShortUrl("SXSTQL");
+    shortenLog.setShortUrl(JwtUtil.sign(1, "ao7777", 0, false));
     when(shortenLogRepository.findTopByOrderByVisitCountDesc()).thenReturn(shortenLog);
 
-    String res = mockMvc.perform(get("/getNumberCount").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE))
+    String res = mockMvc.perform(get("/getNumberCount").header("Authorization", JwtUtil.sign(1, "ao7777", 0, false)).contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
     JSONObject stats = om.readValue(res, new TypeReference<JSONObject>() {
     }).getJSONObject("data");
     assertEquals(stats.getLong("userCount"), 1551);
     assertEquals(stats.getLong("shortUrlCount"), 2333);
     assertEquals(stats.getLong("visitCountTotal"), 31415926);
-    assertEquals(stats.getString("shortUrl"), "SXSTQL");
+    assertEquals(stats.getString("shortUrl"), JwtUtil.sign(1, "ao7777", 0, false));
   }
 
 //    @Test

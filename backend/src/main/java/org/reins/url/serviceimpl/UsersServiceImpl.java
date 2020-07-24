@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class UsersServiceImpl implements UsersService {
   @Autowired
-    StringEncryptor encryptor;
+    StringEncryptor stringEncryptor;
     @Autowired
   private UsersDao usersDao;
   @Autowired
@@ -28,7 +28,7 @@ public class UsersServiceImpl implements UsersService {
 
   @Override
   public Users checkUser(String name, String password) {
-    return usersDao.checkUser(name, encryptor.encrypt(password));
+    return usersDao.checkUser(name, password);
   }
 
   @Override
@@ -39,7 +39,7 @@ public class UsersServiceImpl implements UsersService {
   @Override
   public Boolean register(String name, String password, String email) {
     if (usersDao.doesNameExist(name)) return false;
-    usersDao.register(name, encryptor.encrypt(password), email);
+    usersDao.register(name, stringEncryptor.encrypt(password), email);
     return true;
   }
 }
