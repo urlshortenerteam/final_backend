@@ -8,31 +8,82 @@ import org.lionsoul.ip2region.DbConfig;
 import org.lionsoul.ip2region.DbSearcher;
 import org.lionsoul.ip2region.Util;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
 public class Statistics {
   public String shortUrl;
   public long count;
-  public List<AreaDistr> areaDistr;
+  public AreaDistr[] areaDistr;
   public TimeDistr[] timeDistr;
-  public List<SourceDistr> sourceDistr;
+  public SourceDistr[] sourceDistr;
   public JSONArray longUrl;
   public String creatorName;
   public Date createTime;
+  final static int[] codes = {
+          530000,
+          230000,
+          520000,
+          110000,
+          130000,
+          140000,
+          220000,
+          640000,
+          210000,
+          460000,
+          150000,
+          120000,
+          650000,
+          310000,
+          610000,
+          620000,
+          340000,
+          810000,
+          440000,
+          410000,
+          430000,
+          360000,
+          510000,
+          450000,
+          320000,
+          820000,
+          330000,
+          370000,
+          630000,
+          500000,
+          350000,
+          420000,
+          540000,
+          710000
+  };
+  final static String[] names = {
+          "云南", "黑龙江", "贵州", "北京", "河北", "山西", "吉林", "宁夏", "辽宁", "海南", "内蒙古", "天津", "新疆", "上海",
+          "陕西", "甘肃", "安徽", "香港", "广东", "河南", "湖南", "江西", "四川", "广西", "江苏", "澳门", "浙江", "山东", "青海",
+          "重庆", "福建", "湖北", "西藏", "台湾"
+  };
 
   public Statistics() {
-    areaDistr = new ArrayList<>();
+    areaDistr = new AreaDistr[34];
     timeDistr = new TimeDistr[24];
     for (int i = 0; i < 24; ++i) {
       timeDistr[i] = new TimeDistr();
       timeDistr[i].time = i;
     }
-    sourceDistr = new ArrayList<>();
+    for (int i = 0; i < 34; ++i) {
+      areaDistr[i] = new AreaDistr();
+      areaDistr[i].name = names[i];
+      areaDistr[i].code = codes[i];
+      areaDistr[i].value = 0;
+    }
+    sourceDistr = new SourceDistr[2];
+    sourceDistr[0] = new SourceDistr();
+    sourceDistr[0].source = "电脑";
+    sourceDistr[0].value = 0;
+    sourceDistr[1] = new SourceDistr();
+    sourceDistr[1].source = "手机";
+    sourceDistr[1].value = 0;
     count = 0;
     longUrl = new JSONArray();
   }
@@ -47,57 +98,113 @@ public class Statistics {
     DbSearcher searcher = new DbSearcher(config, dbfile);
     DataBlock block = searcher.btreeSearch(ip);
     String area = block.getRegion().substring(5, 7);
-    boolean flag = false;
-    for (AreaDistr areaDistr : areaDistr) {
-      if (areaDistr.name.equals(area)) {
-        areaDistr.value++;
-        flag = true;
+    switch (area) {
+      case "云南":
+        ++areaDistr[0].value;
         break;
-      }
+      case "黑龙":
+        ++areaDistr[1].value;
+        break;
+      case "贵州":
+        ++areaDistr[2].value;
+        break;
+      case "北京":
+        ++areaDistr[3].value;
+        break;
+      case "河北":
+        ++areaDistr[4].value;
+        break;
+      case "山西":
+        ++areaDistr[5].value;
+        break;
+      case "吉林":
+        ++areaDistr[6].value;
+        break;
+      case "宁夏":
+        ++areaDistr[7].value;
+        break;
+      case "辽宁":
+        ++areaDistr[8].value;
+        break;
+      case "海南":
+        ++areaDistr[9].value;
+        break;
+      case "内蒙":
+        ++areaDistr[10].value;
+        break;
+      case "天津":
+        ++areaDistr[11].value;
+        break;
+      case "新疆":
+        ++areaDistr[12].value;
+        break;
+      case "上海":
+        ++areaDistr[13].value;
+        break;
+      case "陕西":
+        ++areaDistr[14].value;
+        break;
+      case "甘肃":
+        ++areaDistr[15].value;
+        break;
+      case "安徽":
+        ++areaDistr[16].value;
+        break;
+      case "香港":
+        ++areaDistr[17].value;
+        break;
+      case "广东":
+        ++areaDistr[18].value;
+        break;
+      case "河南":
+        ++areaDistr[19].value;
+        break;
+      case "湖南":
+        ++areaDistr[20].value;
+        break;
+      case "江西":
+        ++areaDistr[21].value;
+        break;
+      case "四川":
+        ++areaDistr[22].value;
+        break;
+      case "广西":
+        ++areaDistr[23].value;
+        break;
+      case "江苏":
+        ++areaDistr[24].value;
+        break;
+      case "澳门":
+        ++areaDistr[25].value;
+        break;
+      case "浙江":
+        ++areaDistr[26].value;
+        break;
+      case "山东":
+        ++areaDistr[27].value;
+        break;
+      case "青海":
+        ++areaDistr[28].value;
+        break;
+      case "重庆":
+        ++areaDistr[29].value;
+        break;
+      case "福建":
+        ++areaDistr[30].value;
+        break;
+      case "湖北":
+        ++areaDistr[31].value;
+        break;
+      case "西藏":
+        ++areaDistr[32].value;
+        break;
+      case "台湾":
+        ++areaDistr[33].value;
+        break;
+      default:
+        break;
     }
-    if (!flag) {
-      AreaDistr a = new AreaDistr();
-      a.name = area;
-      a.value = 1;
-      switch (area){
-          case "云南":a.code=530000;break;
-          case "黑龙江":a.code=230000;break;
-          case "贵州":a.code=520000;break;
-          case "北京":a.code=110000;break;
-          case "河北":a.code=130000;break;
-          case "山西":a.code=140000;break;
-          case "吉林":a.code=220000;break;
-          case "宁夏":a.code=640000;break;
-          case "辽宁":a.code=210000;break;
-          case "海南":a.code=460000;break;
-          case "内蒙古":a.code=150000;break;
-          case "天津":a.code=120000;break;
-          case "新疆":a.code=650000;break;
-          case "上海":a.code=310000;break;
-          case "陕西":a.code=610000;break;
-          case "甘肃":a.code=620000;break;
-          case "安徽":a.code=340000;break;
-          case "香港":a.code=810000;break;
-          case "广东":a.code=440000;break;
-          case "河南":a.code=410000;break;
-          case "湖南":a.code=430000;break;
-          case "江西":a.code=360000;break;
-          case "四川":a.code=510000;break;
-          case "广西":a.code=450000;break;
-          case "江苏":a.code=320000;break;
-          case "澳门":a.code=820000;break;
-          case "浙江":a.code=330000;break;
-          case "山东":a.code=370000;break;
-          case "青海":a.code=630000;break;
-          case "重庆":a.code=500000;break;
-          case "福建":a.code=350000;break;
-          case "湖北":a.code=420000;break;
-          case "西藏":a.code=540000;break;
-          case "台湾":a.code=710000;break;
-          default:break;
-      }
-      areaDistr.add(a);
-    }
+
   }
 
   public void addTimeDistr(Date visitTime) {
@@ -107,6 +214,9 @@ public class Statistics {
     timeDistr[hour].value++;
   }
 
-  public void addSourceDistr(String ip) {
+  public void addSourceDistr(boolean device) {
+    if (device)
+      ++sourceDistr[1].value;
+    else ++sourceDistr[0].value;
   }
 }
