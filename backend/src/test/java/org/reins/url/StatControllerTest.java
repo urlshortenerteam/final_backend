@@ -267,6 +267,7 @@ public class StatControllerTest extends ApplicationTests {
         VisitLog visitLog = new VisitLog();
         visitLog.setShortenerId("000000000000000000000000");
         List<VisitLog> visitLogList = new ArrayList<>();
+        visitLog.setVisitTime(new Date());
         for (int i = 0; i < 6; i++) visitLogList.add(visitLog);
         when(visitLogRepository.findAllOrderByVisitTime()).thenReturn(visitLogList);
         Shortener shortener = new Shortener();
