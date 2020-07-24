@@ -5,7 +5,7 @@ import org.reins.url.entity.VisitLog;
 import java.util.List;
 
 public interface VisitLogService {
-  void addVisitLog(String shortenerId, String ip, Boolean device);
+    void addVisitLog(String shortenerId, String ip, Boolean device);
 
-  List<VisitLog> findAllOrderByVisitTime();
+    List<VisitLog> findAllOrderByVisitTime();
 }
