@@ -5,25 +5,25 @@ import org.reins.url.entity.ShortenLog;
 import java.util.List;
 
 public interface ShortenLogDao {
-    String addOneShortenLog(long creatorId, List<String> longUrls);
+  String addOneShortenLog(long creatorId, List<String> longUrls);
 
-    List<String> addShortenLog(long creatorId, List<String> longUrls);
+  List<String> addShortenLog(long creatorId, List<String> longUrls);
 
-    void changeShortenLog(ShortenLog shortenLog);
+  void changeShortenLog(ShortenLog shortenLog);
 
-    long count();
+  long count();
 
-    List<ShortenLog> findAll();
+  List<ShortenLog> findAll();
 
-    List<ShortenLog> findByCreatorId(long creatorId);
+  List<ShortenLog> findByCreatorId(long creatorId);
 
-    ShortenLog findById(long id);
+  ShortenLog findById(long id);
 
-    ShortenLog findByShortUrl(String shortUrl);
+  ShortenLog findByShortUrl(String shortUrl);
 
-    ShortenLog findTopOneOrderByVisitCount();
+  ShortenLog findTopOneOrderByVisitCount();
 
-    List<ShortenLog> findTopTenOrderByVisitCount();
+  List<ShortenLog> findTopTenOrderByVisitCount();
 
-    long visitSum();
+  long visitSum();
 }

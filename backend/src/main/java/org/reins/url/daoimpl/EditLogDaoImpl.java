@@ -14,15 +14,15 @@ import java.util.Date;
 @Repository
 @Service
 public class EditLogDaoImpl implements EditLogDao {
-    @Autowired
-    private EditLogRepository editLogRepository;
+  @Autowired
+  private EditLogRepository editLogRepository;
 
-    @Override
-    public void addEditLog(long editorId, String shortenerId) {
-        EditLog editLog = new EditLog();
-        editLog.setEditorId(editorId);
-        editLog.setEditTime(new Date());
-        editLog.setShortenerId(shortenerId);
-        editLogRepository.save(editLog);
-    }
+  @Override
+  public void addEditLog(long editorId, String shortenerId) {
+    EditLog editLog = new EditLog();
+    editLog.setEditorId(editorId);
+    editLog.setEditTime(new Date());
+    editLog.setShortenerId(shortenerId);
+    editLogRepository.save(editLog);
+  }
 }

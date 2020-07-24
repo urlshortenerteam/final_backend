@@ -7,13 +7,13 @@ import org.reins.url.entity.Users;
 import java.util.List;
 
 public interface StatService {
-    List<Statistics> getStat(long id);
+  List<Statistics> getStat(long id);
 
-    Statistics getShortStat(String shortUrl);
+  Statistics getShortStat(String shortUrl);
 
-    List<Users> getUserStat();
+  List<Users> getUserStat();
 
-    List<Statistics> getAllUrls();
+  List<Statistics> getAllUrls();
 
-    JSONObject getNumberCount();
+  JSONObject getNumberCount();
 }
