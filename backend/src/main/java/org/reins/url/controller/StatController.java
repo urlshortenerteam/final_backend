@@ -122,37 +122,37 @@ public class StatController {
     return res;
   }
 
-  /**
-   * handle the request "/getReal" and return the information visit logs.
-   * It can return the latest 5 visit logs of the user.
-   *
-   * @param id the id in requestParam used for checking the user's id
-   * @return {data: {
-   * logs: [
-   * {
-   * shortUrl: String,
-   * long: String,
-   * ip: String,
-   * source: String,
-   * time: Date,
-   * },
-   * {……},
-   * ……
-   * ],
-   * }
-   * }
-   */
-  @CrossOrigin
-  @RequestMapping("/getReal")
-  public JSONObject getReal(@RequestParam("id") long id) {
-    List<VisitLog> visitLogList = visitLogService.findAllOrderByVisitTime();
-    JSONArray logs = new JSONArray();
-    for (VisitLog visitLog : visitLogList) {
-      Shortener shortener = shortenerService.findById(visitLog.getShortenerId());
-      if (shortener == null || shortener.getLongUrl().equals("BANNED")) continue;
-      ShortenLog shortenLog = shortenLogService.findById(shortener.getShortenId());
-      if (shortenLog == null || shortenLog.getCreatorId() != id) continue;
-      SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-DD HH:mm:ss");
+    /**
+     * handle the request "/getReal" and return the information visit logs.
+     * It can return the latest 5 visit logs of the user.
+     *
+     * @param id the id in requestParam used for checking the user's id
+     * @return {data: {
+     * logs: [
+     * {
+     * shortUrl: String,
+     * long: String,
+     * ip: String,
+     * source: String,
+     * time: Date,
+     * },
+     * {……},
+     * ……
+     * ],
+     * }
+     * }
+     */
+    @CrossOrigin
+    @RequestMapping("/getReal")
+    public JSONObject getReal(@RequestParam("id") long id) {
+        List<VisitLog> visitLogList = visitLogService.findAllOrderByVisitTime();
+        JSONArray logs = new JSONArray();
+        for (VisitLog visitLog : visitLogList) {
+            Shortener shortener = shortenerService.findById(visitLog.getShortenerId());
+            if (shortener == null || shortener.getLongUrl().equals("BANNED")) continue;
+            ShortenLog shortenLog = shortenLogService.findById(shortener.getShortenId());
+            if (shortenLog == null || shortenLog.getCreatorId() != id) continue;
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-DD HH:mm:ss");
             JSONObject tmp = new JSONObject();
             tmp.put("shortUrl", shortenLog.getShortUrl());
             tmp.put("long", shortener.getLongUrl());

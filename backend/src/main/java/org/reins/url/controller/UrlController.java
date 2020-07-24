@@ -74,35 +74,35 @@ public class UrlController {
     return res;
   }
 
-  /**
-   * handle the request "/{[A-Za-z0-9]{6}}" and redirect to the long url.
-   */
-  @CrossOrigin
-  @RequestMapping("/{[A-Za-z0-9]{6}}")
-  public void getLong(HttpServletRequest req, HttpServletResponse resp) {
-    String shortUrl = req.getRequestURI().substring(1);
-    ShortenLog shortenLog = shortenLogService.findByShortUrl(shortUrl);
-    if (shortenLog == null) {
-      try {
-        resp.sendRedirect("/static/error.html");
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-      return;
-    }
-    List<Shortener> longUrls = shortenLog.getShortener();
-    if (longUrls.isEmpty()) {
-      try {
-        resp.sendRedirect("/static/error.html");
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-      return;
-    }
-    Shortener longUrl = longUrls.get(0);
-    if (!longUrl.getLongUrl().equals("BANNED")) longUrl = longUrls.get((int) (Math.random() * longUrls.size()));
-    Boolean device = (UserAgent.parseUserAgentString(req.getHeader("User-Agent")).getOperatingSystem().getDeviceType() != DeviceType.COMPUTER);
-    try {
+    /**
+     * handle the request "/{[A-Za-z0-9]{6}}" and redirect to the long url.
+     */
+    @CrossOrigin
+    @RequestMapping("/{[A-Za-z0-9]{6}}")
+    public void getLong(HttpServletRequest req, HttpServletResponse resp) {
+        String shortUrl = req.getRequestURI().substring(1);
+        ShortenLog shortenLog = shortenLogService.findByShortUrl(shortUrl);
+        if (shortenLog == null) {
+            try {
+                resp.sendRedirect("/static/error.html");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return;
+        }
+        List<Shortener> longUrls = shortenLog.getShortener();
+        if (longUrls.isEmpty()) {
+            try {
+                resp.sendRedirect("/static/error.html");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return;
+        }
+        Shortener longUrl = longUrls.get(0);
+        if (!longUrl.getLongUrl().equals("BANNED")) longUrl = longUrls.get((int) (Math.random() * longUrls.size()));
+        Boolean device = (UserAgent.parseUserAgentString(req.getHeader("User-Agent")).getOperatingSystem().getDeviceType() != DeviceType.COMPUTER);
+        try {
             shortenLog.setVisitCount(shortenLog.getVisitCount() + 1);
       shortenLogService.changeShortenLog(shortenLog);
       usersService.changeVisitCount(shortenLog.getCreatorId());
