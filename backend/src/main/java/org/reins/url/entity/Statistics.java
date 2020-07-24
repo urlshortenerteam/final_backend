@@ -72,6 +72,7 @@ public class Statistics {
             timeDistr[i].time = i;
         }
         for (int i = 0; i < 34; ++i) {
+            areaDistr[i] = new AreaDistr();
             areaDistr[i].name = names[i];
             areaDistr[i].code = codes[i];
             areaDistr[i].value = 0;
@@ -209,7 +210,6 @@ public class Statistics {
             default:
                 break;
         }
-
   public void addAreaDistr(String ip) throws Exception {
     boolean isIpAddress = Util.isIpAddress(ip);
     if (!isIpAddress) return;

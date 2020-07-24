@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class UsersServiceImpl implements UsersService {
   @Autowired
+    StringEncryptor encryptor;
+    @Autowired
   private UsersDao usersDao;
   @Autowired
   StringEncryptor encryptor;
