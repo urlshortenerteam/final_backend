@@ -13,7 +13,7 @@ import java.util.Date;
 public class JwtUtil {
 
   // 过期时间，单位毫秒
-  private static final long EXPIRE_TIME = 30 * 1000;
+  private static final long EXPIRE_TIME = 15 * 60 * 1000;
 
   // 加密密文，私钥
   private static final String TOKEN_SECRET = "SXSNB";
@@ -57,10 +57,13 @@ public class JwtUtil {
       System.out.println("验证成功！");
       return true;
     } catch (ExpiredJwtException e) {
-      return false;
-    } catch (SignatureException e) {
-      return false;
-    } catch (Exception e) {
+      e.printStackTrace();
+            return false;
+        } catch (SignatureException e) {
+            e.printStackTrace();
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
       return false;
     }
   }
