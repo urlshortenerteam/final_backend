@@ -1,5 +1,6 @@
 package org.reins.url.serviceimpl;
 
+import org.jasypt.encryption.StringEncryptor;
 import org.reins.url.dao.UsersDao;
 import org.reins.url.entity.Users;
 import org.reins.url.service.UsersService;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Service;
 public class UsersServiceImpl implements UsersService {
     @Autowired
     private UsersDao usersDao;
+    @Autowired
+    StringEncryptor encryptor;
 
     @Override
     public void changeRole(long id, int role) {
@@ -23,7 +26,7 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     public Users checkUser(String name, String password) {
-        return usersDao.checkUser(name, password);
+        return usersDao.checkUser(name, encryptor.encrypt(password));
     }
 
     @Override
@@ -34,7 +37,7 @@ public class UsersServiceImpl implements UsersService {
     @Override
     public Boolean register(String name, String password, String email) {
         if (usersDao.doesNameExist(name)) return false;
-        usersDao.register(name, password, email);
+        usersDao.register(name, encryptor.encrypt(password), email);
         return true;
     }
 }

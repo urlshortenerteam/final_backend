@@ -30,7 +30,7 @@ public class StatController {
     /**
      * handle the request "/getStat" and return the statistics of the user's Urls.
      *
-     * @param id the id of the user who calls "/getStat"
+     * @param jwt the jwt in requestHeader used for getting the user's id
      * @return {data:
      * [
      * {
@@ -45,19 +45,21 @@ public class StatController {
      * ……
      * ]
      * }
+     * @throws Exception when the string jwt can't be parsed as a JWT
      */
     @CrossOrigin
     @RequestMapping("/getStat")
-    public JSONObject getStat(@RequestParam("id") long id) {
+    public JSONObject getStat(@RequestHeader("Authorization") String jwt) throws Exception {
+        Claims c = JwtUtil.parseJWT(jwt);
         JSONObject res = new JSONObject();
-        res.put("data", statService.getStat(id));
+        res.put("data", statService.getStat(Long.parseLong(c.get("id").toString())));
         return res;
     }
 
     /**
      * handle the request "/getShortStat" and return the statistics of a single Url.
      *
-     * @param id        the id of the user who calls "/getShortStat"
+     * @param jwt the jwt in requestHeader used for getting the user's id
      * @param short_url the url whose statistics is required
      * @return {data:{
      * shortUrl:String,
@@ -68,10 +70,12 @@ public class StatController {
      * source_distr:JSONArray
      * }
      * }
+     * @throws Exception when the string jwt can't be parsed as a JWT
      */
     @CrossOrigin
     @RequestMapping("/getShortStat")
-    public JSONObject getShortStat(@RequestParam("id") long id, @RequestParam("short") String short_url) {
+    public JSONObject getShortStat(@RequestHeader("Authorization") String jwt, @RequestParam("short") String short_url) throws Exception {
+        Claims c = JwtUtil.parseJWT(jwt);
         JSONObject res = new JSONObject();
         res.put("data", statService.getShortStat(short_url));
         return res;

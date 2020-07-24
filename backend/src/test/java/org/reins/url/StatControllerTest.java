@@ -14,6 +14,7 @@ import org.reins.url.repository.ShortenLogRepository;
 import org.reins.url.repository.ShortenerRepository;
 import org.reins.url.repository.UsersRepository;
 import org.reins.url.repository.VisitLogRepository;
+import org.reins.url.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -95,7 +96,7 @@ public class StatControllerTest extends ApplicationTests {
         visit_logs.add(tmp3);
         when(visitLogRepository.findByShortenerId("1")).thenReturn(visit_logs);
 
-        String res = mockMvc.perform(get("/getStat?id=1").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE))
+        String res = mockMvc.perform(get("/getStat?id=1").header("Authorization", JwtUtil.sign(1,"ao7777",0,false)).contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         List<JSONObject> stats = om.readValue(res, new TypeReference<JSONObject>() {
         }).getJSONArray("data").toJavaList(JSONObject.class);
@@ -115,7 +116,7 @@ public class StatControllerTest extends ApplicationTests {
         assertEquals("https://www.baidu.com/", l);
 
 
-//        String res = mockMvc.perform(get("/getStat?id=1").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE))
+//        String res = mockMvc.perform(get("/getStat?id=1").header("Authorization", JwtUtil.sign(1,"ao7777",0,false)).contentType(MediaType.APPLICATION_JSON_VALUE))
 //                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
 //        List<JSONObject> stats = om.readValue(res, new TypeReference<JSONObject>() {
 //        }).getJSONArray("data").toJavaList(JSONObject.class);
@@ -168,7 +169,7 @@ public class StatControllerTest extends ApplicationTests {
 
         String shortUrl = "000000";
 
-        String res = mockMvc.perform(get("/getShortStat?id=1&short=" + shortUrl).contentType(MediaType.APPLICATION_JSON_VALUE).header("Authorization", "SXSTQL"))
+        String res = mockMvc.perform(get("/getShortStat?id=1&short=" + shortUrl).contentType(MediaType.APPLICATION_JSON_VALUE).header("Authorization", JwtUtil.sign(1,"ao7777",0,false)))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         JSONObject stat = om.readValue(res, new TypeReference<JSONObject>() {
         })
@@ -190,7 +191,7 @@ public class StatControllerTest extends ApplicationTests {
 
         when(shortenLogRepository.findByShortUrl("000001")).thenReturn(null);
 
-        String res2 = mockMvc.perform(get("/getShortStat?id=1&short=000001").contentType(MediaType.APPLICATION_JSON_VALUE).header("Authorization", "SXSTQL"))
+        String res2 = mockMvc.perform(get("/getShortStat?id=1&short=000001").contentType(MediaType.APPLICATION_JSON_VALUE).header("Authorization", JwtUtil.sign(1,"ao7777",0,false)))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         JSONObject stat2 = om.readValue(res2, new TypeReference<JSONObject>() {
         })
@@ -200,7 +201,7 @@ public class StatControllerTest extends ApplicationTests {
 
 //        String shortUrl = "B7VAfa";
 //
-//        String res = mockMvc.perform(get("/getShortStat?id=1&short=" + shortUrl).contentType(MediaType.APPLICATION_JSON_VALUE).header("Authorization", "SXSTQL"))
+//        String res = mockMvc.perform(get("/getShortStat?id=1&short=" + shortUrl).contentType(MediaType.APPLICATION_JSON_VALUE).header("Authorization", JwtUtil.sign(1,"ao7777",0,false)))
 //                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
 //        JSONObject stat = om.readValue(res, new TypeReference<JSONObject>() {
 //        })
@@ -401,9 +402,12 @@ public class StatControllerTest extends ApplicationTests {
         assertEquals(stats.getString("shortUrl"), "SXSTQL");
     }
 
-    @Test
-    public void areaDistrTest() throws Exception {
-        Statistics statistics=new Statistics();
-        statistics.addAreaDistr("111.186.44.71");
-    }
+//    @Test
+//    public void areaDistrTest(){
+//        Statistics statistics=new Statistics();
+//        statistics.addAreaDistr("111.186.44.71");
+//        List<ShortenLog> shortenLogs = shortenLogRepository.findByCreatorId(2);
+//        String res = mockMvc.perform(get("/getStat?id=2").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE))
+//                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+//    }
 }
