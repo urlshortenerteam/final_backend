@@ -14,6 +14,7 @@ import org.reins.url.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 @RestController
@@ -143,12 +144,13 @@ public class StatController {
             if (shortener == null || shortener.getLongUrl().equals("BANNED")) continue;
             ShortenLog shortenLog = shortenLogService.findById(shortener.getShortenId());
             if (shortenLog == null || shortenLog.getCreatorId() != id) continue;
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-DD HH:mm:ss");
             JSONObject tmp = new JSONObject();
             tmp.put("shortUrl", shortenLog.getShortUrl());
             tmp.put("long", shortener.getLongUrl());
             tmp.put("ip", visitLog.getIp());
             tmp.put("source", "Browser");
-            tmp.put("time", visitLog.getVisitTime());
+            tmp.put("time", simpleDateFormat.format(visitLog.getVisitTime()));
             logs.add(tmp);
             if (logs.size() >= 5) break;
         }
