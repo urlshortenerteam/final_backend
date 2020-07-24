@@ -102,8 +102,8 @@ public class UrlController {
     Shortener longUrl = longUrls.get(0);
     if (!longUrl.getLongUrl().equals("BANNED")) longUrl = longUrls.get((int) (Math.random() * longUrls.size()));
     Boolean device = (UserAgent.parseUserAgentString(req.getHeader("User-Agent")).getOperatingSystem().getDeviceType() != DeviceType.COMPUTER);
-    shortenLog.setVisitCount(shortenLog.getVisitCount() + 1);
     try {
+            shortenLog.setVisitCount(shortenLog.getVisitCount() + 1);
       shortenLogService.changeShortenLog(shortenLog);
       usersService.changeVisitCount(shortenLog.getCreatorId());
       visitLogService.addVisitLog(longUrl.getId(), req.getRemoteAddr(), device);
