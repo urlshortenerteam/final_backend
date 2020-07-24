@@ -272,15 +272,16 @@ public class StatControllerTest extends ApplicationTests {
     VisitLog visitLog = new VisitLog();
     visitLog.setShortenerId("000000000000000000000000");
     List<VisitLog> visitLogList = new ArrayList<>();
-    for (int i = 0; i < 6; i++) visitLogList.add(visitLog);
-    when(visitLogRepository.findAllOrderByVisitTime()).thenReturn(visitLogList);
-    Shortener shortener = new Shortener();
-    shortener.setShortenId(1);
-    shortener.setLongUrl("https://www.baidu.com/");
-    when(shortenerRepository.findById("000000000000000000000000")).thenReturn(Optional.of(shortener));
-    ShortenLog shortenLog = new ShortenLog();
-    shortenLog.setCreatorId(1);
-    when(shortenLogRepository.findById((long) 1)).thenReturn(Optional.of(shortenLog));
+    visitLog.setVisitTime(new Date());
+        for (int i = 0; i < 6; i++) visitLogList.add(visitLog);
+        when(visitLogRepository.findAllOrderByVisitTime()).thenReturn(visitLogList);
+        Shortener shortener = new Shortener();
+        shortener.setShortenId(1);
+        shortener.setLongUrl("https://www.baidu.com/");
+        when(shortenerRepository.findById("000000000000000000000000")).thenReturn(Optional.of(shortener));
+        ShortenLog shortenLog = new ShortenLog();
+        shortenLog.setCreatorId(1);
+        when(shortenLogRepository.findById((long) 1)).thenReturn(Optional.of(shortenLog));
 
     String res = mockMvc.perform(get("/getReal?id=1").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
