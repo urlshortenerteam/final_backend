@@ -5,19 +5,19 @@ import org.reins.url.entity.Users;
 import java.util.List;
 
 public interface UsersDao {
-  void changeRole(long id, int role);
+    void changeRole(long id, int role);
 
-  void changeVisitCount(long id);
+    void changeVisitCount(long id);
 
-  Users checkUser(String name, String password);
+    Users checkUser(String name, String password);
 
-  long count();
+    long count();
 
-  boolean doesNameExist(String name);
+    boolean doesNameExist(String name);
 
-  List<Users> findAllUserStat();
+    List<Users> findAllUserStat();
 
-  Users findById(long id);
+    Users findById(long id);
 
-  void register(String name, String password, String email);
+    void register(String name, String password, String email);
 }

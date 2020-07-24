@@ -59,9 +59,9 @@ public class Statistics {
             710000
     };
     final static String[] names = {
-            "云南", "黑龙江", "贵州", "北京", "河北", "山西", "吉林", "宁夏", "辽宁", "海南", "内蒙古", "天津", "新疆", "上海",
-            "陕西", "甘肃", "安徽", "香港", "广东", "河南", "湖南", "江西", "四川", "广西", "江苏", "澳门", "浙江", "山东", "青海",
-            "重庆", "福建", "湖北", "西藏", "台湾"
+            "云南省", "黑龙江省", "贵州省", "北京市", "河北省", "山西省", "吉林省", "宁夏回族自治区", "辽宁省", "海南省", "内蒙古自治区", "天津市", "新疆维吾尔自治区", "上海市",
+            "陕西省", "甘肃省", "安徽省", "香港特别行政区", "广东省", "河南省", "湖南省", "江西省", "四川省", "广西壮族自治区", "江苏省", "澳门特别行政区", "浙江省", "山东省", "青海省",
+            "重庆市", "福建省", "湖北省", "西藏自治区", "台湾省"
     };
 
     public Statistics() {
@@ -78,12 +78,12 @@ public class Statistics {
             areaDistr[i].value = 0;
         }
         for (int i = 0; i < 34; ++i) {
-      areaDistr[i] = new AreaDistr();
-      areaDistr[i].name = names[i];
-      areaDistr[i].code = codes[i];
-      areaDistr[i].value = 0;
-    }
-    sourceDistr = new SourceDistr[2];
+            areaDistr[i] = new AreaDistr();
+            areaDistr[i].name = names[i];
+            areaDistr[i].code = codes[i];
+            areaDistr[i].value = 0;
+        }
+        sourceDistr = new SourceDistr[2];
         sourceDistr[0] = new SourceDistr();
         sourceDistr[0].source = "电脑";
         sourceDistr[0].value = 0;
@@ -210,124 +210,7 @@ public class Statistics {
             default:
                 break;
         }
-  public void addAreaDistr(String ip) throws Exception {
-    boolean isIpAddress = Util.isIpAddress(ip);
-    if (!isIpAddress) return;
-    //long ipLong=Util.ip2long(ip);
-    //String strIp=Util.long2ip(ipLong);
-    DbConfig config = new DbConfig();
-    String dbfile = "./src/main/resources/ip2region.db";
-    DbSearcher searcher = new DbSearcher(config, dbfile);
-    DataBlock block = searcher.btreeSearch(ip);
-    String area = block.getRegion().substring(5, 7);
-    switch (area) {
-      case "云南":
-        ++areaDistr[0].value;
-        break;
-      case "黑龙":
-        ++areaDistr[1].value;
-        break;
-      case "贵州":
-        ++areaDistr[2].value;
-        break;
-      case "北京":
-        ++areaDistr[3].value;
-        break;
-      case "河北":
-        ++areaDistr[4].value;
-        break;
-      case "山西":
-        ++areaDistr[5].value;
-        break;
-      case "吉林":
-        ++areaDistr[6].value;
-        break;
-      case "宁夏":
-        ++areaDistr[7].value;
-        break;
-      case "辽宁":
-        ++areaDistr[8].value;
-        break;
-      case "海南":
-        ++areaDistr[9].value;
-        break;
-      case "内蒙":
-        ++areaDistr[10].value;
-        break;
-      case "天津":
-        ++areaDistr[11].value;
-        break;
-      case "新疆":
-        ++areaDistr[12].value;
-        break;
-      case "上海":
-        ++areaDistr[13].value;
-        break;
-      case "陕西":
-        ++areaDistr[14].value;
-        break;
-      case "甘肃":
-        ++areaDistr[15].value;
-        break;
-      case "安徽":
-        ++areaDistr[16].value;
-        break;
-      case "香港":
-        ++areaDistr[17].value;
-        break;
-      case "广东":
-        ++areaDistr[18].value;
-        break;
-      case "河南":
-        ++areaDistr[19].value;
-        break;
-      case "湖南":
-        ++areaDistr[20].value;
-        break;
-      case "江西":
-        ++areaDistr[21].value;
-        break;
-      case "四川":
-        ++areaDistr[22].value;
-        break;
-      case "广西":
-        ++areaDistr[23].value;
-        break;
-      case "江苏":
-        ++areaDistr[24].value;
-        break;
-      case "澳门":
-        ++areaDistr[25].value;
-        break;
-      case "浙江":
-        ++areaDistr[26].value;
-        break;
-      case "山东":
-        ++areaDistr[27].value;
-        break;
-      case "青海":
-        ++areaDistr[28].value;
-        break;
-      case "重庆":
-        ++areaDistr[29].value;
-        break;
-      case "福建":
-        ++areaDistr[30].value;
-        break;
-      case "湖北":
-        ++areaDistr[31].value;
-        break;
-      case "西藏":
-        ++areaDistr[32].value;
-        break;
-      case "台湾":
-        ++areaDistr[33].value;
-        break;
-      default:
-        break;
     }
-
-  }
 
     public void addTimeDistr(Date visitTime) {
         Calendar calendarTime = Calendar.getInstance();

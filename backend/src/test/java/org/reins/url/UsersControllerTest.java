@@ -130,35 +130,64 @@ public class UsersControllerTest extends ApplicationTests {
 
     @Test
     public void banUser() throws Exception {
-        Users user1 = new Users();
-        Users user2 = new Users();
-        Users user3 = new Users();
-        user1.setRole(0);
-        user2.setRole(1);
-        user3.setRole(2);
-        when(usersRepository.findById((long) 1)).thenReturn(Optional.of(user1));
-        when(usersRepository.findById((long) 2)).thenReturn(Optional.of(user2));
-        when(usersRepository.findById((long) 3)).thenReturn(Optional.of(user3));
+        Users user = new Users();
+        user.setRole(1);
+        when(usersRepository.findById((long) 0)).thenReturn(Optional.empty());
+        when(usersRepository.findById((long) 2)).thenReturn(Optional.of(user));
         when(usersRepository.save(any(Users.class))).thenReturn(new Users());
 
-        String res = mockMvc.perform(get("/banUser?id=0&ban_id=0&ban=true").header("Authorization", JwtUtil.sign(1, "ao7777", 0, false)).contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
-        assertFalse(om.readValue(res, new TypeReference<JSONObject>() {
-        }).getJSONObject("data").getBooleanValue("status"));
-
-        res = mockMvc.perform(get("/banUser?id=1&ban_id=1&ban=true").header("Authorization", JwtUtil.sign(1, "ao7777", 0, false)).contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
-        assertFalse(om.readValue(res, new TypeReference<JSONObject>() {
-        }).getJSONObject("data").getBooleanValue("status"));
-
-        res = mockMvc.perform(get("/banUser?id=2&ban_id=2&ban=true").header("Authorization", JwtUtil.sign(1, "ao7777", 0, false)).contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
-        assertFalse(om.readValue(res, new TypeReference<JSONObject>() {
-        }).getJSONObject("data").getBooleanValue("status"));
-
-        res = mockMvc.perform(get("/banUser?id=1&ban_id=2&ban=true").header("Authorization", JwtUtil.sign(1, "ao7777", 0, false)).contentType(MediaType.APPLICATION_JSON_VALUE))
+        String res = mockMvc.perform(get("/banUser?banId=1&ban=true").header("Authorization", JwtUtil.sign(2, "ao7777", 1, false)).contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         assertTrue(om.readValue(res, new TypeReference<JSONObject>() {
+        }).getBooleanValue("not_administrator"));
+
+        res = mockMvc.perform(get("/banUser?banId=0&ban=true").header("Authorization", JwtUtil.sign(1, "ao7777", 0, false)).contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+        assertFalse(om.readValue(res, new TypeReference<JSONObject>() {
+        }).getBooleanValue("not_administrator"));
+        assertFalse(om.readValue(res, new TypeReference<JSONObject>() {
         }).getJSONObject("data").getBooleanValue("status"));
+
+        res = mockMvc.perform(get("/banUser?banId=2&ban=true").header("Authorization", JwtUtil.sign(1, "ao7777", 0, false)).contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+        assertFalse(om.readValue(res, new TypeReference<JSONObject>() {
+        }).getBooleanValue("not_administrator"));
+        assertTrue(om.readValue(res, new TypeReference<JSONObject>() {
+        }).getJSONObject("data").getBooleanValue("status"));
+    }
+
+    @Test
+    public void refresh() throws Exception {
+        Users users = new Users();
+        users.setId(1);
+        users.setName("ao7777");
+        users.setRole(0);
+        when(usersRepository.findById((long) 1)).thenReturn(Optional.of(users));
+
+        Map<String, String> params = new HashMap<>();
+        params.put("refresh", JwtUtil.sign(1, "ao7777", 0, true));
+        String res = mockMvc.perform(post("/refresh").contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString(params)))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+        boolean success = om.readValue(res, new TypeReference<JSONObject>() {
+        }).getBoolean("success");
+        assertTrue(success);
+
+        users.setRole(2);
+        when(usersRepository.findById((long) 1)).thenReturn(Optional.of(users));
+        params = new HashMap<>();
+        params.put("refresh", JwtUtil.sign(1, "ao7777", 1, true));
+        res = mockMvc.perform(post("/refresh").contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString(params)))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+        success = om.readValue(res, new TypeReference<JSONObject>() {
+        }).getBoolean("success");
+        assertFalse(success);
+
+        params = new HashMap<>();
+        params.put("refresh", "SXSTXDY");
+        res = mockMvc.perform(post("/refresh").contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString(params)))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+        success = om.readValue(res, new TypeReference<JSONObject>() {
+        }).getBoolean("success");
+        assertFalse(success);
     }
 }

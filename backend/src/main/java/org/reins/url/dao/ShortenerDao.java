@@ -3,9 +3,9 @@ package org.reins.url.dao;
 import org.reins.url.entity.Shortener;
 
 public interface ShortenerDao {
-  void addShortener(long editorId, long shortenId, String longUrl);
+    void addShortener(long editorId, long shortenId, String longUrl);
 
-  void changeShortener(Shortener shortener);
+    void changeShortener(Shortener shortener);
 
-  Shortener findById(String id);
+    Shortener findById(String id);
 }

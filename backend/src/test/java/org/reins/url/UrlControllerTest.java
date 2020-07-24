@@ -19,9 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -72,7 +70,7 @@ public class UrlControllerTest extends ApplicationTests {
         List<String> longUrls = new ArrayList<>();
         longUrls.add("https://www.baidu.com/");
         longUrls.add("https://github.com/");
-        String res = mockMvc.perform(post("/getShort?id=1").header("Authorization", JwtUtil.sign(1, "ao7777", 0, false)).contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString(longUrls)))
+        String res = mockMvc.perform(post("/getShort").header("Authorization", JwtUtil.sign(1, "ao7777", 0, false)).contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString(longUrls)))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         List<String> shortUrls = om.readValue(res, new TypeReference<JSONObject>() {
         }).getJSONArray("data").toJavaList(String.class);
@@ -89,7 +87,7 @@ public class UrlControllerTest extends ApplicationTests {
         List<String> longUrls = new ArrayList<>();
         longUrls.add("https://www.baidu.com/");
         longUrls.add("https://github.com/");
-        String res = mockMvc.perform(post("/getOneShort?id=1").header("Authorization", JwtUtil.sign(1, "ao7777", 0, false)).contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString(longUrls)).header("Authorization", JwtUtil.sign(1, "ao7777", 0, false)))
+        String res = mockMvc.perform(post("/getOneShort").header("Authorization", JwtUtil.sign(1, "ao7777", 0, false)).contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString(longUrls)))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         String shortUrl = om.readValue(res, new TypeReference<JSONObject>() {
         }).getString("data");
@@ -170,32 +168,45 @@ public class UrlControllerTest extends ApplicationTests {
         when(editLogRepository.save(any(EditLog.class))).thenReturn(new EditLog());
         when(shortenerRepository.insert(any(Shortener.class))).thenReturn(new Shortener());
 
-        String res = mockMvc.perform(post("/editUrl?id=0&shortUrl=000000").header("Authorization", JwtUtil.sign(1, "ao7777", 0, false)).contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString(longUrl)))
+        Map<String, String> params1 = new HashMap<>();
+        Map<String, String> params2 = new HashMap<>();
+        Map<String, String> params3 = new HashMap<>();
+        Map<String, String> params4 = new HashMap<>();
+        params1.put("shortUrl", "000000");
+        params1.put("longUrl", longUrl);
+        params2.put("shortUrl", "000000");
+        params2.put("longUrl", "BANNED");
+        params3.put("shortUrl", "000000");
+        params3.put("longUrl", "LIFT");
+        params4.put("shortUrl", "000001");
+        params4.put("longUrl", longUrl);
+
+        String res = mockMvc.perform(post("/editUrl").header("Authorization", JwtUtil.sign(0, "ao7777", 0, false)).contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString(params1)))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         assertFalse(om.readValue(res, new TypeReference<JSONObject>() {
         }).getJSONObject("data").getBooleanValue("status"));
 
-        res = mockMvc.perform(post("/editUrl?id=1&shortUrl=000001").header("Authorization", JwtUtil.sign(1, "ao7777", 0, false)).contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString(longUrl)))
+        res = mockMvc.perform(post("/editUrl").header("Authorization", JwtUtil.sign(1, "ao7777", 0, false)).contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString(params4)))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         assertFalse(om.readValue(res, new TypeReference<JSONObject>() {
         }).getJSONObject("data").getBooleanValue("status"));
 
-        res = mockMvc.perform(post("/editUrl?id=3&shortUrl=000000").header("Authorization", JwtUtil.sign(1, "ao7777", 0, false)).contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString(longUrl)))
+        res = mockMvc.perform(post("/editUrl").header("Authorization", JwtUtil.sign(3, "ao7777", 0, false)).contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString(params1)))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         assertFalse(om.readValue(res, new TypeReference<JSONObject>() {
         }).getJSONObject("data").getBooleanValue("status"));
 
-        res = mockMvc.perform(post("/editUrl?id=2&shortUrl=000000").header("Authorization", JwtUtil.sign(1, "ao7777", 0, false)).contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString(longUrl)))
+        res = mockMvc.perform(post("/editUrl").header("Authorization", JwtUtil.sign(2, "ao7777", 0, false)).contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString(params1)))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         assertTrue(om.readValue(res, new TypeReference<JSONObject>() {
         }).getJSONObject("data").getBooleanValue("status"));
 
-        res = mockMvc.perform(post("/editUrl?id=1&shortUrl=000000").header("Authorization", JwtUtil.sign(1, "ao7777", 0, false)).contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString("LIFT")))
+        res = mockMvc.perform(post("/editUrl").header("Authorization", JwtUtil.sign(1, "ao7777", 0, false)).contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString(params3)))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         assertFalse(om.readValue(res, new TypeReference<JSONObject>() {
         }).getJSONObject("data").getBooleanValue("status"));
 
-        res = mockMvc.perform(post("/editUrl?id=1&shortUrl=000000").header("Authorization", JwtUtil.sign(1, "ao7777", 0, false)).contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString("BANNED")))
+        res = mockMvc.perform(post("/editUrl").header("Authorization", JwtUtil.sign(1, "ao7777", 0, false)).contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString(params2)))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         assertTrue(om.readValue(res, new TypeReference<JSONObject>() {
         }).getJSONObject("data").getBooleanValue("status"));
