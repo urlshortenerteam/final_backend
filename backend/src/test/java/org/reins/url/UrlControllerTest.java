@@ -97,21 +97,42 @@ public class UrlControllerTest extends ApplicationTests {
 
     @Test
     public void getLong() throws Exception {
-        ShortenLog shortenLog = new ShortenLog();
-        shortenLog.setId(1);
-        shortenLog.setCreatorId(1);
-        when(shortenLogRepository.findByShortUrl("000000")).thenReturn(shortenLog);
-        Shortener shortener = new Shortener();
-        shortener.setLongUrl("https://www.baidu.com/");
-        List<Shortener> shortenerList = new ArrayList<>();
-        shortenerList.add(shortener);
-        when(shortenerRepository.findByShortenId(1)).thenReturn(shortenerList);
+        ShortenLog shortenLog1 = new ShortenLog();
+        ShortenLog shortenLog2 = new ShortenLog();
+        ShortenLog shortenLog3 = new ShortenLog();
+        shortenLog1.setId(1);
+        shortenLog1.setCreatorId(1);
+        shortenLog2.setId(2);
+        shortenLog3.setId(3);
+        shortenLog3.setCreatorId(1);
+        when(shortenLogRepository.findByShortUrl("000000")).thenReturn(shortenLog1);
+        when(shortenLogRepository.findByShortUrl("000001")).thenReturn(null);
+        when(shortenLogRepository.findByShortUrl("000002")).thenReturn(shortenLog2);
+        when(shortenLogRepository.findByShortUrl("000003")).thenReturn(shortenLog3);
+        Shortener shortener1 = new Shortener();
+        Shortener shortener2 = new Shortener();
+        shortener1.setLongUrl("https://www.baidu.com/");
+        shortener2.setLongUrl("BANNED");
+        List<Shortener> shortenerList1 = new ArrayList<>();
+        List<Shortener> shortenerList2 = new ArrayList<>();
+        shortenerList1.add(shortener1);
+        shortenerList2.add(shortener1);
+        shortenerList2.add(shortener2);
+        when(shortenerRepository.findByShortenId(1)).thenReturn(shortenerList1);
+        when(shortenerRepository.findByShortenId(2)).thenReturn(new ArrayList<>());
+        when(shortenerRepository.findByShortenId(3)).thenReturn(shortenerList2);
         when(shortenLogRepository.save(any(ShortenLog.class))).thenReturn(new ShortenLog());
         when(usersRepository.findById((long) 1)).thenReturn(Optional.of(new Users()));
         when(usersRepository.save(any(Users.class))).thenReturn(new Users());
         when(visitLogRepository.save(any(VisitLog.class))).thenReturn(new VisitLog());
 
         mockMvc.perform(get("/000000").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isFound()).andReturn();
+        mockMvc.perform(get("/000001").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isFound()).andReturn();
+        mockMvc.perform(get("/000002").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isFound()).andReturn();
+        mockMvc.perform(get("/000003").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isFound()).andReturn();
     }
 

@@ -74,7 +74,7 @@ public class UsersController {
             else {
                 obj.put("loginStatus", true);
                 obj.put("token", JwtUtil.sign(user.getId(), user.getName(), user.getRole(), false));
-                obj.put("refresh-token", JwtUtil.sign(user.getId(), user.getName(), user.getRole(), true));
+                obj.put("refreshToken", JwtUtil.sign(user.getId(), user.getName(), user.getRole(), true));
             }
         }
         JSONObject res = new JSONObject();
@@ -139,16 +139,14 @@ public class UsersController {
      *
      * @param params It cotains "refresh":the old refresh-token
      * @return {
-     *     data:{
-     *             token:String
-     *             refresh-token:String
-     *         },
-     *      success:boolean
+     * data:{
+     * token:String
+     * refresh-token:String
+     * },
+     * success:boolean
      * }
-     *
      * @throws Exception when the string jwt can't be parsed as a JWT
      */
-
     @CrossOrigin
     @RequestMapping("/refresh")
     public JSONObject refresh(@RequestBody Map<String, String> params) throws Exception {
@@ -159,7 +157,7 @@ public class UsersController {
             return res;
         }
         Claims c = JwtUtil.parseJWT(oldRefresh);
-        long userId = (long) c.get("id");
+        long userId = Long.parseLong(c.get("id").toString());
         Users users = usersService.findById(userId);
         if (users == null || users.getRole() == 2) {
             res.put("success", false);
@@ -167,10 +165,12 @@ public class UsersController {
         }
         res.put("success", true);
 
-
         JSONObject obj = new JSONObject();
         obj.put("token", JwtUtil.sign(users.getId(), users.getName(), users.getRole(), false));
-        obj.put("refresh-token", JwtUtil.sign(users.getId(), users.getName(), users.getRole(), true));
+        obj.put("refreshToken", JwtUtil.sign(users.getId(), users.getName(), users.getRole(), true));
+        obj.put("id", users.getId());
+        obj.put("type", users.getRole());
+        obj.put("loginStatus", true);
         res.put("data", obj);
         return res;
     }
