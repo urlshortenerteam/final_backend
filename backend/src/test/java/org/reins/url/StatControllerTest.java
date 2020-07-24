@@ -404,7 +404,7 @@ public class StatControllerTest extends ApplicationTests {
 
     @Test
     public void areaDistrTest() throws Exception {
-        Statistics statistics=new Statistics();
+        Statistics statistics = new Statistics();
         statistics.addAreaDistr("111.186.44.71");
     }
 }

@@ -42,7 +42,7 @@ public class StatServiceImpl implements StatService {
                         e.printStackTrace();
                     }
                     statistics.addTimeDistr(v.getVisitTime());
-                    statistics.addSourceDistr(v.getIp());
+                    statistics.addSourceDistr(v.getDevice());
                 }
             }
             res.add(statistics);
@@ -73,7 +73,7 @@ public class StatServiceImpl implements StatService {
                     e.printStackTrace();
                 }
                 statistics.addTimeDistr(v.getVisitTime());
-                statistics.addSourceDistr(v.getIp());
+                statistics.addSourceDistr(v.getDevice());
             }
         }
         return statistics;
@@ -106,7 +106,7 @@ public class StatServiceImpl implements StatService {
                         e.printStackTrace();
                     }
                     statistics.addTimeDistr(v.getVisitTime());
-                    statistics.addSourceDistr(v.getIp());
+                    statistics.addSourceDistr(v.getDevice());
                 }
             }
             res.add(statistics);

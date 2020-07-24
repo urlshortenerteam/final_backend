@@ -8,10 +8,8 @@ import org.lionsoul.ip2region.DbConfig;
 import org.lionsoul.ip2region.DbSearcher;
 import org.lionsoul.ip2region.Util;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -20,7 +18,7 @@ public class Statistics {
     public long count;
     public AreaDistr[] areaDistr;
     public TimeDistr[] timeDistr;
-    public List<SourceDistr> sourceDistr;
+    public SourceDistr[] sourceDistr;
     public JSONArray longUrl;
     public String creatorName;
     public Date createTime;
@@ -74,12 +72,17 @@ public class Statistics {
             timeDistr[i].time = i;
         }
         for (int i = 0; i < 34; ++i) {
-            areaDistr[i] = new AreaDistr();
             areaDistr[i].name = names[i];
             areaDistr[i].code = codes[i];
             areaDistr[i].value = 0;
         }
-        sourceDistr = new ArrayList<>();
+        sourceDistr = new SourceDistr[2];
+        sourceDistr[0] = new SourceDistr();
+        sourceDistr[0].source = "电脑";
+        sourceDistr[0].value = 0;
+        sourceDistr[1] = new SourceDistr();
+        sourceDistr[1].source = "手机";
+        sourceDistr[1].value = 0;
         count = 0;
         longUrl = new JSONArray();
     }
@@ -210,6 +213,9 @@ public class Statistics {
         timeDistr[hour].value++;
     }
 
-    public void addSourceDistr(String ip) {
+    public void addSourceDistr(boolean device) {
+        if (device)
+            ++sourceDistr[1].value;
+        else ++sourceDistr[0].value;
     }
 }
