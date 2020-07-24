@@ -77,12 +77,6 @@ public class Statistics {
             areaDistr[i].code = codes[i];
             areaDistr[i].value = 0;
         }
-        for (int i = 0; i < 34; ++i) {
-            areaDistr[i] = new AreaDistr();
-            areaDistr[i].name = names[i];
-            areaDistr[i].code = codes[i];
-            areaDistr[i].value = 0;
-        }
         sourceDistr = new SourceDistr[2];
         sourceDistr[0] = new SourceDistr();
         sourceDistr[0].source = "电脑";
