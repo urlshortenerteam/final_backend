@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.jasypt.encryption.StringEncryptor;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.AfterEach;
@@ -49,8 +48,6 @@ public class StatControllerTest extends ApplicationTests {
 
     @Autowired
     private WebApplicationContext context;
-    @Autowired
-    StringEncryptor stringEncryptor;
 
     @MockBean
     private ShortenerRepository shortenerRepository;

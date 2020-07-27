@@ -21,9 +21,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   data:
     mongodb:
-      uri: ENC(1zazKbKzFOxo61wNUW7nqbHhHf15PxCekmA/V47k/iFcKlt5l24i2i9ng/FZbLqc)
-      username: ENC(5yFrcY1QBcytNzOpGZYZqw==)
-      password: ENC(SlP+PyXAZFsG68fxz8mpEj36NQTQkC1f)
+      uri: ENC(aiYU4ilK3gVh9k+Qm2ZsC/jcADeYp9UjXvG/w2UM+nKoY1b3OLhXC0GIbD/zVtzYqtDGJAH46XbWwJ7Yk6Xhtw==)
 server:
   port: 4000
   tomcat:
