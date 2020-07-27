@@ -17,15 +17,13 @@ spring:
   datasource:
     url: ENC(grMCWwygMDkOd+TdWje1yasCGpnL/JAKA5z6DNllIeRt/Yr3G5LFPlcztotvLWKe+ogRiCvrjGjJ/y8FwFuhHfPpaTZuxBkIJRgmQOZaqLK+HAWyibUZ9RNp8a6xCao5LDmK/VFWCY6rAme0f+K55I3Nkh1J7IgiYd4cENiE+r+ejehGjqwyDs2UeOp/NpGJUUQ7B74dehI=)
     username: ENC(MLP/TP22ctJOa5wmYmXu/Q==)
-    password: ENC(9B5FdPpKGp9rUrdEQVZF1SPc34zblIaO)
-    #    url: jdbc:mysql://127.0.0.1:3306/url?useUnicode=true&characterEncoding=UTF-8&serverTimezone=CST
-    #    username: root
-    #    password: root
+    password: ENC(ivdNWO7aivOZyhIlIDGUB/0lYCbyuE7g)
     driver-class-name: com.mysql.cj.jdbc.Driver
   data:
     mongodb:
       uri: ENC(1zazKbKzFOxo61wNUW7nqbHhHf15PxCekmA/V47k/iFcKlt5l24i2i9ng/FZbLqc)
-#      uri: mongodb://test:test@127.0.0.1:27017/url?authSource=mydb
+      username: ENC(5yFrcY1QBcytNzOpGZYZqw==)
+      password: ENC(SlP+PyXAZFsG68fxz8mpEj36NQTQkC1f)
 server:
   port: 4000
   tomcat:

@@ -49,6 +49,8 @@ public class StatControllerTest extends ApplicationTests {
 
     @Autowired
     private WebApplicationContext context;
+    @Autowired
+    StringEncryptor stringEncryptor;
 
     @MockBean
     private ShortenerRepository shortenerRepository;
@@ -118,29 +120,6 @@ public class StatControllerTest extends ApplicationTests {
         assertEquals(size, 1);
         String l = longUrl.getJSONObject(0).getString("url");
         assertEquals("https://www.baidu.com/", l);
-
-
-//        String res = mockMvc.perform(get("/getStat?id=1").header("Authorization", JwtUtil.sign(1, "ao7777", 0, false)).contentType(MediaType.APPLICATION_JSON_VALUE))
-//                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
-//        List<JSONObject> stats = om.readValue(res, new TypeReference<JSONObject>() {
-//        }).getJSONArray("data").toJavaList(JSONObject.class);
-//        for (JSONObject jsonObject : stats) {
-//            assertTrue((jsonObject.getString("shortUrl")).matches("[A-Za-z0-9]{6}"));
-//            assertTrue((jsonObject.getLong("count")) >= 0);
-//            List<Time_distr> timeDistrs = jsonObject.getJSONArray("timeDistr").toJavaList(Time_distr.class);
-//            assertEquals(timeDistrs.size(), 24);
-//            for (int i = 0; i < 24; ++i) {
-//                assertEquals(i, timeDistrs.get(i).time);
-//                assertTrue(timeDistrs.get(i).value >= 0);
-//            }
-//            JSONArray longUrl = jsonObject.getJSONArray("longUrl");
-//            int size = longUrl.size();
-//            for (int i = 0; i < size; ++i) {
-//                String l = longUrl.getJSONObject(i).getString("url");
-//                System.out.println(l);
-//                assertTrue(l.startsWith("https://") || l.startsWith("http://"));
-//            }
-//        }
     }
 
     @Test
@@ -198,29 +177,6 @@ public class StatControllerTest extends ApplicationTests {
         JSONObject stat2 = om.readValue(res2, new TypeReference<JSONObject>() {
         }).getJSONObject("data");
         assertEquals((stat2.getLong("count")), -1);
-
-
-//        String shortUrl = "B7VAfa";
-//
-//        String res = mockMvc.perform(get("/getShortStat?id=1&short=" + shortUrl).contentType(MediaType.APPLICATION_JSON_VALUE).header("Authorization", JwtUtil.sign(1, "ao7777", 0, false)))
-//                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
-//        JSONObject stat = om.readValue(res, new TypeReference<JSONObject>() {
-//        })
-//                .getJSONObject("data");
-//        assertTrue((stat.getString("shortUrl")).matches("[A-Za-z0-9]{6}"));
-//        assertTrue((stat.getLong("count")) >= 0);
-//        List<Time_distr> timeDistrs = stat.getJSONArray("time_distr").toJavaList(Time_distr.class);
-//        assertEquals(timeDistrs.size(), 24);
-//        for (int i = 0; i < 24; ++i) {
-//            assertEquals(i, timeDistrs.get(i).time);
-//            assertTrue(timeDistrs.get(i).value >= 0);
-//        }
-//        JSONArray longurl = stat.getJSONArray("longUrl");
-//        int size = longurl.size();
-//        for (int i = 0; i < size; ++i) {
-//            String l = longurl.getJSONObject(i).getString("url");
-//            assertTrue(l.startsWith("https://") || l.startsWith("http://"));
-//        }
     }
 
     @Test
@@ -252,20 +208,6 @@ public class StatControllerTest extends ApplicationTests {
         assertEquals(users.get(0).getInteger("role"), 0);
         assertEquals(users.get(0).getLong("visitCount"), 1);
         assertEquals(users.get(0).getLong("id"), 1);
-
-//        String res = mockMvc.perform(get("/getUserStat").contentType(MediaType.APPLICATION_JSON_VALUE).header("Authorization", JwtUtil.sign(1, "ao7777", 0, false)))
-//                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
-//        List<JSONObject> users = om.readValue(res, new TypeReference<JSONObject>() {})
-//                .getJSONArray("data").toJavaList(JSONObject.class);
-//        assertEquals("test0", users.get(0).getString("name"));
-//        assertEquals("test0", users.get(0).getString("password"));
-//        assertEquals("123@sjtu.edu.cn", users.get(0).getString("email"));
-//        for (JSONObject user : users) {
-//            assertTrue(user.getLong("id") >= 0);
-//            int role = user.getInteger("role");
-//            assertTrue(role >= 0 && role <= 2);
-//            assertTrue(user.getLong("visit_count") >= 0);
-//        }
     }
 
     @Test
@@ -380,22 +322,6 @@ public class StatControllerTest extends ApplicationTests {
         assertEquals(size, 1);
         String l = longurl.getJSONObject(0).getString("url");
         assertEquals("https://www.baidu.com/", l);
-
-    }
-
-    @Autowired
-    StringEncryptor encryptor;
-
-    @Test
-    public void getEncryptor() {
-        String url = encryptor.encrypt("jdbc:mysql://reevoo-test-beta.crvfzsr4389e.us-east-1.rds.amazonaws.com:3306/test?useUnicode=true&characterEncoding=UTF-8&serverTimezone=CST");
-        String name = encryptor.encrypt("admin");
-        String password = encryptor.encrypt("reevoo2020");
-        String urlMongo = encryptor.encrypt("mongodb://54.165.181.57:27017/url");
-        System.out.println(url);
-        System.out.println(name);
-        System.out.println(password);
-        System.out.println(urlMongo);
     }
 
     @Test
@@ -422,13 +348,4 @@ public class StatControllerTest extends ApplicationTests {
         assertEquals(stats.getLong("visitCountTotal"), 31415926);
         assertEquals(stats.getString("shortUrl"), "SXSTQL");
     }
-
-//    @Test
-//    public void areaDistrTest(){
-//        Statistics statistics = new Statistics();
-//        statistics.addAreaDistr("111.186.44.71");
-//        List<ShortenLog> shortenLogs = shortenLogRepository.findByCreatorId(2);
-//        String res = mockMvc.perform(get("/getStat?id=2").header("Authorization", "SXSTQL").contentType(MediaType.APPLICATION_JSON_VALUE))
-//                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
-//    }
 }
