@@ -7,7 +7,7 @@ services:
       - "8080:4000"
     environment:
       - JVM_OPTS="-Xms128m -Xmx128m"
-        JASYPT_ENCRYPTOR_PASSWORD="SXSYYDS"
+      - JASYPT_ENCRYPTOR_PASSWORD=SXSYYDS
     networks:
       - demo
 
