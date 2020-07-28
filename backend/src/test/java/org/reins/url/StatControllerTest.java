@@ -325,7 +325,7 @@ public class StatControllerTest extends ApplicationTests {
     public void getNumberCount() throws Exception {
         when(usersRepository.count()).thenReturn((long) 1551);
         when(shortenLogRepository.count()).thenReturn((long) 2333);
-        when(shortenLogRepository.visitSum()).thenReturn((long) 31415926);
+        when(shortenLogRepository.visitSum()).thenReturn(new Long(31415926));
 
         ShortenLog shortenLog = new ShortenLog();
         shortenLog.setShortUrl("SXSTQL");
