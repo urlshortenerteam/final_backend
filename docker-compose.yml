@@ -1,0 +1,34 @@
+version: '3.2'
+
+services:
+  backend:
+    image: reevoo:latest
+    ports:
+      - "8080:4000"
+    environment:
+      - JVM_OPTS="-Xms128m -Xmx128m"
+    networks:
+      - demo
+
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - type: bind
+        source: ./prometheus.yml
+        target: /etc/prometheus/prometheus.yml
+        read_only: true
+    ports:
+      - "9090:9090"
+    networks:
+      - demo
+
+  grafana:
+    image: grafana/grafana
+    ports:
+        - "3000:3000"
+    networks:
+        - demo
+
+networks:
+  demo:
+    driver: bridge
