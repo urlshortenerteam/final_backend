@@ -5,7 +5,7 @@ services:
     image: reevoo:latest
     restart: always
     ports:
-      - "8080:4000"
+      - "8080:8080"
     environment:
       - JVM_OPTS="-Xms128m -Xmx128m"
       - JASYPT_ENCRYPTOR_PASSWORD=SXSYYDS
