@@ -3,6 +3,7 @@ version: '3.2'
 services:
   backend:
     image: reevoo:latest
+    restart: always
     ports:
       - "8080:4000"
     environment:
@@ -14,11 +15,12 @@ services:
 
   prometheus:
     image: prom/prometheus
+    restart: always
     volumes:
       - type: bind
-        source: ./prometheus.yml
-        target: /etc/prometheus/prometheus.yml
-        read_only: true
+      - source: ./prometheus.yml
+      - target: /etc/prometheus/prometheus.yml
+      - read_only: true
     ports:
       - "9091:9090"
     networks:
@@ -26,6 +28,7 @@ services:
 
   grafana:
     image: grafana/grafana
+    restart: always
     ports:
       - "3000:3000"
     networks:
