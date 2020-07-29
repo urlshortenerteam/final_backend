@@ -17,10 +17,7 @@ services:
     image: prom/prometheus
     restart: always
     volumes:
-      - type: bind
-      - source: ./prometheus.yml
-      - target: /etc/prometheus/prometheus.yml
-      - read_only: true
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "9091:9090"
     networks:
