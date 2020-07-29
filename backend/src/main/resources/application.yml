@@ -28,7 +28,7 @@ spring:
       username: ENC(hqkQ6LNXanI/YPRGM91AMg==)
       password: ENC(OAOND8tNccLS/N13zbCFj/RSwejoI/Hr)
 server:
-  port: 4000
+  port: 8080
   tomcat:
     uri-encoding: UTF-8
 management:
