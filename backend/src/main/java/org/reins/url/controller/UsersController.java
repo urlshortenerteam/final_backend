@@ -101,8 +101,9 @@ public class UsersController {
      * @param banId the id of the user who should be banned or unbanned
      * @param ban   wether the user should be banned or unbanned
      * @return {data:{
-     * status:Boolean
-     * }
+     * status: Boolean
+     * },
+     * not_administrator: Boolean
      * }
      * @throws Exception when the string jwt can't be parsed as a JWT
      */

@@ -21,6 +21,10 @@ import org.reins.url.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -322,6 +326,64 @@ public class StatControllerTest extends ApplicationTests {
     }
 
     @Test
+    public void getAllUrlsPageable() throws Exception {
+        Pageable pageable = PageRequest.of(0, 30);
+        List<ShortenLog> shorten_logs = new ArrayList<>();
+        ShortenLog tmp1 = new ShortenLog();
+        tmp1.setId(1);
+        tmp1.setCreatorId(1);
+        tmp1.setCreateTime(new Date());
+        tmp1.setShortUrl("000000");
+        tmp1.setVisitCount(1);
+        shorten_logs.add(tmp1);
+        Page<ShortenLog> shortenLogPage = new PageImpl<>(shorten_logs);
+        when(shortenLogRepository.findAll(pageable)).thenReturn(shortenLogPage);
+
+        List<Shortener> shorteners = new ArrayList<>();
+        Shortener tmp2 = new Shortener();
+        tmp2.setId("1");
+        tmp2.setShortenId(1);
+        tmp2.setLongUrl("https://www.baidu.com/");
+        shorteners.add(tmp2);
+        when(shortenerRepository.findByShortenId(1)).thenReturn(shorteners);
+
+        List<VisitLog> visit_logs = new ArrayList<>();
+        VisitLog tmp3 = new VisitLog();
+        tmp3.setId(1);
+        tmp3.setShortenerId("1");
+        tmp3.setVisitTime(new Date());
+        tmp3.setIp("127.0.0.1");
+        tmp3.setDevice(true);
+        visit_logs.add(tmp3);
+        when(visitLogRepository.findByShortenerId("1")).thenReturn(visit_logs);
+
+        Users tmp4 = new Users();
+        tmp4.setName("SXS");
+        tmp4.setRole(0);
+        tmp4.setVisitCount(1);
+        tmp4.setId(1);
+        tmp4.setPassword("123456");
+        tmp4.setEmail("ao7777@sjtu.edu.cn");
+        when(usersRepository.findById((long) 1)).thenReturn(java.util.Optional.of(tmp4));
+
+        String res = mockMvc.perform(get("/getAllUrlsPageable?pageCount=0&pageSize=30").header("Authorization", JwtUtil.sign(2, "ao7777", 1, false)).contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+        assertTrue(om.readValue(res, new TypeReference<JSONObject>() {
+        }).getBooleanValue("not_administrator"));
+
+        res = mockMvc.perform(get("/getAllUrlsPageable?pageCount=0&pageSize=30").header("Authorization", JwtUtil.sign(2, "ao7777", 0, false)).contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+        JSONObject data = om.readValue(res, new TypeReference<JSONObject>() {
+        }).getJSONObject("data");
+        List<JSONObject> stats = data.getJSONArray("data").toJavaList(JSONObject.class);
+        assertEquals(stats.size(), 1);
+        assertEquals("000000", (stats.get(0).getString("shortUrl")));
+        assertEquals(stats.get(0).getLong("count"), 1);
+        assertEquals(stats.get(0).getString("creatorName"), "SXS");
+        assertEquals(data.getInteger("totalPages"), 1);
+    }
+
+    @Test
     public void getNumberCount() throws Exception {
         when(usersRepository.count()).thenReturn((long) 1551);
         when(shortenLogRepository.count()).thenReturn((long) 2333);
@@ -345,11 +407,4 @@ public class StatControllerTest extends ApplicationTests {
         assertEquals(stats.getLong("visitCountTotal"), 31415926);
         assertEquals(stats.getString("shortUrl"), "SXSTQL");
     }
-
-//    @Test
-//    public void getAllUrlsPageable() throws Exception {
-//        String res = mockMvc.perform(get("/getAllUrlsPageable?pageCount=0&pageSize=30").header("Authorization", JwtUtil.sign(2, "ao7777", 0, false)).contentType(MediaType.APPLICATION_JSON_VALUE))
-//                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
-//        System.out.println(res);
-//    }
 }

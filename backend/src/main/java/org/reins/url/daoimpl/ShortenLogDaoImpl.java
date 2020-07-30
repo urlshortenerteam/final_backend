@@ -160,6 +160,14 @@ public class ShortenLogDaoImpl implements ShortenLogDao {
     }
 
     @Override
+    public Page<ShortenLog> findPage(Pageable pageable) {
+        Page<ShortenLog> shortenLogList = shortenLogRepository.findAll(pageable);
+        for (ShortenLog shortenLog : shortenLogList)
+            shortenLog.setShortener(reorderShortenerList(shortenerRepository.findByShortenId(shortenLog.getId())));
+        return shortenLogList;
+    }
+
+    @Override
     public ShortenLog findTopOneOrderByVisitCount() {
         return shortenLogRepository.findTopByOrderByVisitCountDesc();
     }
@@ -177,13 +185,5 @@ public class ShortenLogDaoImpl implements ShortenLogDao {
         Long res = shortenLogRepository.visitSum();
         if (res == null) return 0;
         return res;
-    }
-
-    @Override
-    public Page<ShortenLog> findPage(Pageable pageable) {
-        Page<ShortenLog> shortenLogList = shortenLogRepository.findAll(pageable);
-        for (ShortenLog shortenLog : shortenLogList)
-            shortenLog.setShortener(reorderShortenerList(shortenerRepository.findByShortenId(shortenLog.getId())));
-        return shortenLogList;
     }
 }
