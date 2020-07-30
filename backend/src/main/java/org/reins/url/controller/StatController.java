@@ -142,9 +142,8 @@ public class StatController {
     @CrossOrigin
     @RequestMapping("/getReal")
     public JSONObject getReal(@RequestHeader("Authorization") String jwt) throws Exception {
-    Claims c = JwtUtil.parseJWT(jwt);
-    long id=Long.parseLong(c.get("id").toString());
-
+        Claims c = JwtUtil.parseJWT(jwt);
+        long id = Long.parseLong(c.get("id").toString());
         List<VisitLog> visitLogList = visitLogService.findAllOrderByVisitTime();
         JSONArray logs = new JSONArray();
         for (VisitLog visitLog : visitLogList) {
