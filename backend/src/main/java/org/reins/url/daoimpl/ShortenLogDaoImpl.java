@@ -174,7 +174,9 @@ public class ShortenLogDaoImpl implements ShortenLogDao {
 
     @Override
     public long visitSum() {
-        return shortenLogRepository.visitSum();
+        Long res = shortenLogRepository.visitSum();
+        if (res == null) return 0;
+        return res;
     }
 
     @Override

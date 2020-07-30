@@ -7,6 +7,7 @@ import org.lionsoul.ip2region.DataBlock;
 import org.lionsoul.ip2region.DbConfig;
 import org.lionsoul.ip2region.DbSearcher;
 import org.lionsoul.ip2region.Util;
+import org.springframework.util.ResourceUtils;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -91,10 +92,11 @@ public class Statistics {
     public void addAreaDistr(String ip) throws Exception {
         boolean isIpAddress = Util.isIpAddress(ip);
         if (!isIpAddress) return;
-        //long ipLong=Util.ip2long(ip);
-        //String strIp=Util.long2ip(ipLong);
+//        long ipLong = Util.ip2long(ip);
+//        String strIp = Util.long2ip(ipLong);
         DbConfig config = new DbConfig();
-        String dbfile = "./src/main/resources/ip2region.db";
+        String dbfile = System.getenv("IP2REGION");
+        dbfile = java.net.URLDecoder.decode(dbfile, "utf-8");
         DbSearcher searcher = new DbSearcher(config, dbfile);
         DataBlock block = searcher.btreeSearch(ip);
         String area = block.getRegion().substring(5, 7);
