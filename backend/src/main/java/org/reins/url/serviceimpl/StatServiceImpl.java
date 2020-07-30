@@ -1,7 +1,6 @@
 package org.reins.url.serviceimpl;
 
 import com.alibaba.fastjson.JSONObject;
-import javafx.util.Pair;
 import org.reins.url.dao.ShortenLogDao;
 import org.reins.url.dao.UsersDao;
 import org.reins.url.dao.VisitLogDao;
@@ -13,9 +12,9 @@ import org.reins.url.entity.VisitLog;
 import org.reins.url.service.StatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import org.springframework.data.domain.Pageable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -124,7 +123,7 @@ public class StatServiceImpl implements StatService {
     @Override
     public JSONObject getPagedUrls(Pageable pageable) {
         Page<ShortenLog> shortenLogs = shortenLogDao.findPage(pageable);
-        List<Statistics> res=new ArrayList<>();
+        List<Statistics> res = new ArrayList<>();
         for (ShortenLog s : shortenLogs) {
             Statistics statistics = new Statistics();
             statistics.shortUrl = s.getShortUrl();
@@ -148,9 +147,9 @@ public class StatServiceImpl implements StatService {
             }
             res.add(statistics);
         }
-        JSONObject ans=new JSONObject();
-        ans.put("data",res);
-        ans.put("totalPages",shortenLogs.getTotalPages());
+        JSONObject ans = new JSONObject();
+        ans.put("data", res);
+        ans.put("totalPages", shortenLogs.getTotalPages());
         return ans;
     }
 

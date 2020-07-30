@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSONObject;
 import io.jsonwebtoken.Claims;
 import org.reins.url.entity.ShortenLog;
 import org.reins.url.entity.Shortener;
-import org.reins.url.entity.Statistics;
 import org.reins.url.entity.VisitLog;
 import org.reins.url.service.ShortenLogService;
 import org.reins.url.service.ShortenerService;
@@ -13,15 +12,14 @@ import org.reins.url.service.StatService;
 import org.reins.url.service.VisitLogService;
 import org.reins.url.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import org.springframework.data.domain.Pageable;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -146,8 +144,8 @@ public class StatController {
     @CrossOrigin
     @RequestMapping("/getReal")
     public JSONObject getReal(@RequestHeader("Authorization") String jwt) throws Exception {
-    Claims c = JwtUtil.parseJWT(jwt);
-    long id=Long.parseLong(c.get("id").toString());
+        Claims c = JwtUtil.parseJWT(jwt);
+        long id = Long.parseLong(c.get("id").toString());
 
         List<VisitLog> visitLogList = visitLogService.findAllOrderByVisitTime();
         JSONArray logs = new JSONArray();
@@ -271,7 +269,7 @@ public class StatController {
     @CrossOrigin
     @RequestMapping("/getAllUrlsPageable")
     public JSONObject getAllUrlsPageable(@RequestHeader("Authorization") String jwt,
-                                         @RequestParam("pageCount") int pageCount,@RequestParam("pageSize") int pageSize) throws Exception {
+                                         @RequestParam("pageCount") int pageCount, @RequestParam("pageSize") int pageSize) throws Exception {
         Claims c = JwtUtil.parseJWT(jwt);
         if ((int) c.get("role") != 0) {
             JSONObject res = new JSONObject();
@@ -279,7 +277,7 @@ public class StatController {
             return res;
         }
         JSONObject res = new JSONObject();
-        Pageable pageable= PageRequest.of(pageCount,pageSize);
+        Pageable pageable = PageRequest.of(pageCount, pageSize);
         res.put("data", statService.getPagedUrls(pageable));
         res.put("not_administrator", false);
         return res;
