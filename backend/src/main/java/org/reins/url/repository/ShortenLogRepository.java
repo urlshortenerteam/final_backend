@@ -21,7 +21,9 @@ public interface ShortenLogRepository extends JpaRepository<ShortenLog, Long> {
     List<ShortenLog> findTop10ByOrderByVisitCountDesc();
 
     @Query("select sum(s.visitCount) from ShortenLog s")
+
     long visitSum();
 
     Page<ShortenLog> findAll(Pageable pageable);
+
 }

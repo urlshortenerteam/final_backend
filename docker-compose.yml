@@ -1,0 +1,39 @@
+version: '3.2'
+
+services:
+  backend:
+    image: reevoo:latest
+    hostname: backend
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      - JVM_OPTS="-Xms128m -Xmx128m"
+      - JASYPT_ENCRYPTOR_PASSWORD=SXSYYDS
+      - IP2REGION=./ip2region.db
+    networks:
+      - demo
+
+  prometheus:
+    image: prom/prometheus
+    hostname: prometheus
+    restart: always
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9091:9090"
+    networks:
+      - demo
+
+  grafana:
+    image: grafana/grafana
+    hostname: grafana
+    restart: always
+    ports:
+      - "3000:3000"
+    networks:
+      - demo
+
+networks:
+  demo:
+    driver: bridge
