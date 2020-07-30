@@ -20,11 +20,11 @@ public class UsersController {
      * It checks whether the name has existed.If yes, the registration fails.
      *
      * @param params a map that contains the name, password and email
-     * {
-     * name:String,
-     * password:String,
-     * email:String
-     * }
+     *               {
+     *               name:String,
+     *               password:String,
+     *               email:String
+     *               }
      * @return {data:{
      * success:Boolean
      * }
