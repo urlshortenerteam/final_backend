@@ -1,6 +1,8 @@
 package org.reins.url.dao;
 
 import org.reins.url.entity.ShortenLog;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -26,4 +28,6 @@ public interface ShortenLogDao {
     List<ShortenLog> findTopTenOrderByVisitCount();
 
     long visitSum();
+
+    Page<ShortenLog> findPage(Pageable pageable);
 }

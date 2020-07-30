@@ -7,6 +7,8 @@ import org.reins.url.repository.ShortenLogRepository;
 import org.reins.url.repository.ShortenerRepository;
 import org.reins.url.xeger.Xeger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -173,5 +175,13 @@ public class ShortenLogDaoImpl implements ShortenLogDao {
     @Override
     public long visitSum() {
         return shortenLogRepository.visitSum();
+    }
+
+    @Override
+    public Page<ShortenLog> findPage(Pageable pageable){
+        Page<ShortenLog> shortenLogList = shortenLogRepository.findAll(pageable);
+        for (ShortenLog shortenLog : shortenLogList)
+            shortenLog.setShortener(reorderShortenerList(shortenerRepository.findByShortenId(shortenLog.getId())));
+        return shortenLogList;
     }
 }
