@@ -123,7 +123,7 @@ public class StatController {
      * handle the request "/getReal" and return the information visit logs.
      * It can return the latest 5 visit logs of the user.
      *
-     * @param id the id in requestParam used for checking the user's id
+     * @param jwt the jwt in requestHeader used for getting the user's id
      * @return {data: {
      * logs: [
      * {
@@ -141,7 +141,10 @@ public class StatController {
      */
     @CrossOrigin
     @RequestMapping("/getReal")
-    public JSONObject getReal(@RequestParam("id") long id) {
+    public JSONObject getReal(@RequestHeader("Authorization") String jwt) throws Exception {
+    Claims c = JwtUtil.parseJWT(jwt);
+    long id=Long.parseLong(c.get("id").toString());
+
         List<VisitLog> visitLogList = visitLogService.findAllOrderByVisitTime();
         JSONArray logs = new JSONArray();
         for (VisitLog visitLog : visitLogList) {
