@@ -12,6 +12,8 @@ import org.reins.url.service.StatService;
 import org.reins.url.service.VisitLogService;
 import org.reins.url.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -144,6 +146,7 @@ public class StatController {
     public JSONObject getReal(@RequestHeader("Authorization") String jwt) throws Exception {
         Claims c = JwtUtil.parseJWT(jwt);
         long id = Long.parseLong(c.get("id").toString());
+
         List<VisitLog> visitLogList = visitLogService.findAllOrderByVisitTime();
         JSONArray logs = new JSONArray();
         for (VisitLog visitLog : visitLogList) {
@@ -258,6 +261,24 @@ public class StatController {
         }
         JSONObject res = new JSONObject();
         res.put("data", statService.getAllUrls());
+        res.put("not_administrator", false);
+        return res;
+    }
+
+
+    @CrossOrigin
+    @RequestMapping("/getAllUrlsPageable")
+    public JSONObject getAllUrlsPageable(@RequestHeader("Authorization") String jwt,
+                                         @RequestParam("pageCount") int pageCount, @RequestParam("pageSize") int pageSize) throws Exception {
+        Claims c = JwtUtil.parseJWT(jwt);
+        if ((int) c.get("role") != 0) {
+            JSONObject res = new JSONObject();
+            res.put("not_administrator", true);
+            return res;
+        }
+        JSONObject res = new JSONObject();
+        Pageable pageable = PageRequest.of(pageCount, pageSize);
+        res.put("data", statService.getPagedUrls(pageable));
         res.put("not_administrator", false);
         return res;
     }

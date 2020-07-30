@@ -11,6 +11,8 @@ import org.reins.url.entity.Users;
 import org.reins.url.entity.VisitLog;
 import org.reins.url.service.StatService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -116,6 +118,39 @@ public class StatServiceImpl implements StatService {
             res.add(statistics);
         }
         return res;
+    }
+
+    @Override
+    public JSONObject getPagedUrls(Pageable pageable) {
+        Page<ShortenLog> shortenLogs = shortenLogDao.findPage(pageable);
+        List<Statistics> res = new ArrayList<>();
+        for (ShortenLog s : shortenLogs) {
+            Statistics statistics = new Statistics();
+            statistics.shortUrl = s.getShortUrl();
+            statistics.creatorName = usersDao.findById(s.getCreatorId()).getName();
+            statistics.createTime = s.getCreateTime();
+            statistics.count = s.getVisitCount();
+            for (Shortener shortener : s.getShortener()) {
+                List<VisitLog> visitLogs = visitLogDao.findByShortenerId(shortener.getId());
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("url", shortener.getLongUrl());
+                statistics.longUrl.add(jsonObject);
+                for (VisitLog v : visitLogs) {
+                    try {
+                        statistics.addAreaDistr(v.getIp());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    statistics.addTimeDistr(v.getVisitTime());
+                    statistics.addSourceDistr(v.getDevice());
+                }
+            }
+            res.add(statistics);
+        }
+        JSONObject ans = new JSONObject();
+        ans.put("data", res);
+        ans.put("totalPages", shortenLogs.getTotalPages());
+        return ans;
     }
 
     @Override

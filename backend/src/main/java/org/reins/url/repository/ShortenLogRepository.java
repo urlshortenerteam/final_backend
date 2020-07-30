@@ -1,6 +1,8 @@
 package org.reins.url.repository;
 
 import org.reins.url.entity.ShortenLog;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -19,5 +21,9 @@ public interface ShortenLogRepository extends JpaRepository<ShortenLog, Long> {
     List<ShortenLog> findTop10ByOrderByVisitCountDesc();
 
     @Query("select sum(s.visitCount) from ShortenLog s")
-    Long visitSum();
+
+    long visitSum();
+
+    Page<ShortenLog> findAll(Pageable pageable);
+
 }
