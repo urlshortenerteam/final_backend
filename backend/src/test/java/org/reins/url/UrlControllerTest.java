@@ -20,7 +20,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.*;
-import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -93,22 +92,6 @@ public class UrlControllerTest extends ApplicationTests {
         String shortUrl = om.readValue(res, new TypeReference<JSONObject>() {
         }).getString("data");
         assertTrue(shortUrl.matches("[A-Za-z0-9]{6}"));
-//        Random random=new Random();
-//        String str="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-//        for (int k=0;k<1000;++k){
-//            List<String> longUrls=new ArrayList<>();
-//            int size=random.nextInt(5)+1;
-//            for (int i=0;i<size;++i){
-//                StringBuilder stringBuffer=new StringBuilder();
-//                stringBuffer.append("https://");
-//                int length=random.nextInt(30)+1;
-//                for (int j=0;j<length;++j){
-//                    stringBuffer.append(str.charAt(random.nextInt(62)));
-//                }
-//                longUrls.add(stringBuffer.toString());
-//            }
-//            shortenLogService.addOneShortenLog(2,longUrls);
-//        }
     }
 
     @Test

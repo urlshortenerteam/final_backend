@@ -223,7 +223,7 @@ public class StatControllerTest extends ApplicationTests {
         shortenLog.setCreatorId(1);
         when(shortenLogRepository.findById((long) 1)).thenReturn(Optional.of(shortenLog));
 
-        String res = mockMvc.perform(get("/getReal?id=1").header("Authorization", JwtUtil.sign(1, "ao7777", 0, false)).contentType(MediaType.APPLICATION_JSON_VALUE))
+        String res = mockMvc.perform(get("/getReal").header("Authorization", JwtUtil.sign(1, "ao7777", 0, false)).contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         JSONArray logs = om.readValue(res, new TypeReference<JSONObject>() {
         }).getJSONObject("data").getJSONArray("logs");
