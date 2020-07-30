@@ -190,39 +190,4 @@ public class UsersControllerTest extends ApplicationTests {
         }).getBoolean("success");
         assertFalse(success);
     }
-
-    @Test
-    public void refresh() throws Exception {
-        Users users=new Users();
-        users.setId(1);
-        users.setName("ao7777");
-        users.setRole(0);
-        when(usersRepository.findById((long) 1)).thenReturn(Optional.of(users));
-
-        Map<String, String> params = new HashMap<>();
-        params.put("refresh", JwtUtil.sign(1,"ao7777",0,true));
-        String res = mockMvc.perform(post("/refresh").contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString(params)))
-                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
-        boolean success = om.readValue(res, new TypeReference<JSONObject>() {
-        }).getBoolean("success");
-        assertTrue(success);
-
-        users.setRole(2);
-        when(usersRepository.findById((long) 1)).thenReturn(Optional.of(users));
-        params = new HashMap<>();
-        params.put("refresh", JwtUtil.sign(1,"ao7777",1,true));
-        res = mockMvc.perform(post("/refresh").contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString(params)))
-                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
-        success = om.readValue(res, new TypeReference<JSONObject>() {
-        }).getBoolean("success");
-        assertFalse(success);
-
-        params = new HashMap<>();
-        params.put("refresh", "SXSTXDY");
-        res = mockMvc.perform(post("/refresh").contentType(MediaType.APPLICATION_JSON_VALUE).content(JSONObject.toJSONString(params)))
-                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
-        success = om.readValue(res, new TypeReference<JSONObject>() {
-        }).getBoolean("success");
-        assertFalse(success);
-    }
 }
