@@ -322,6 +322,14 @@ public class StatControllerTest extends ApplicationTests {
     }
 
     @Test
+    public void getAllUrlsPageable() throws Exception {
+        String res = mockMvc.perform(get("/getAllUrlsPageable?pageCount=0&pageSize=30").header("Authorization", JwtUtil.sign(2, "ao7777", 1, false)).contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+        assertTrue(om.readValue(res, new TypeReference<JSONObject>() {
+        }).getBooleanValue("not_administrator"));
+    }
+
+    @Test
     public void getNumberCount() throws Exception {
         when(usersRepository.count()).thenReturn((long) 1551);
         when(shortenLogRepository.count()).thenReturn((long) 2333);
@@ -345,11 +353,4 @@ public class StatControllerTest extends ApplicationTests {
         assertEquals(stats.getLong("visitCountTotal"), 31415926);
         assertEquals(stats.getString("shortUrl"), "SXSTQL");
     }
-
-//    @Test
-//    public void getAllUrlsPageable() throws Exception {
-//        String res = mockMvc.perform(get("/getAllUrlsPageable?pageCount=0&pageSize=30").header("Authorization", JwtUtil.sign(2, "ao7777", 0, false)).contentType(MediaType.APPLICATION_JSON_VALUE))
-//                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
-//        System.out.println(res);
-//    }
 }

@@ -10,6 +10,8 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface ShortenLogRepository extends JpaRepository<ShortenLog, Long> {
+    Page<ShortenLog> findAll(Pageable pageable);
+
     @Query("select s from ShortenLog s where s.creatorId=:creatorId")
     List<ShortenLog> findByCreatorId(@Param("creatorId") long creatorId);
 
@@ -21,9 +23,5 @@ public interface ShortenLogRepository extends JpaRepository<ShortenLog, Long> {
     List<ShortenLog> findTop10ByOrderByVisitCountDesc();
 
     @Query("select sum(s.visitCount) from ShortenLog s")
-
-    long visitSum();
-
-    Page<ShortenLog> findAll(Pageable pageable);
-
+    Long visitSum();
 }

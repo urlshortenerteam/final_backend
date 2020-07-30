@@ -23,11 +23,11 @@ public interface ShortenLogDao {
 
     ShortenLog findByShortUrl(String shortUrl);
 
+    Page<ShortenLog> findPage(Pageable pageable);
+
     ShortenLog findTopOneOrderByVisitCount();
 
     List<ShortenLog> findTopTenOrderByVisitCount();
 
     long visitSum();
-
-    Page<ShortenLog> findPage(Pageable pageable);
 }

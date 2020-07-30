@@ -102,7 +102,8 @@ public class StatController {
      * },
      * {……},
      * ……
-     * ]
+     * ],
+     * not_administrator: Boolean
      * }
      * @throws Exception when the string jwt can't be parsed as a JWT
      */
@@ -146,7 +147,6 @@ public class StatController {
     public JSONObject getReal(@RequestHeader("Authorization") String jwt) throws Exception {
         Claims c = JwtUtil.parseJWT(jwt);
         long id = Long.parseLong(c.get("id").toString());
-
         List<VisitLog> visitLogList = visitLogService.findAllOrderByVisitTime();
         JSONArray logs = new JSONArray();
         for (VisitLog visitLog : visitLogList) {
@@ -246,7 +246,8 @@ public class StatController {
      * },
      * {……},
      * ……
-     * ]
+     * ],
+     * not_administrator: Boolean
      * }
      * @throws Exception when the string jwt can't be parsed as a JWT
      */
@@ -265,11 +266,30 @@ public class StatController {
         return res;
     }
 
-
+    /**
+     * handle the request "/getAllUrlsPageable" and return the statistics of pageable Urls.
+     * It's similar to "/getStat"
+     * It can only be requested by administrators.
+     *
+     * @param jwt the jwt in requestHeader used for checking the user's type
+     * @return {data:[
+     * {
+     * shortUrl:String,
+     * longUrl:JSONArray
+     * count:Integer,
+     * creatorName:String,
+     * createTime:String
+     * },
+     * {……},
+     * ……
+     * ],
+     * not_administrator: Boolean
+     * }
+     * @throws Exception when the string jwt can't be parsed as a JWT
+     */
     @CrossOrigin
     @RequestMapping("/getAllUrlsPageable")
-    public JSONObject getAllUrlsPageable(@RequestHeader("Authorization") String jwt,
-                                         @RequestParam("pageCount") int pageCount, @RequestParam("pageSize") int pageSize) throws Exception {
+    public JSONObject getAllUrlsPageable(@RequestHeader("Authorization") String jwt, @RequestParam("pageCount") int pageCount, @RequestParam("pageSize") int pageSize) throws Exception {
         Claims c = JwtUtil.parseJWT(jwt);
         if ((int) c.get("role") != 0) {
             JSONObject res = new JSONObject();
@@ -293,7 +313,8 @@ public class StatController {
      * shortUrlCount:Integer,
      * visitCountTotal:Integer,
      * shortUrl:String,
-     * }
+     * },
+     * not_administrator: Boolean
      * }
      * @throws Exception when the string jwt can't be parsed as a JWT
      */

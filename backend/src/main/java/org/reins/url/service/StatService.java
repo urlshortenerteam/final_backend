@@ -8,15 +8,15 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface StatService {
-    List<Statistics> getStat(long id);
-
-    Statistics getShortStat(String shortUrl);
-
-    List<Users> getUserStat();
-
     List<Statistics> getAllUrls();
+
+    JSONObject getNumberCount();
 
     JSONObject getPagedUrls(Pageable pageable);
 
-    JSONObject getNumberCount();
+    Statistics getShortStat(String shortUrl);
+
+    List<Statistics> getStat(long id);
+
+    List<Users> getUserStat();
 }
