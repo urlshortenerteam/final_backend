@@ -62,6 +62,7 @@ public class StatController {
         res.put("data", statService.getStat(Long.parseLong(c.get("id").toString())));
         return res;
     }
+
     /**
      * handle the request "/getStatPageable" and return the statistics of pageable Urls.
      * It's similar to "/getStat"
@@ -90,8 +91,8 @@ public class StatController {
     public JSONObject getStatPageable(@RequestHeader("Authorization") String jwt, @RequestParam("pageCount") int pageCount, @RequestParam("pageSize") int pageSize) throws Exception {
         Claims c = JwtUtil.parseJWT(jwt);
         JSONObject res = new JSONObject();
-        Pageable pageable=PageRequest.of(pageCount,pageSize);
-        res.put("data", statService.getStatPageable(Long.parseLong(c.get("id").toString()),pageable));
+        Pageable pageable = PageRequest.of(pageCount, pageSize);
+        res.put("data", statService.getStatPageable(Long.parseLong(c.get("id").toString()), pageable));
         return res;
     }
 
