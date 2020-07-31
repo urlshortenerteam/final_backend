@@ -71,15 +71,15 @@ public class StatControllerTest extends ApplicationTests {
 
     @Test
     public void getStat() throws Exception {
-        List<ShortenLog> shorten_logs = new ArrayList<>();
+        List<ShortenLog> shortenLogs = new ArrayList<>();
         ShortenLog tmp1 = new ShortenLog();
         tmp1.setId(1);
         tmp1.setCreatorId(1);
         tmp1.setCreateTime(new Date());
         tmp1.setShortUrl("000000");
         tmp1.setVisitCount(1);
-        shorten_logs.add(tmp1);
-        when(shortenLogRepository.findByCreatorId(1)).thenReturn(shorten_logs);
+        shortenLogs.add(tmp1);
+        when(shortenLogRepository.findByCreatorId(1)).thenReturn(shortenLogs);
 
         List<Shortener> shorteners = new ArrayList<>();
         Shortener tmp2 = new Shortener();
@@ -89,15 +89,15 @@ public class StatControllerTest extends ApplicationTests {
         shorteners.add(tmp2);
         when(shortenerRepository.findByShortenId(1)).thenReturn(shorteners);
 
-        List<VisitLog> visit_logs = new ArrayList<>();
+        List<VisitLog> visitLogs = new ArrayList<>();
         VisitLog tmp3 = new VisitLog();
         tmp3.setId(1);
         tmp3.setShortenerId("1");
         tmp3.setVisitTime(new Date());
         tmp3.setIp("127.0.0.1");
         tmp3.setDevice(true);
-        visit_logs.add(tmp3);
-        when(visitLogRepository.findByShortenerId("1")).thenReturn(visit_logs);
+        visitLogs.add(tmp3);
+        when(visitLogRepository.findByShortenerId("1")).thenReturn(visitLogs);
 
         String res = mockMvc.perform(get("/getStat?id=1").header("Authorization", JwtUtil.sign(1, "ao7777", 0, false)).contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
@@ -194,15 +194,15 @@ public class StatControllerTest extends ApplicationTests {
         tmp1.setCreateTime(new Date());
         when(shortenLogRepository.findByShortUrl("000000")).thenReturn(tmp1);
 
-        List<VisitLog> visit_logs = new ArrayList<>();
+        List<VisitLog> visitLogs = new ArrayList<>();
         VisitLog tmp3 = new VisitLog();
         tmp3.setId(1);
         tmp3.setShortenerId("1");
         tmp3.setVisitTime(new Date());
         tmp3.setIp("127.0.0.1");
         tmp3.setDevice(true);
-        visit_logs.add(tmp3);
-        when(visitLogRepository.findByShortenerId("1")).thenReturn(visit_logs);
+        visitLogs.add(tmp3);
+        when(visitLogRepository.findByShortenerId("1")).thenReturn(visitLogs);
 
         String shortUrl = "000000";
 
@@ -315,15 +315,15 @@ public class StatControllerTest extends ApplicationTests {
 
     @Test
     public void getAllUrls() throws Exception {
-        List<ShortenLog> shorten_logs = new ArrayList<>();
+        List<ShortenLog> shortenLogs = new ArrayList<>();
         ShortenLog tmp1 = new ShortenLog();
         tmp1.setId(1);
         tmp1.setCreatorId(1);
         tmp1.setCreateTime(new Date());
         tmp1.setShortUrl("000000");
         tmp1.setVisitCount(1);
-        shorten_logs.add(tmp1);
-        when(shortenLogRepository.findAll()).thenReturn(shorten_logs);
+        shortenLogs.add(tmp1);
+        when(shortenLogRepository.findAll()).thenReturn(shortenLogs);
 
         List<Shortener> shorteners = new ArrayList<>();
         Shortener tmp2 = new Shortener();
@@ -333,15 +333,15 @@ public class StatControllerTest extends ApplicationTests {
         shorteners.add(tmp2);
         when(shortenerRepository.findByShortenId(1)).thenReturn(shorteners);
 
-        List<VisitLog> visit_logs = new ArrayList<>();
+        List<VisitLog> visitLogs = new ArrayList<>();
         VisitLog tmp3 = new VisitLog();
         tmp3.setId(1);
         tmp3.setShortenerId("1");
         tmp3.setVisitTime(new Date());
         tmp3.setIp("127.0.0.1");
         tmp3.setDevice(true);
-        visit_logs.add(tmp3);
-        when(visitLogRepository.findByShortenerId("1")).thenReturn(visit_logs);
+        visitLogs.add(tmp3);
+        when(visitLogRepository.findByShortenerId("1")).thenReturn(visitLogs);
 
         Users tmp4 = new Users();
         tmp4.setName("SXS");
@@ -381,15 +381,15 @@ public class StatControllerTest extends ApplicationTests {
     @Test
     public void getAllUrlsPageable() throws Exception {
         Pageable pageable = PageRequest.of(0, 30);
-        List<ShortenLog> shorten_logs = new ArrayList<>();
+        List<ShortenLog> shortenLogs = new ArrayList<>();
         ShortenLog tmp1 = new ShortenLog();
         tmp1.setId(1);
         tmp1.setCreatorId(1);
         tmp1.setCreateTime(new Date());
         tmp1.setShortUrl("000000");
         tmp1.setVisitCount(1);
-        shorten_logs.add(tmp1);
-        Page<ShortenLog> shortenLogPage = new PageImpl<>(shorten_logs);
+        shortenLogs.add(tmp1);
+        Page<ShortenLog> shortenLogPage = new PageImpl<>(shortenLogs);
         when(shortenLogRepository.findAll(pageable)).thenReturn(shortenLogPage);
 
         List<Shortener> shorteners = new ArrayList<>();
@@ -400,15 +400,15 @@ public class StatControllerTest extends ApplicationTests {
         shorteners.add(tmp2);
         when(shortenerRepository.findByShortenId(1)).thenReturn(shorteners);
 
-        List<VisitLog> visit_logs = new ArrayList<>();
+        List<VisitLog> visitLogs = new ArrayList<>();
         VisitLog tmp3 = new VisitLog();
         tmp3.setId(1);
         tmp3.setShortenerId("1");
         tmp3.setVisitTime(new Date());
         tmp3.setIp("127.0.0.1");
         tmp3.setDevice(true);
-        visit_logs.add(tmp3);
-        when(visitLogRepository.findByShortenerId("1")).thenReturn(visit_logs);
+        visitLogs.add(tmp3);
+        when(visitLogRepository.findByShortenerId("1")).thenReturn(visitLogs);
 
         Users tmp4 = new Users();
         tmp4.setName("SXS");
