@@ -10,7 +10,7 @@ services:
     environment:
       - JVM_OPTS="-Xms128m -Xmx128m"
       - JASYPT_ENCRYPTOR_PASSWORD=SXSYYDS
-      - IP2REGION=./src/main/resources/ip2region.db
+      - IP2REGION=./ip2region.db
     networks:
       - demo
 
