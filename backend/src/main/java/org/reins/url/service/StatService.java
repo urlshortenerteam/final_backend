@@ -18,5 +18,7 @@ public interface StatService {
 
     List<Statistics> getStat(long id);
 
+    JSONObject getStatPageable(long id,Pageable pageable);
+
     List<Users> getUserStat();
 }

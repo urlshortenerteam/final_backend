@@ -147,6 +147,14 @@ public class ShortenLogDaoImpl implements ShortenLogDao {
     }
 
     @Override
+    public Page<ShortenLog> findByCreatorIdPageable(long creatorId, Pageable pageable){
+        Page<ShortenLog> shortenLogList = shortenLogRepository.findByCreatorId(creatorId,pageable);
+        for (ShortenLog shortenLog : shortenLogList)
+            shortenLog.setShortener(reorderShortenerList(shortenerRepository.findByShortenId(shortenLog.getId())));
+        return shortenLogList;
+    }
+
+    @Override
     public ShortenLog findById(long id) {
         return shortenLogRepository.findById(id).orElse(null);
     }
