@@ -8,11 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.runner.RunWith;
-import org.reins.url.entity.ShortenLog;
-import org.reins.url.entity.Shortener;
-import org.reins.url.entity.TimeDistr;
-import org.reins.url.entity.Users;
-import org.reins.url.entity.VisitLog;
+import org.reins.url.entity.*;
 import org.reins.url.repository.ShortenLogRepository;
 import org.reins.url.repository.ShortenerRepository;
 import org.reins.url.repository.UsersRepository;
@@ -121,6 +117,63 @@ public class StatControllerTest extends ApplicationTests {
         assertEquals(size, 1);
         String l = longUrl.getJSONObject(0).getString("url");
         assertEquals("https://www.baidu.com/", l);
+    }
+
+    @Test
+    public void getStatPageable() throws Exception {
+        Pageable pageable = PageRequest.of(0, 30);
+
+        List<ShortenLog> shortenLogs = new ArrayList<>();
+        ShortenLog tmp1 = new ShortenLog();
+        tmp1.setId(1);
+        tmp1.setCreatorId(1);
+        tmp1.setCreateTime(new Date());
+        tmp1.setShortUrl("000000");
+        tmp1.setVisitCount(1);
+        shortenLogs.add(tmp1);
+
+        Page<ShortenLog> shortenLogPage=new PageImpl<>(shortenLogs);
+
+        when(shortenLogRepository.findByCreatorId(1,pageable)).thenReturn(shortenLogPage);
+
+        List<Shortener> shorteners = new ArrayList<>();
+        Shortener tmp2 = new Shortener();
+        tmp2.setId("1");
+        tmp2.setShortenId(1);
+        tmp2.setLongUrl("https://www.baidu.com/");
+        shorteners.add(tmp2);
+        when(shortenerRepository.findByShortenId(1)).thenReturn(shorteners);
+
+        List<VisitLog> visit_logs = new ArrayList<>();
+        VisitLog tmp3 = new VisitLog();
+        tmp3.setId(1);
+        tmp3.setShortenerId("1");
+        tmp3.setVisitTime(new Date());
+        tmp3.setIp("127.0.0.1");
+        tmp3.setDevice(true);
+        visit_logs.add(tmp3);
+        when(visitLogRepository.findByShortenerId("1")).thenReturn(visit_logs);
+
+        String res = mockMvc.perform(get("/getStatPageable?pageCount=0&pageSize=30").header("Authorization", JwtUtil.sign(1, "ao7777", 0, false)).contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+        JSONObject data = om.readValue(res, new TypeReference<JSONObject>() {
+        }).getJSONObject("data");
+        List<JSONObject> stats=data.getJSONArray("data").toJavaList(JSONObject.class);
+        assertEquals(stats.size(), 1);
+        assertEquals("000000", (stats.get(0).getString("shortUrl")));
+        assertEquals((stats.get(0).getLong("count")), 1);
+        List<TimeDistr> timeDistrs = stats.get(0).getJSONArray("timeDistr").toJavaList(TimeDistr.class);
+        assertEquals(timeDistrs.size(), 24);
+        for (int i = 0; i < 24; ++i) {
+            assertEquals(i, timeDistrs.get(i).time);
+            assertTrue(timeDistrs.get(i).value >= 0 && timeDistrs.get(i).value <= 1);
+        }
+        JSONArray longUrl = stats.get(0).getJSONArray("longUrl");
+        int size = longUrl.size();
+        assertEquals(size, 1);
+        String l = longUrl.getJSONObject(0).getString("url");
+        assertEquals("https://www.baidu.com/", l);
+        assertEquals(1,data.getLong("totalElements"));
     }
 
     @Test
@@ -380,7 +433,7 @@ public class StatControllerTest extends ApplicationTests {
         assertEquals("000000", (stats.get(0).getString("shortUrl")));
         assertEquals(stats.get(0).getLong("count"), 1);
         assertEquals(stats.get(0).getString("creatorName"), "SXS");
-        assertEquals(data.getInteger("totalPages"), 1);
+        assertEquals(data.getInteger("totalElements"), 1);
     }
 
     @Test

@@ -44,9 +44,9 @@ public class StatController {
      * shortUrl:String,
      * longUrl:JSONArray
      * count:Integer,
-     * area_distr:JSONArray,
-     * time_distr:JSONArray,
-     * source_distr:JSONArray
+     * areaDistr:JSONArray,
+     * timeDistr:JSONArray,
+     * sourceDistr:JSONArray
      * },
      * {……},
      * ……
@@ -60,6 +60,38 @@ public class StatController {
         Claims c = JwtUtil.parseJWT(jwt);
         JSONObject res = new JSONObject();
         res.put("data", statService.getStat(Long.parseLong(c.get("id").toString())));
+        return res;
+    }
+    /**
+     * handle the request "/getStatPageable" and return the statistics of pageable Urls.
+     * It's similar to "/getStat"
+     *
+     * @param jwt the jwt in requestHeader used for checking the user's type
+     * @return {data:{
+     * data:[
+     * {
+     * shortUrl:String,
+     * longUrl:JSONArray
+     * count:Integer,
+     * areaDistr:JSONArray,
+     * timeDistr:JSONArray,
+     * sourceDistr:JSONArray
+     * },
+     * {……},
+     * ……
+     * ],
+     * totalElements:long
+     * }
+     * }
+     * @throws Exception when the string jwt can't be parsed as a JWT
+     */
+    @CrossOrigin
+    @RequestMapping("/getStatPageable")
+    public JSONObject getStatPageable(@RequestHeader("Authorization") String jwt, @RequestParam("pageCount") int pageCount, @RequestParam("pageSize") int pageSize) throws Exception {
+        Claims c = JwtUtil.parseJWT(jwt);
+        JSONObject res = new JSONObject();
+        Pageable pageable=PageRequest.of(pageCount,pageSize);
+        res.put("data", statService.getStatPageable(Long.parseLong(c.get("id").toString()),pageable));
         return res;
     }
 
