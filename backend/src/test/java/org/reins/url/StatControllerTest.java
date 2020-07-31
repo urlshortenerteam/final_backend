@@ -380,7 +380,7 @@ public class StatControllerTest extends ApplicationTests {
         assertEquals("000000", (stats.get(0).getString("shortUrl")));
         assertEquals(stats.get(0).getLong("count"), 1);
         assertEquals(stats.get(0).getString("creatorName"), "SXS");
-        assertEquals(data.getInteger("totalPages"), 1);
+        assertEquals(data.getInteger("totalElements"), 1);
     }
 
     @Test

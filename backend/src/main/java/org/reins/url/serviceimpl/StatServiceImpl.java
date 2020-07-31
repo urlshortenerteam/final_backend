@@ -38,19 +38,9 @@ public class StatServiceImpl implements StatService {
             statistics.createTime = s.getCreateTime();
             statistics.count = s.getVisitCount();
             for (Shortener shortener : s.getShortener()) {
-                List<VisitLog> visitLogs = visitLogDao.findByShortenerId(shortener.getId());
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("url", shortener.getLongUrl());
                 statistics.longUrl.add(jsonObject);
-                for (VisitLog v : visitLogs) {
-                    try {
-                        statistics.addAreaDistr(v.getIp());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    statistics.addTimeDistr(v.getVisitTime());
-                    statistics.addSourceDistr(v.getDevice());
-                }
             }
             res.add(statistics);
         }
@@ -80,25 +70,15 @@ public class StatServiceImpl implements StatService {
             statistics.createTime = s.getCreateTime();
             statistics.count = s.getVisitCount();
             for (Shortener shortener : s.getShortener()) {
-                List<VisitLog> visitLogs = visitLogDao.findByShortenerId(shortener.getId());
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("url", shortener.getLongUrl());
                 statistics.longUrl.add(jsonObject);
-                for (VisitLog v : visitLogs) {
-                    try {
-                        statistics.addAreaDistr(v.getIp());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    statistics.addTimeDistr(v.getVisitTime());
-                    statistics.addSourceDistr(v.getDevice());
-                }
             }
             res.add(statistics);
         }
         JSONObject ans = new JSONObject();
         ans.put("data", res);
-        ans.put("totalPages", shortenLogs.getTotalPages());
+        ans.put("totalElements", shortenLogs.getTotalElements());
         return ans;
     }
 
