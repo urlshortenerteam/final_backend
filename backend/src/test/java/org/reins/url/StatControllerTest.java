@@ -132,9 +132,9 @@ public class StatControllerTest extends ApplicationTests {
         tmp1.setVisitCount(1);
         shortenLogs.add(tmp1);
 
-        Page<ShortenLog> shortenLogPage=new PageImpl<>(shortenLogs);
+        Page<ShortenLog> shortenLogPage = new PageImpl<>(shortenLogs);
 
-        when(shortenLogRepository.findByCreatorId(1,pageable)).thenReturn(shortenLogPage);
+        when(shortenLogRepository.findByCreatorId(1, pageable)).thenReturn(shortenLogPage);
 
         List<Shortener> shorteners = new ArrayList<>();
         Shortener tmp2 = new Shortener();
@@ -144,21 +144,21 @@ public class StatControllerTest extends ApplicationTests {
         shorteners.add(tmp2);
         when(shortenerRepository.findByShortenId(1)).thenReturn(shorteners);
 
-        List<VisitLog> visit_logs = new ArrayList<>();
+        List<VisitLog> visitLogs = new ArrayList<>();
         VisitLog tmp3 = new VisitLog();
         tmp3.setId(1);
         tmp3.setShortenerId("1");
         tmp3.setVisitTime(new Date());
         tmp3.setIp("127.0.0.1");
         tmp3.setDevice(true);
-        visit_logs.add(tmp3);
-        when(visitLogRepository.findByShortenerId("1")).thenReturn(visit_logs);
+        visitLogs.add(tmp3);
+        when(visitLogRepository.findByShortenerId("1")).thenReturn(visitLogs);
 
         String res = mockMvc.perform(get("/getStatPageable?pageCount=0&pageSize=30").header("Authorization", JwtUtil.sign(1, "ao7777", 0, false)).contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         JSONObject data = om.readValue(res, new TypeReference<JSONObject>() {
         }).getJSONObject("data");
-        List<JSONObject> stats=data.getJSONArray("data").toJavaList(JSONObject.class);
+        List<JSONObject> stats = data.getJSONArray("data").toJavaList(JSONObject.class);
         assertEquals(stats.size(), 1);
         assertEquals("000000", (stats.get(0).getString("shortUrl")));
         assertEquals((stats.get(0).getLong("count")), 1);
@@ -173,7 +173,7 @@ public class StatControllerTest extends ApplicationTests {
         assertEquals(size, 1);
         String l = longUrl.getJSONObject(0).getString("url");
         assertEquals("https://www.baidu.com/", l);
-        assertEquals(1,data.getLong("totalElements"));
+        assertEquals(1, data.getLong("totalElements"));
     }
 
     @Test

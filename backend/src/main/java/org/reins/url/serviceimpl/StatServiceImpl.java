@@ -141,9 +141,9 @@ public class StatServiceImpl implements StatService {
     }
 
     @Override
-    public JSONObject getStatPageable(long id,Pageable pageable){
+    public JSONObject getStatPageable(long id, Pageable pageable) {
         List<Statistics> res = new ArrayList<>();
-        Page<ShortenLog> shortenLogs = shortenLogDao.findByCreatorIdPageable(id,pageable);
+        Page<ShortenLog> shortenLogs = shortenLogDao.findByCreatorIdPageable(id, pageable);
         for (ShortenLog s : shortenLogs) {
             Statistics statistics = new Statistics();
             if (s.getShortener().size() == 0) continue;
