@@ -5,7 +5,10 @@ import org.reins.url.dao.UsersDao;
 import org.reins.url.entity.Users;
 import org.reins.url.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class UsersServiceImpl implements UsersService {
@@ -17,29 +20,34 @@ public class UsersServiceImpl implements UsersService {
     StringEncryptor encryptor;
 
     @Override
+    @Async
     public void changeRole(long id, int role) {
         usersDao.changeRole(id, role);
     }
 
     @Override
+    @Async
     public void changeVisitCount(long id) {
         usersDao.changeVisitCount(id);
     }
 
     @Override
-    public Users checkUser(String name, String password) {
-        return usersDao.checkUser(name, password);
+    @Async
+    public CompletableFuture<Users> checkUser(String name, String password) {
+        return CompletableFuture.completedFuture(usersDao.checkUser(name, password));
     }
 
     @Override
-    public Users findById(long id) {
-        return usersDao.findById(id);
+    @Async
+    public CompletableFuture<Users> findById(long id) {
+        return CompletableFuture.completedFuture(usersDao.findById(id));
     }
 
     @Override
-    public Boolean register(String name, String password, String email) {
-        if (usersDao.doesNameExist(name)) return false;
+    @Async
+    public CompletableFuture<Boolean> register(String name, String password, String email) {
+        if (usersDao.doesNameExist(name)) return CompletableFuture.completedFuture(false);
         usersDao.register(name, stringEncryptor.encrypt(password), email);
-        return true;
+        return CompletableFuture.completedFuture(true);
     }
 }
