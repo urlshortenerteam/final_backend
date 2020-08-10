@@ -6,19 +6,20 @@ import org.reins.url.entity.Users;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public interface StatService {
-    List<Statistics> getAllUrls();
+    CompletableFuture<List<Statistics>> getAllUrls();
 
-    JSONObject getNumberCount();
+    CompletableFuture<JSONObject> getNumberCount();
 
-    JSONObject getPagedUrls(Pageable pageable);
+    CompletableFuture<JSONObject> getPagedUrls(Pageable pageable);
 
-    Statistics getShortStat(String shortUrl);
+    CompletableFuture<Statistics> getShortStat(String shortUrl);
 
-    List<Statistics> getStat(long id);
+    CompletableFuture<List<Statistics>> getStat(long id);
 
-    JSONObject getStatPageable(long id, Pageable pageable);
+    CompletableFuture<JSONObject> getStatPageable(long id, Pageable pageable);
 
-    List<Users> getUserStat();
+    CompletableFuture<List<Users>> getUserStat();
 }

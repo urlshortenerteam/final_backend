@@ -59,7 +59,7 @@ public class StatController {
     public JSONObject getStat(@RequestHeader("Authorization") String jwt) throws Exception {
         Claims c = JwtUtil.parseJWT(jwt);
         JSONObject res = new JSONObject();
-        res.put("data", statService.getStat(Long.parseLong(c.get("id").toString())));
+        res.put("data", statService.getStat(Long.parseLong(c.get("id").toString())).get());
         return res;
     }
 
@@ -92,7 +92,7 @@ public class StatController {
         Claims c = JwtUtil.parseJWT(jwt);
         JSONObject res = new JSONObject();
         Pageable pageable = PageRequest.of(pageCount, pageSize);
-        res.put("data", statService.getStatPageable(Long.parseLong(c.get("id").toString()), pageable));
+        res.put("data", statService.getStatPageable(Long.parseLong(c.get("id").toString()), pageable).get());
         return res;
     }
 
@@ -117,7 +117,7 @@ public class StatController {
     public JSONObject getShortStat(@RequestHeader("Authorization") String jwt, @RequestParam("short") String short_url) throws Exception {
         Claims c = JwtUtil.parseJWT(jwt);
         JSONObject res = new JSONObject();
-        res.put("data", statService.getShortStat(short_url));
+        res.put("data", statService.getShortStat(short_url).get());
         return res;
     }
 
@@ -150,7 +150,7 @@ public class StatController {
             return res;
         }
         JSONObject res = new JSONObject();
-        res.put("data", statService.getUserStat());
+        res.put("data", statService.getUserStat().get());
         res.put("not_administrator", false);
         return res;
     }
@@ -180,12 +180,12 @@ public class StatController {
     public JSONObject getReal(@RequestHeader("Authorization") String jwt) throws Exception {
         Claims c = JwtUtil.parseJWT(jwt);
         long id = Long.parseLong(c.get("id").toString());
-        List<VisitLog> visitLogList = visitLogService.findAllOrderByVisitTime();
+        List<VisitLog> visitLogList = visitLogService.findAllOrderByVisitTime().get();
         JSONArray logs = new JSONArray();
         for (VisitLog visitLog : visitLogList) {
-            Shortener shortener = shortenerService.findById(visitLog.getShortenerId());
+            Shortener shortener = shortenerService.findById(visitLog.getShortenerId()).get();
             if (shortener == null || shortener.getLongUrl().equals("BANNED")) continue;
-            ShortenLog shortenLog = shortenLogService.findById(shortener.getShortenId());
+            ShortenLog shortenLog = shortenLogService.findById(shortener.getShortenId()).get();
             if (shortenLog == null || shortenLog.getCreatorId() != id) continue;
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-DD HH:mm:ss");
             JSONObject tmp = new JSONObject();
@@ -241,7 +241,7 @@ public class StatController {
             res.put("not_administrator", true);
             return res;
         }
-        List<ShortenLog> shortenLogList = shortenLogService.findTopTenOrderByVisitCount();
+        List<ShortenLog> shortenLogList = shortenLogService.findTopTenOrderByVisitCount().get();
         JSONArray data = new JSONArray();
         for (ShortenLog shortenLog : shortenLogList) {
             List<Shortener> shortenerList = shortenLog.getShortener();
@@ -294,7 +294,7 @@ public class StatController {
             return res;
         }
         JSONObject res = new JSONObject();
-        res.put("data", statService.getAllUrls());
+        res.put("data", statService.getAllUrls().get());
         res.put("not_administrator", false);
         return res;
     }
@@ -331,7 +331,7 @@ public class StatController {
         }
         JSONObject res = new JSONObject();
         Pageable pageable = PageRequest.of(pageCount, pageSize);
-        res.put("data", statService.getPagedUrls(pageable));
+        res.put("data", statService.getPagedUrls(pageable).get());
         res.put("not_administrator", false);
         return res;
     }
@@ -361,7 +361,7 @@ public class StatController {
             return res;
         }
         JSONObject res = new JSONObject();
-        res.put("data", statService.getNumberCount());
+        res.put("data", statService.getNumberCount().get());
         res.put("not_administrator", false);
         return res;
     }
