@@ -12,8 +12,15 @@ import org.reins.url.service.StatService;
 import org.reins.url.service.VisitLogService;
 import org.reins.url.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 @RestController
@@ -30,34 +37,69 @@ public class StatController {
     /**
      * handle the request "/getStat" and return the statistics of the user's Urls.
      *
-     * @param id the id of the user who calls "/getStat"
+     * @param jwt the jwt in requestHeader used for getting the user's id
      * @return {data:
      * [
      * {
      * shortUrl:String,
      * longUrl:JSONArray
      * count:Integer,
-     * area_distr:JSONArray,
-     * time_distr:JSONArray,
-     * source_distr:JSONArray
+     * areaDistr:JSONArray,
+     * timeDistr:JSONArray,
+     * sourceDistr:JSONArray
      * },
      * {……},
      * ……
      * ]
      * }
+     * @throws Exception when the string jwt can't be parsed as a JWT
      */
     @CrossOrigin
     @RequestMapping("/getStat")
-    public JSONObject getStat(@RequestParam("id") long id) {
+    public JSONObject getStat(@RequestHeader("Authorization") String jwt) throws Exception {
+        Claims c = JwtUtil.parseJWT(jwt);
         JSONObject res = new JSONObject();
-        res.put("data", statService.getStat(id));
+        res.put("data", statService.getStat(Long.parseLong(c.get("id").toString())).get());
+        return res;
+    }
+
+    /**
+     * handle the request "/getStatPageable" and return the statistics of pageable Urls.
+     * It's similar to "/getStat"
+     *
+     * @param jwt the jwt in requestHeader used for checking the user's type
+     * @return {data:{
+     * data:[
+     * {
+     * shortUrl:String,
+     * longUrl:JSONArray
+     * count:Integer,
+     * areaDistr:JSONArray,
+     * timeDistr:JSONArray,
+     * sourceDistr:JSONArray
+     * },
+     * {……},
+     * ……
+     * ],
+     * totalElements:long
+     * }
+     * }
+     * @throws Exception when the string jwt can't be parsed as a JWT
+     */
+    @CrossOrigin
+    @RequestMapping("/getStatPageable")
+    public JSONObject getStatPageable(@RequestHeader("Authorization") String jwt, @RequestParam("pageCount") int pageCount, @RequestParam("pageSize") int pageSize) throws Exception {
+        Claims c = JwtUtil.parseJWT(jwt);
+        JSONObject res = new JSONObject();
+        Pageable pageable = PageRequest.of(pageCount, pageSize);
+        res.put("data", statService.getStatPageable(Long.parseLong(c.get("id").toString()), pageable).get());
         return res;
     }
 
     /**
      * handle the request "/getShortStat" and return the statistics of a single Url.
      *
-     * @param id        the id of the user who calls "/getShortStat"
+     * @param jwt       the jwt in requestHeader used for getting the user's id
      * @param short_url the url whose statistics is required
      * @return {data:{
      * shortUrl:String,
@@ -68,12 +110,14 @@ public class StatController {
      * source_distr:JSONArray
      * }
      * }
+     * @throws Exception when the string jwt can't be parsed as a JWT
      */
     @CrossOrigin
     @RequestMapping("/getShortStat")
-    public JSONObject getShortStat(@RequestParam("id") long id, @RequestParam("short") String short_url) {
+    public JSONObject getShortStat(@RequestHeader("Authorization") String jwt, @RequestParam("short") String short_url) throws Exception {
+        Claims c = JwtUtil.parseJWT(jwt);
         JSONObject res = new JSONObject();
-        res.put("data", statService.getShortStat(short_url));
+        res.put("data", statService.getShortStat(short_url).get());
         return res;
     }
 
@@ -91,24 +135,22 @@ public class StatController {
      * },
      * {……},
      * ……
-     * ]
+     * ],
+     * not_administrator: Boolean
      * }
      * @throws Exception when the string jwt can't be parsed as a JWT
      */
     @CrossOrigin
     @RequestMapping("/getUserStat")
     public JSONObject getUserStat(@RequestHeader("Authorization") String jwt) throws Exception {
-        if (!jwt.equals("SXSTQL")) {
-            Claims c = JwtUtil.parseJWT(jwt);
-            if ((int) c.get("role") != 0) {
-                JSONObject res = new JSONObject();
-                res.put("not_administrator", true);
-                return res;
-            }
+        Claims c = JwtUtil.parseJWT(jwt);
+        if ((int) c.get("role") != 0) {
+            JSONObject res = new JSONObject();
+            res.put("not_administrator", true);
+            return res;
         }
-
         JSONObject res = new JSONObject();
-        res.put("data", statService.getUserStat());
+        res.put("data", statService.getUserStat().get());
         res.put("not_administrator", false);
         return res;
     }
@@ -117,7 +159,7 @@ public class StatController {
      * handle the request "/getReal" and return the information visit logs.
      * It can return the latest 5 visit logs of the user.
      *
-     * @param id the id in requestParam used for checking the user's id
+     * @param jwt the jwt in requestHeader used for getting the user's id
      * @return {data: {
      * logs: [
      * {
@@ -135,20 +177,23 @@ public class StatController {
      */
     @CrossOrigin
     @RequestMapping("/getReal")
-    public JSONObject getReal(@RequestParam("id") long id) {
-        List<VisitLog> visitLogList = visitLogService.findAllOrderByVisitTime();
+    public JSONObject getReal(@RequestHeader("Authorization") String jwt) throws Exception {
+        Claims c = JwtUtil.parseJWT(jwt);
+        long id = Long.parseLong(c.get("id").toString());
+        List<VisitLog> visitLogList = visitLogService.findAllOrderByVisitTime().get();
         JSONArray logs = new JSONArray();
         for (VisitLog visitLog : visitLogList) {
-            Shortener shortener = shortenerService.findById(visitLog.getShortenerId());
+            Shortener shortener = shortenerService.findById(visitLog.getShortenerId()).get();
             if (shortener == null || shortener.getLongUrl().equals("BANNED")) continue;
-            ShortenLog shortenLog = shortenLogService.findById(shortener.getShortenId());
+            ShortenLog shortenLog = shortenLogService.findById(shortener.getShortenId()).get();
             if (shortenLog == null || shortenLog.getCreatorId() != id) continue;
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-DD HH:mm:ss");
             JSONObject tmp = new JSONObject();
             tmp.put("shortUrl", shortenLog.getShortUrl());
             tmp.put("long", shortener.getLongUrl());
             tmp.put("ip", visitLog.getIp());
             tmp.put("source", "Browser");
-            tmp.put("time", visitLog.getVisitTime());
+            tmp.put("time", simpleDateFormat.format(visitLog.getVisitTime()));
             logs.add(tmp);
             if (logs.size() >= 5) break;
         }
@@ -190,15 +235,13 @@ public class StatController {
     @CrossOrigin
     @RequestMapping("/getTopTen")
     public JSONObject getTopTen(@RequestHeader("Authorization") String jwt) throws Exception {
-        if (!jwt.equals("SXSTQL")) {
-            Claims c = JwtUtil.parseJWT(jwt);
-            if ((int) c.get("role") != 0) {
-                JSONObject res = new JSONObject();
-                res.put("not_administrator", true);
-                return res;
-            }
+        Claims c = JwtUtil.parseJWT(jwt);
+        if ((int) c.get("role") != 0) {
+            JSONObject res = new JSONObject();
+            res.put("not_administrator", true);
+            return res;
         }
-        List<ShortenLog> shortenLogList = shortenLogService.findTopTenOrderByVisitCount();
+        List<ShortenLog> shortenLogList = shortenLogService.findTopTenOrderByVisitCount().get();
         JSONArray data = new JSONArray();
         for (ShortenLog shortenLog : shortenLogList) {
             List<Shortener> shortenerList = shortenLog.getShortener();
@@ -236,24 +279,59 @@ public class StatController {
      * },
      * {……},
      * ……
-     * ]
+     * ],
+     * not_administrator: Boolean
      * }
      * @throws Exception when the string jwt can't be parsed as a JWT
      */
     @CrossOrigin
     @RequestMapping("/getAllUrls")
     public JSONObject getAllUrls(@RequestHeader("Authorization") String jwt) throws Exception {
-        if (!jwt.equals("SXSTQL")) {
-            Claims c = JwtUtil.parseJWT(jwt);
-            if ((int) c.get("role") != 0) {
-                JSONObject res = new JSONObject();
-                res.put("not_administrator", true);
-                return res;
-            }
+        Claims c = JwtUtil.parseJWT(jwt);
+        if ((int) c.get("role") != 0) {
+            JSONObject res = new JSONObject();
+            res.put("not_administrator", true);
+            return res;
         }
-
         JSONObject res = new JSONObject();
-        res.put("data", statService.getAllUrls());
+        res.put("data", statService.getAllUrls().get());
+        res.put("not_administrator", false);
+        return res;
+    }
+
+    /**
+     * handle the request "/getAllUrlsPageable" and return the statistics of pageable Urls.
+     * It's similar to "/getStat"
+     * It can only be requested by administrators.
+     *
+     * @param jwt the jwt in requestHeader used for checking the user's type
+     * @return {data:[
+     * {
+     * shortUrl:String,
+     * longUrl:JSONArray
+     * count:Integer,
+     * creatorName:String,
+     * createTime:String
+     * },
+     * {……},
+     * ……
+     * ],
+     * not_administrator: Boolean
+     * }
+     * @throws Exception when the string jwt can't be parsed as a JWT
+     */
+    @CrossOrigin
+    @RequestMapping("/getAllUrlsPageable")
+    public JSONObject getAllUrlsPageable(@RequestHeader("Authorization") String jwt, @RequestParam("pageCount") int pageCount, @RequestParam("pageSize") int pageSize) throws Exception {
+        Claims c = JwtUtil.parseJWT(jwt);
+        if ((int) c.get("role") != 0) {
+            JSONObject res = new JSONObject();
+            res.put("not_administrator", true);
+            return res;
+        }
+        JSONObject res = new JSONObject();
+        Pageable pageable = PageRequest.of(pageCount, pageSize);
+        res.put("data", statService.getPagedUrls(pageable).get());
         res.put("not_administrator", false);
         return res;
     }
@@ -268,24 +346,22 @@ public class StatController {
      * shortUrlCount:Integer,
      * visitCountTotal:Integer,
      * shortUrl:String,
-     * }
+     * },
+     * not_administrator: Boolean
      * }
      * @throws Exception when the string jwt can't be parsed as a JWT
      */
     @CrossOrigin
     @RequestMapping("/getNumberCount")
     public JSONObject getNumberCount(@RequestHeader("Authorization") String jwt) throws Exception {
-        if (!jwt.equals("SXSTQL")) {
-            Claims c = JwtUtil.parseJWT(jwt);
-            if ((int) c.get("role") != 0) {
-                JSONObject res = new JSONObject();
-                res.put("not_administrator", true);
-                return res;
-            }
+        Claims c = JwtUtil.parseJWT(jwt);
+        if ((int) c.get("role") != 0) {
+            JSONObject res = new JSONObject();
+            res.put("not_administrator", true);
+            return res;
         }
-
         JSONObject res = new JSONObject();
-        res.put("data", statService.getNumberCount());
+        res.put("data", statService.getNumberCount().get());
         res.put("not_administrator", false);
         return res;
     }

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 public class UsersController {
@@ -32,13 +33,13 @@ public class UsersController {
      */
     @CrossOrigin
     @RequestMapping("/register")
-    public JSONObject register(@RequestBody Map<String, String> params) {
+    public JSONObject register(@RequestBody Map<String, String> params) throws ExecutionException, InterruptedException {
         String name = params.get("name");
         String password = params.get("password");
         String email = params.get("email");
         JSONObject obj = new JSONObject();
         JSONObject data = new JSONObject();
-        data.put("success", usersService.register(name, password, email));
+        data.put("success", usersService.register(name, password, email).get());
         obj.put("data", data);
         return obj;
     }
@@ -58,10 +59,10 @@ public class UsersController {
      */
     @CrossOrigin
     @RequestMapping("/loginReq")
-    public JSONObject login(@RequestBody Map<String, String> params) {
+    public JSONObject login(@RequestBody Map<String, String> params) throws ExecutionException, InterruptedException {
         String name = params.get("name");
         String password = params.get("password");
-        Users user = usersService.checkUser(name, password);
+        Users user = usersService.checkUser(name, password).get();
         JSONObject obj = new JSONObject();
         if (user == null) {
             obj.put("loginStatus", false);
@@ -97,37 +98,35 @@ public class UsersController {
      * It can only be requested by administrators.
      * It can ban or unban a user who is not an administrator
      *
-     * @param jwt    the jwt in requestHeader used for checking the user's type
-     * @param id     the id of the user who calls the request
-     * @param ban_id the id of the user who should be banned or unbanned
-     * @param ban    wether the user should be banned or unbanned
+     * @param jwt   the jwt in requestHeader used for checking the user's type
+     * @param banId the id of the user who should be banned or unbanned
+     * @param ban   wether the user should be banned or unbanned
      * @return {data:{
-     * status:Boolean
-     * }
+     * status: Boolean
+     * },
+     * not_administrator: Boolean
      * }
      * @throws Exception when the string jwt can't be parsed as a JWT
      */
     @CrossOrigin
     @RequestMapping("/banUser")
-    public JSONObject banUser(@RequestHeader("Authorization") String jwt, @RequestParam("id") long id, @RequestParam("ban_id") long ban_id, @RequestParam("ban") boolean ban) throws Exception {
-        if (!jwt.equals("SXSTQL")) {
-            Claims c = JwtUtil.parseJWT(jwt);
-            if ((int) c.get("role") != 0) {
-                JSONObject res = new JSONObject();
-                res.put("not_administrator", true);
-                return res;
-            }
+    public JSONObject banUser(@RequestHeader("Authorization") String jwt, @RequestParam("banId") long banId, @RequestParam("ban") boolean ban) throws Exception {
+        Claims c = JwtUtil.parseJWT(jwt);
+        if ((int) c.get("role") != 0) {
+            JSONObject res = new JSONObject();
+            res.put("not_administrator", true);
+            return res;
         }
-        Users admin = usersService.findById(id);
-        Users banUser = usersService.findById(ban_id);
+        Users banUser = usersService.findById(banId).get();
         JSONObject res = new JSONObject();
         JSONObject status = new JSONObject();
-        if (admin == null || banUser == null || admin.getRole() != 0 || banUser.getRole() == 0) {
+        res.put("not_administrator", false);
+        if (banUser == null || banUser.getRole() == 0) {
             status.put("status", false);
             res.put("data", status);
             return res;
         }
-        usersService.changeRole(ban_id, ban ? 2 : 1);
+        usersService.changeRole(banId, ban ? 2 : 1);
         status.put("status", true);
         res.put("data", status);
         return res;
@@ -158,7 +157,7 @@ public class UsersController {
         }
         Claims c = JwtUtil.parseJWT(oldRefresh);
         long userId = Long.parseLong(c.get("id").toString());
-        Users users = usersService.findById(userId);
+        Users users = usersService.findById(userId).get();
         if (users == null || users.getRole() == 2) {
             res.put("success", false);
             return res;

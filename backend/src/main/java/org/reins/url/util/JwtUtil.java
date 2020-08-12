@@ -13,10 +13,12 @@ import java.util.Date;
 public class JwtUtil {
 
     // 过期时间，单位毫秒
-    private static final long EXPIRE_TIME = 15 * 60 * 1000; // 15分钟
+    private static final long EXPIRE_TIME = 15 * 60 * 1000;
 
     // 加密密文，私钥
-    private static final String TOKEN_SECRET = "SXSNB";
+    private static final String TOKEN_SECRET_ENV = System.getenv("JASYPT_ENCRYPTOR_PASSWORD");
+    private static final String TOKEN_SECRET_PRO = System.getProperty("JASYPT_ENCRYPTOR_PASSWORD");
+    private static final String TOKEN_SECRET = (TOKEN_SECRET_ENV == null ? TOKEN_SECRET_PRO : TOKEN_SECRET_ENV) + "12";
 
     // 由字符串生成加密key
     public static SecretKey generalKey() {
@@ -57,10 +59,13 @@ public class JwtUtil {
             System.out.println("验证成功！");
             return true;
         } catch (ExpiredJwtException e) {
+            e.printStackTrace();
             return false;
         } catch (SignatureException e) {
+            e.printStackTrace();
             return false;
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }

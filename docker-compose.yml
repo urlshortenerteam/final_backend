@@ -1,0 +1,63 @@
+version: '3.2'
+
+services:
+  backend:
+    image: reevoo:latest
+    hostname: backend
+    restart: always
+    ports:
+      - "80:8080"
+    environment:
+      - JVM_OPTS="-Xms128m -Xmx128m"
+      - JASYPT_ENCRYPTOR_PASSWORD=SXSYYDS
+      - IP2REGION=./ip2region.db
+    networks:
+      - demo
+
+  prometheus:
+    image: prom/prometheus
+    hostname: prometheus
+    restart: always
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9091:9090"
+    networks:
+      - demo
+
+  grafana:
+    image: grafana/grafana
+    hostname: grafana
+    restart: always
+    ports:
+      - "3000:3000"
+    networks:
+      - demo
+
+  cadvisor:
+    image: gcr.io/google-containers/cadvisor:latest
+    container_name: cadvisor
+    restart: always
+    ports:
+      - "4040:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    depends_on:
+      - redis
+    networks:
+      - demo
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - demo
+networks:
+  demo:
+    driver: bridge

@@ -7,6 +7,8 @@ import org.reins.url.repository.ShortenLogRepository;
 import org.reins.url.repository.ShortenerRepository;
 import org.reins.url.xeger.Xeger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -83,10 +85,10 @@ public class ShortenLogDaoImpl implements ShortenLogDao {
                 e.printStackTrace();
             }
         }
-        for (int i = 0; i < longUrls.size(); i++) {
+        for (String longUrl : longUrls) {
             Shortener shortener = new Shortener();
             shortener.setShortenId(shortenLog.getId());
-            shortener.setLongUrl(longUrls.get(i));
+            shortener.setLongUrl(longUrl);
             shortenerRepository.insert(shortener);
         }
         return shortenLog.getShortUrl();
@@ -95,8 +97,7 @@ public class ShortenLogDaoImpl implements ShortenLogDao {
     @Override
     public List<String> addShortenLog(long creatorId, List<String> longUrls) {
         List<String> shortUrls = new ArrayList<>();
-        for (int i = 0; i < longUrls.size(); i++) {
-            String longUrl = longUrls.get(i);
+        for (String longUrl : longUrls) {
             ShortenLog shortenLog = new ShortenLog();
             shortenLog.setCreatorId(creatorId);
             shortenLog.setCreateTime(new Date());
@@ -113,7 +114,7 @@ public class ShortenLogDaoImpl implements ShortenLogDao {
             shortUrls.add(shortenLog.getShortUrl());
             Shortener shortener = new Shortener();
             shortener.setShortenId(shortenLog.getId());
-            shortener.setLongUrl(longUrls.get(i));
+            shortener.setLongUrl(longUrl);
             shortenerRepository.insert(shortener);
         }
         return shortUrls;
@@ -146,6 +147,14 @@ public class ShortenLogDaoImpl implements ShortenLogDao {
     }
 
     @Override
+    public Page<ShortenLog> findByCreatorIdPageable(long creatorId, Pageable pageable) {
+        Page<ShortenLog> shortenLogList = shortenLogRepository.findByCreatorId(creatorId, pageable);
+        for (ShortenLog shortenLog : shortenLogList)
+            shortenLog.setShortener(reorderShortenerList(shortenerRepository.findByShortenId(shortenLog.getId())));
+        return shortenLogList;
+    }
+
+    @Override
     public ShortenLog findById(long id) {
         return shortenLogRepository.findById(id).orElse(null);
     }
@@ -156,6 +165,14 @@ public class ShortenLogDaoImpl implements ShortenLogDao {
         if (shortenLog == null) return null;
         shortenLog.setShortener(reorderShortenerList(shortenerRepository.findByShortenId(shortenLog.getId())));
         return shortenLog;
+    }
+
+    @Override
+    public Page<ShortenLog> findPage(Pageable pageable) {
+        Page<ShortenLog> shortenLogList = shortenLogRepository.findAll(pageable);
+        for (ShortenLog shortenLog : shortenLogList)
+            shortenLog.setShortener(reorderShortenerList(shortenerRepository.findByShortenId(shortenLog.getId())));
+        return shortenLogList;
     }
 
     @Override
@@ -173,6 +190,8 @@ public class ShortenLogDaoImpl implements ShortenLogDao {
 
     @Override
     public long visitSum() {
-        return shortenLogRepository.visitSum();
+        Long res = shortenLogRepository.visitSum();
+        if (res == null) return 0;
+        return res;
     }
 }
