@@ -16,7 +16,7 @@ public class JwtUtil {
     private static final long EXPIRE_TIME = 15 * 60 * 1000;
 
     // 加密密文，私钥
-    private static final String TOKEN_SECRET = "SXSNB";
+    private static final String TOKEN_SECRET = System.getenv("JASYPT_ENCRYPTOR_PASSWORD");
 
     // 由字符串生成加密key
     public static SecretKey generalKey() {
