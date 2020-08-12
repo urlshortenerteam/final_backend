@@ -13,10 +13,12 @@ import org.reins.url.service.StatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class StatServiceImpl implements StatService {
@@ -28,7 +30,8 @@ public class StatServiceImpl implements StatService {
     private VisitLogDao visitLogDao;
 
     @Override
-    public List<Statistics> getAllUrls() {
+    @Async
+    public CompletableFuture<List<Statistics>> getAllUrls() {
         List<Statistics> res = new ArrayList<>();
         List<ShortenLog> shortenLogs = shortenLogDao.findAll();
         for (ShortenLog s : shortenLogs) {
@@ -44,11 +47,12 @@ public class StatServiceImpl implements StatService {
             }
             res.add(statistics);
         }
-        return res;
+        return CompletableFuture.completedFuture(res);
     }
 
     @Override
-    public JSONObject getNumberCount() {
+    @Async
+    public CompletableFuture<JSONObject> getNumberCount() {
         JSONObject res = new JSONObject();
         res.put("userCount", usersDao.count());
         res.put("shortUrlCount", shortenLogDao.count());
@@ -56,11 +60,12 @@ public class StatServiceImpl implements StatService {
         ShortenLog shortenLog = shortenLogDao.findTopOneOrderByVisitCount();
         if (shortenLog != null)
             res.put("shortUrl", shortenLog.getShortUrl());
-        return res;
+        return CompletableFuture.completedFuture(res);
     }
 
     @Override
-    public JSONObject getPagedUrls(Pageable pageable) {
+    @Async
+    public CompletableFuture<JSONObject> getPagedUrls(Pageable pageable) {
         Page<ShortenLog> shortenLogs = shortenLogDao.findPage(pageable);
         List<Statistics> res = new ArrayList<>();
         for (ShortenLog s : shortenLogs) {
@@ -79,17 +84,18 @@ public class StatServiceImpl implements StatService {
         JSONObject ans = new JSONObject();
         ans.put("data", res);
         ans.put("totalElements", shortenLogs.getTotalElements());
-        return ans;
+        return CompletableFuture.completedFuture(ans);
     }
 
     @Override
-    public Statistics getShortStat(String shortUrl) {
+    @Async
+    public CompletableFuture<Statistics> getShortStat(String shortUrl) {
         Statistics statistics = new Statistics();
         statistics.shortUrl = shortUrl;
         ShortenLog shortenLog = shortenLogDao.findByShortUrl(shortUrl);
         if (shortenLog == null) {
             statistics.count = -1;
-            return statistics;
+            return CompletableFuture.completedFuture(statistics);
         }
         statistics.count = shortenLog.getVisitCount();
         List<Shortener> shorteners = shortenLog.getShortener();
@@ -108,11 +114,12 @@ public class StatServiceImpl implements StatService {
                 statistics.addSourceDistr(v.getDevice());
             }
         }
-        return statistics;
+        return CompletableFuture.completedFuture(statistics);
     }
 
     @Override
-    public List<Statistics> getStat(long id) {
+    @Async
+    public CompletableFuture<List<Statistics>> getStat(long id) {
         List<Statistics> res = new ArrayList<>();
         List<ShortenLog> shortenLogs = shortenLogDao.findByCreatorId(id);
         for (ShortenLog s : shortenLogs) {
@@ -137,11 +144,12 @@ public class StatServiceImpl implements StatService {
             }
             res.add(statistics);
         }
-        return res;
+        return CompletableFuture.completedFuture(res);
     }
 
     @Override
-    public JSONObject getStatPageable(long id, Pageable pageable) {
+    @Async
+    public CompletableFuture<JSONObject> getStatPageable(long id, Pageable pageable) {
         List<Statistics> res = new ArrayList<>();
         Page<ShortenLog> shortenLogs = shortenLogDao.findByCreatorIdPageable(id, pageable);
         for (ShortenLog s : shortenLogs) {
@@ -169,11 +177,12 @@ public class StatServiceImpl implements StatService {
         JSONObject ans = new JSONObject();
         ans.put("data", res);
         ans.put("totalElements", shortenLogs.getTotalElements());
-        return ans;
+        return CompletableFuture.completedFuture(ans);
     }
 
     @Override
-    public List<Users> getUserStat() {
-        return usersDao.findAllUserStat();
+    @Async
+    public CompletableFuture<List<Users>> getUserStat() {
+        return CompletableFuture.completedFuture(usersDao.findAllUserStat());
     }
 }

@@ -3,17 +3,18 @@ package org.reins.url.service;
 import org.reins.url.entity.ShortenLog;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public interface ShortenLogService {
-    String addOneShortenLog(long creatorId, List<String> longUrls);
+    CompletableFuture<String> addOneShortenLog(long creatorId, List<String> longUrls);
 
-    List<String> addShortenLog(long creatorId, List<String> longUrls);
+    CompletableFuture<List<String>> addShortenLog(long creatorId, List<String> longUrls);
 
     void changeShortenLog(ShortenLog shortenLog);
 
-    ShortenLog findById(long id);
+    CompletableFuture<ShortenLog> findById(long id);
 
-    ShortenLog findByShortUrl(String shortUrl);
+    CompletableFuture<ShortenLog> findByShortUrl(String shortUrl);
 
-    List<ShortenLog> findTopTenOrderByVisitCount();
+    CompletableFuture<List<ShortenLog>> findTopTenOrderByVisitCount();
 }

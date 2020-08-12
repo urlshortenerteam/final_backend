@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 public class UrlController {
@@ -56,7 +57,7 @@ public class UrlController {
     public JSONObject generateShort(@RequestHeader("Authorization") String jwt, @RequestBody List<String> longUrls) throws Exception {
         Claims c = JwtUtil.parseJWT(jwt);
         JSONObject res = new JSONObject();
-        res.put("data", shortenLogService.addShortenLog(Long.parseLong(c.get("id").toString()), longUrls));
+        res.put("data", shortenLogService.addShortenLog(Long.parseLong(c.get("id").toString()), longUrls).get());
         return res;
     }
 
@@ -75,7 +76,7 @@ public class UrlController {
     public JSONObject generateOneShort(@RequestHeader("Authorization") String jwt, @RequestBody List<String> longUrls) throws Exception {
         Claims c = JwtUtil.parseJWT(jwt);
         JSONObject res = new JSONObject();
-        res.put("data", shortenLogService.addOneShortenLog(Long.parseLong(c.get("id").toString()), longUrls));
+        res.put("data", shortenLogService.addOneShortenLog(Long.parseLong(c.get("id").toString()), longUrls).get());
         return res;
     }
 
@@ -84,9 +85,9 @@ public class UrlController {
      */
     @CrossOrigin
     @RequestMapping("/{[A-Za-z0-9]{6}}")
-    public void getLong(HttpServletRequest req, HttpServletResponse resp) {
+    public void getLong(HttpServletRequest req, HttpServletResponse resp) throws ExecutionException, InterruptedException {
         String shortUrl = req.getRequestURI().substring(1);
-        ShortenLog shortenLog = shortenLogService.findByShortUrl(shortUrl);
+        ShortenLog shortenLog = shortenLogService.findByShortUrl(shortUrl).get();
         if (shortenLog == null) {
             try {
                 resp.sendRedirect("/static/error.html");
@@ -139,8 +140,8 @@ public class UrlController {
         String longUrl = params.get("longUrl");
         JSONObject res = new JSONObject();
         JSONObject status = new JSONObject();
-        Users user = usersService.findById(id);
-        ShortenLog shortenLog = shortenLogService.findByShortUrl(shortUrl);
+        Users user = usersService.findById(id).get();
+        ShortenLog shortenLog = shortenLogService.findByShortUrl(shortUrl).get();
         if (shortenLog == null || user == null) {
             status.put("status", false);
             res.put("data", status);

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 public class UsersController {
@@ -32,13 +33,13 @@ public class UsersController {
      */
     @CrossOrigin
     @RequestMapping("/register")
-    public JSONObject register(@RequestBody Map<String, String> params) {
+    public JSONObject register(@RequestBody Map<String, String> params) throws ExecutionException, InterruptedException {
         String name = params.get("name");
         String password = params.get("password");
         String email = params.get("email");
         JSONObject obj = new JSONObject();
         JSONObject data = new JSONObject();
-        data.put("success", usersService.register(name, password, email));
+        data.put("success", usersService.register(name, password, email).get());
         obj.put("data", data);
         return obj;
     }
@@ -58,10 +59,10 @@ public class UsersController {
      */
     @CrossOrigin
     @RequestMapping("/loginReq")
-    public JSONObject login(@RequestBody Map<String, String> params) {
+    public JSONObject login(@RequestBody Map<String, String> params) throws ExecutionException, InterruptedException {
         String name = params.get("name");
         String password = params.get("password");
-        Users user = usersService.checkUser(name, password);
+        Users user = usersService.checkUser(name, password).get();
         JSONObject obj = new JSONObject();
         if (user == null) {
             obj.put("loginStatus", false);
@@ -116,7 +117,7 @@ public class UsersController {
             res.put("not_administrator", true);
             return res;
         }
-        Users banUser = usersService.findById(banId);
+        Users banUser = usersService.findById(banId).get();
         JSONObject res = new JSONObject();
         JSONObject status = new JSONObject();
         res.put("not_administrator", false);
@@ -156,7 +157,7 @@ public class UsersController {
         }
         Claims c = JwtUtil.parseJWT(oldRefresh);
         long userId = Long.parseLong(c.get("id").toString());
-        Users users = usersService.findById(userId);
+        Users users = usersService.findById(userId).get();
         if (users == null || users.getRole() == 2) {
             res.put("success", false);
             return res;
