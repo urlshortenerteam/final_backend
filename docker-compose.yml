@@ -3,6 +3,7 @@ version: '3.2'
 services:
   backend:
     image: reevoo:latest
+    container_name: backend
     hostname: backend
     restart: always
     ports:
@@ -16,6 +17,7 @@ services:
 
   prometheus:
     image: prom/prometheus
+    container_name: prometheus
     hostname: prometheus
     restart: always
     volumes:
@@ -27,6 +29,7 @@ services:
 
   grafana:
     image: grafana/grafana
+    container_name: grafana
     hostname: grafana
     restart: always
     ports:
