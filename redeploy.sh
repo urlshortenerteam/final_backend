@@ -1,5 +1,9 @@
 #!bin/bash
 docker pull https://hub.docker.com/repository/docker/reevoo2020/backend:latest
-docker stop reevoo:latest
+docker kill backend
+docker kill prometheus
+docker kill grafana
+docker kill cadvisor
+docker kill redis
 docker system prune -f
-docker run -p 80:8080 -dit reevoo:latest --JASYPT_ENCRYPTOR_PASSWORD=SXSYYDS --IP2REGION=./ip2region.db
+docker-compose up -d
