@@ -29,7 +29,7 @@ public class JwtUtil {
         SecretKey key = new SecretKeySpec(encodedKey, 0, encodedKey.length, "AES");
         return key;
     }
-  
+
     // 生成签名
     public static String sign(long id, String username, int type, boolean isRefresh) {
         System.out.println("生成签名方法开始执行！");
