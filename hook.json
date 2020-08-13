@@ -1,8 +1,8 @@
 [
   {
     "id": "redeploy",
-    "execute-command": "/home/ubuntu/final_backend/redeploy.sh",
-    "command-working-directory": "/home/ubuntu/final_backend",
+    "execute-command": "./redeploy.sh",
+    "command-working-directory": "./",
     "response-message": "Redeploying API server."
   }
 ]
