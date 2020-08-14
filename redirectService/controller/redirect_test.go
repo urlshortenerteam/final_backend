@@ -84,7 +84,7 @@ func TestInit(t *testing.T) {
 			httpServerExitDone := &sync.WaitGroup{}
 			httpServerExitDone.Add(1)
 			srv := re.Init(httpServerExitDone,mockService)
-			time.Sleep(1 * time.Second)
+			time.Sleep(500 * time.Microsecond)
 			if err := srv.Shutdown(context.Background()); err != nil {
 				t.Fatal(err)
 			}
