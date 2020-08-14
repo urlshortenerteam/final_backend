@@ -36,7 +36,7 @@ management:
     health:
       show-details: always
   metrics:
-    enable: true
+    enabled: true
   endpoints:
     web:
       exposure:
