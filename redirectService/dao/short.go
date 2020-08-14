@@ -35,7 +35,7 @@ func init() {
 
 	// 输出 stdout 而不是默认的 stderr，也可以是一个文件
 	log.SetOutput(os.Stdout)
-	err:=godotenv.Load("../credentials.env")
+	err:=godotenv.Load(os.Getenv("TEST_DIR")+"credentials.env")
 	if err != nil{
 		log.Fatal(err)
 	}
