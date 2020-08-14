@@ -2,7 +2,7 @@ version: '3.2'
 
 services:
   backend:
-    image: reevoo:latest
+    image: reevoo2020/backend
     container_name: backend
     hostname: backend
     restart: always
