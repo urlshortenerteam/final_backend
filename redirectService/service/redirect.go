@@ -7,6 +7,7 @@ import (
 
 	"github.com/ao7777/redirectService/dao"
 	idao "github.com/ao7777/redirectService/interface/dao"
+	
 	log "github.com/sirupsen/logrus"
 )
 
@@ -20,7 +21,7 @@ type Redirect struct {
 // Init use it before service
 func (r *Redirect) Init(shortDAO ...idao.IShortUrl) {
 	if len(shortDAO) == 0 {
-		shortDAO[0]=&dao.ShortDAO{}
+		shortDAO=append(shortDAO,&dao.ShortDAO{})
 	}
 	r.shortDAO = shortDAO[0]
 	r.shortDAO.InitShortDAO()
