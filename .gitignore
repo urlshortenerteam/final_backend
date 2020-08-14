@@ -16,3 +16,5 @@
 /backend/src/test/.DS_Store/
 /backend/target
 /backend/target/
+.vscode
+*.env
