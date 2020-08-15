@@ -121,11 +121,6 @@ public class ShortenLogDaoImpl implements ShortenLogDao {
     }
 
     @Override
-    public void changeShortenLog(ShortenLog shortenLog) {
-        shortenLogRepository.save(shortenLog);
-    }
-
-    @Override
     public long count() {
         return shortenLogRepository.count();
     }

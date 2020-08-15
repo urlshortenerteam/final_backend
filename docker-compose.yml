@@ -22,10 +22,6 @@ services:
     restart: always
     ports:
       - "9092:9090"
-    environment:
-      - JVM_OPTS="-Xms128m -Xmx128m"
-      - JASYPT_ENCRYPTOR_PASSWORD=SXSYYDS
-      - IP2REGION=./ip2region.db
     networks:
       - demo
 

@@ -33,16 +33,6 @@ public class UsersDaoImpl implements UsersDao {
     }
 
     @Override
-    public void changeVisitCount(long id) {
-        Optional<Users> usersOptional = usersRepository.findById(id);
-        if (usersOptional.isPresent()) {
-            Users users = usersOptional.get();
-            users.setVisitCount(users.getVisitCount() + 1);
-            usersRepository.save(users);
-        }
-    }
-
-    @Override
     public Users checkUser(String name, String password) {
         Users user = usersRepository.findByName(name);
         if (user != null && stringEncryptor.decrypt(user.getPassword()).equals(password)) return user;
