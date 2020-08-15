@@ -88,7 +88,7 @@ public class UrlController {
     public void getLong(HttpServletRequest req, HttpServletResponse resp) {
         String shortUrl = req.getRequestURI().substring(1);
         try {
-            resp.sendRedirect("http://rv-s.cn:9092/redirect?short=" + shortUrl);
+            resp.sendRedirect("redirect:9090/redirect?short=" + shortUrl);
         } catch (IOException e) {
             e.printStackTrace();
         }
