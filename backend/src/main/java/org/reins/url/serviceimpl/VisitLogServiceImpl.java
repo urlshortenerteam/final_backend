@@ -17,12 +17,6 @@ public class VisitLogServiceImpl implements VisitLogService {
 
     @Override
     @Async
-    public void addVisitLog(String shortenerId, String ip, Boolean device) {
-        visitLogDao.addVisitLog(shortenerId, ip, device);
-    }
-
-    @Override
-    @Async
     public CompletableFuture<List<VisitLog>> findAllOrderByVisitTime() {
         return CompletableFuture.completedFuture(visitLogDao.findAllOrderByVisitTime());
     }

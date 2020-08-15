@@ -29,12 +29,6 @@ public class ShortenLogServiceImpl implements ShortenLogService {
 
     @Override
     @Async
-    public void changeShortenLog(ShortenLog shortenLog) {
-        shortenLogDao.changeShortenLog(shortenLog);
-    }
-
-    @Override
-    @Async
     public CompletableFuture<ShortenLog> findById(long id) {
         return CompletableFuture.completedFuture(shortenLogDao.findById(id));
     }

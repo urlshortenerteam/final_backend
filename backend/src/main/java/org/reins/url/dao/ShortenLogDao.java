@@ -11,8 +11,6 @@ public interface ShortenLogDao {
 
     List<String> addShortenLog(long creatorId, List<String> longUrls);
 
-    void changeShortenLog(ShortenLog shortenLog);
-
     long count();
 
     List<ShortenLog> findAll();

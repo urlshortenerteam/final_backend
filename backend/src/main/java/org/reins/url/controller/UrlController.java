@@ -85,36 +85,10 @@ public class UrlController {
      */
     @CrossOrigin
     @RequestMapping("/{[A-Za-z0-9]{6}}")
-    public void getLong(HttpServletRequest req, HttpServletResponse resp) throws ExecutionException, InterruptedException {
+    public void getLong(HttpServletRequest req, HttpServletResponse resp) {
         String shortUrl = req.getRequestURI().substring(1);
-        ShortenLog shortenLog = shortenLogService.findByShortUrl(shortUrl).get();
-        if (shortenLog == null) {
-            try {
-                resp.sendRedirect("/static/error.html");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return;
-        }
-        List<Shortener> longUrls = shortenLog.getShortener();
-        if (longUrls.isEmpty()) {
-            try {
-                resp.sendRedirect("/static/error.html");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return;
-        }
-        Shortener longUrl = longUrls.get(0);
-        if (!longUrl.getLongUrl().equals("BANNED")) longUrl = longUrls.get((int) (Math.random() * longUrls.size()));
-        Boolean device = (UserAgent.parseUserAgentString(req.getHeader("User-Agent")).getOperatingSystem().getDeviceType() != DeviceType.COMPUTER);
         try {
-            shortenLog.setVisitCount(shortenLog.getVisitCount() + 1);
-            shortenLogService.changeShortenLog(shortenLog);
-            usersService.changeVisitCount(shortenLog.getCreatorId());
-            visitLogService.addVisitLog(longUrl.getId(), req.getRemoteAddr(), device);
-            if (longUrl.getLongUrl().equals("BANNED")) resp.sendRedirect("/static/banned.html");
-            else resp.sendRedirect(longUrl.getLongUrl());
+            resp.sendRedirect("http://rv-s.cn:9092/redirect?short=" + shortUrl);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -7,8 +7,6 @@ import java.util.List;
 public interface UsersDao {
     void changeRole(long id, int role);
 
-    void changeVisitCount(long id);
-
     Users checkUser(String name, String password);
 
     long count();
