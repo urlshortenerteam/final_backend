@@ -15,6 +15,20 @@ services:
     networks:
       - demo
 
+  redirect:
+    image: reevoo2020/redirect-service
+    container_name: redirect
+    hostname: redirect
+    restart: always
+    ports:
+      - "9092:9090"
+    environment:
+      - JVM_OPTS="-Xms128m -Xmx128m"
+      - JASYPT_ENCRYPTOR_PASSWORD=SXSYYDS
+      - IP2REGION=./ip2region.db
+    networks:
+      - demo
+
   prometheus:
     image: prom/prometheus
     container_name: prometheus
