@@ -15,6 +15,16 @@ services:
     networks:
       - demo
 
+  redirect:
+    image: reevoo2020/redirect-service
+    container_name: redirect
+    hostname: redirect
+    restart: always
+    ports:
+      - "9092:9090"
+    networks:
+      - demo
+
   prometheus:
     image: prom/prometheus
     container_name: prometheus

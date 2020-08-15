@@ -27,12 +27,6 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     @Async
-    public void changeVisitCount(long id) {
-        usersDao.changeVisitCount(id);
-    }
-
-    @Override
-    @Async
     public CompletableFuture<Users> checkUser(String name, String password) {
         return CompletableFuture.completedFuture(usersDao.checkUser(name, password));
     }

@@ -7,8 +7,6 @@ import java.util.concurrent.CompletableFuture;
 public interface UsersService {
     void changeRole(long id, int role);
 
-    void changeVisitCount(long id);
-
     CompletableFuture<Users> checkUser(String name, String password);
 
     CompletableFuture<Users> findById(long id);

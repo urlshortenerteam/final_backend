@@ -19,16 +19,6 @@ public class VisitLogDaoImpl implements VisitLogDao {
     private VisitLogRepository visitLogRepository;
 
     @Override
-    public void addVisitLog(String shortenerId, String ip, Boolean device) {
-        VisitLog visitLog = new VisitLog();
-        visitLog.setShortenerId(shortenerId);
-        visitLog.setVisitTime(new Date());
-        visitLog.setIp(ip);
-        visitLog.setDevice(device);
-        visitLogRepository.save(visitLog);
-    }
-
-    @Override
     public List<VisitLog> findAllOrderByVisitTime() {
         return visitLogRepository.findAllOrderByVisitTime();
     }
