@@ -41,7 +41,7 @@ func (re *RedirectController) serveShort(w http.ResponseWriter, r *http.Request)
 // Init Initialize redirect controller
 func (re *RedirectController) Init(wg *sync.WaitGroup, shortService isrv.IRedirect) *http.Server {
 	srv := &http.Server{Addr: ":9090"}
-	re.shortService = shortService
+	re.shortService = shortService 
 	http.HandleFunc("/redirect", re.serveShort) // 设置访问的路由
 	go func() {
 		defer wg.Done() // let main know we are done cleaning up
