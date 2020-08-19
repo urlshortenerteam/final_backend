@@ -52,8 +52,7 @@ jobs:
       with:
         envkey_MYSQL_URL: ${{secrets.MYSQL_URL}}
         envkey_MONGO_URL: ${{secrets.MONGO_URL}}
-        file_name: credentials.env
-        workdir: redirectService
+        file_name: redirectService/credentials.env
     - name: Run Go testing
       working-directory: redirectService
       run: go test ./...
