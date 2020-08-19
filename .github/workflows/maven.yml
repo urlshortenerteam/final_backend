@@ -47,7 +47,8 @@ jobs:
         tool_name: reviewdog
   test_go:
     runs-on: ubuntu-latest
-    steps:
+    steps:    
+    - uses: actions/checkout@v2
     - name: Setup Go environment
       uses: actions/setup-go@v2.1.2
     - name: Make envfile
