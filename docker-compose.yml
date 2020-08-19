@@ -50,6 +50,7 @@ services:
   cadvisor:
     image: gcr.io/google-containers/cadvisor:latest
     container_name: cadvisor
+    hostname: cadvisor
     restart: always
     ports:
       - "4040:8080"
@@ -66,9 +67,33 @@ services:
   redis:
     image: redis:latest
     container_name: redis
+    hostname: redis
     restart: always
     ports:
       - "6379:6379"
+    networks:
+      - demo
+
+  reverse-proxy:
+    image: traefik:v2.2
+    container_name: reverse-proxy
+    hostname: reverse-proxy
+    restart: always
+    command: --api.insecure=true --providers.docker
+    ports:
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - demo
+
+  whoami:
+    image: containous/whoami
+    container_name: whoami
+    hostname: whoami
+    restart: always
+    labels:
+      - "traefik.http.routers.whoami.rule=Host(`whoami.docker.localhost`)"
     networks:
       - demo
 networks:
