@@ -1,38 +1,14 @@
 # This workflow will build a Java project with Maven
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
 
-name: Java CI with Maven
+name: Continuous Integration
 
 on:
-  push:
-    branches: [ master, develop, feature, feature2 ]
-  pull_request:
-    branches: [ master, develop, feature, feature2 ]
+ [push]
 jobs:
   build:
     runs-on: ubuntu-latest
-    services:
-      mysql:
-        image: mysql:5.7
-        env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: url
-        ports:
-          - 3306
-        options: >-
-          --health-cmd "mysqladmin ping"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 3
-    strategy:
-      matrix:
-        mongodb-version: [4.2]
     steps:
-    - name: Start MongoDB v${{ matrix.mongodb-version }}
-      uses: supercharge/mongodb-github-action@1.2.0
-      with:
-        mongodb-version: ${{ matrix.mongodb-version }}
-        mongodb-replica-set: rs-test
     - uses: actions/checkout@v2
     - name: Set up JDK 1.8
       uses: actions/setup-java@v1
@@ -69,3 +45,20 @@ jobs:
         workdir: ./backend
         # Tool name to use for reviewdog reporter
         tool_name: reviewdog
+  test_go:
+    runs-on: ubuntu-latest
+    steps:    
+    - uses: actions/checkout@v2
+    - name: Setup Go environment
+      uses: actions/setup-go@v2.1.2
+    - name: Make envfile
+      uses: SpicyPizza/create-envfile@v1
+      with:
+        envkey_MYSQL_URL: ${{secrets.MYSQL_URL}}
+        envkey_MONGO_URL: ${{secrets.MONGO_URL}}
+        file_name: redirectService/credentials.env
+    - name: Run Go testing
+      working-directory: redirectService
+      run: go test ./...
+      env:
+       TEST_DIR: ../ 
