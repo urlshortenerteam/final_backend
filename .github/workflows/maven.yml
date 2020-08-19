@@ -57,3 +57,5 @@ jobs:
     - name: Run Go testing
       working-directory: redirectService
       run: go test ./...
+      env:
+       TEST_DIR: ../ 
