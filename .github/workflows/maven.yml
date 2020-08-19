@@ -4,7 +4,7 @@
 name: Continuous Integration
 
 on:
- [push,pull_request]
+ [push]
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -45,6 +45,9 @@ jobs:
         workdir: ./backend
         # Tool name to use for reviewdog reporter
         tool_name: reviewdog
+  test_go:
+    runs-on: ubuntu-latest
+    steps:
     - name: Setup Go environment
       uses: actions/setup-go@v2.1.2
     - name: Make envfile
