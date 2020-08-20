@@ -18,3 +18,7 @@
 /backend/target/
 .vscode
 *.env
+.classpath
+.factorypath
+.project
+.settings

@@ -1,9 +1,14 @@
 package org.reins.url.controller;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import com.alibaba.fastjson.JSONObject;
-import eu.bitwalker.useragentutils.DeviceType;
-import eu.bitwalker.useragentutils.UserAgent;
-import io.jsonwebtoken.Claims;
+
 import org.reins.url.entity.ShortenLog;
 import org.reins.url.entity.Shortener;
 import org.reins.url.entity.Users;
@@ -20,12 +25,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutionException;
+import io.jsonwebtoken.Claims;
 
 @RestController
 public class UrlController {
@@ -54,9 +54,10 @@ public class UrlController {
      */
     @CrossOrigin
     @RequestMapping("/getShort")
-    public JSONObject generateShort(@RequestHeader("Authorization") String jwt, @RequestBody List<String> longUrls) throws Exception {
-        Claims c = JwtUtil.parseJWT(jwt);
-        JSONObject res = new JSONObject();
+    public JSONObject generateShort(@RequestHeader("Authorization") final String jwt,
+            @RequestBody final List<String> longUrls) throws Exception {
+        final Claims c = JwtUtil.parseJWT(jwt);
+        final JSONObject res = new JSONObject();
         res.put("data", shortenLogService.addShortenLog(Long.parseLong(c.get("id").toString()), longUrls).get());
         return res;
     }
@@ -66,16 +67,15 @@ public class UrlController {
      *
      * @param jwt      the jwt in requestHeader used for checking the user's id
      * @param longUrls the long urls that needs to be generated to the short url
-     * @return {data:
-     * shortUrl
-     * }
+     * @return {data: shortUrl }
      * @throws Exception when the string jwt can't be parsed as a JWT
      */
     @CrossOrigin
     @RequestMapping("/getOneShort")
-    public JSONObject generateOneShort(@RequestHeader("Authorization") String jwt, @RequestBody List<String> longUrls) throws Exception {
-        Claims c = JwtUtil.parseJWT(jwt);
-        JSONObject res = new JSONObject();
+    public JSONObject generateOneShort(@RequestHeader("Authorization") final String jwt,
+            @RequestBody final List<String> longUrls) throws Exception {
+        final Claims c = JwtUtil.parseJWT(jwt);
+        final JSONObject res = new JSONObject();
         res.put("data", shortenLogService.addOneShortenLog(Long.parseLong(c.get("id").toString()), longUrls).get());
         return res;
     }
@@ -85,11 +85,11 @@ public class UrlController {
      */
     @CrossOrigin
     @RequestMapping("/{[A-Za-z0-9]{6}}")
-    public void getLong(HttpServletRequest req, HttpServletResponse resp) {
-        String shortUrl = req.getRequestURI().substring(1);
+    public void getLong(final HttpServletRequest req, final HttpServletResponse resp) {
+        final String shortUrl = req.getRequestURI().substring(1);
         try {
             resp.sendRedirect("redirect:9090/redirect?short=" + shortUrl);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             e.printStackTrace();
         }
     }
@@ -99,38 +99,36 @@ public class UrlController {
      *
      * @param jwt    the jwt in requestHeader used for checking the user's id
      * @param params the params includes shortUrl and longUrl
-     * @return {data:{
-     * status:Boolean
-     * }
-     * }
+     * @return {data:{ status:Boolean } }
      * @throws Exception when the string jwt can't be parsed as a JWT
      */
     @CrossOrigin
     @RequestMapping("/editUrl")
-    public JSONObject editUrl(@RequestHeader("Authorization") String jwt, @RequestBody Map<String, String> params) throws Exception {
-        Claims c = JwtUtil.parseJWT(jwt);
-        long id = Long.parseLong(c.get("id").toString());
-        String shortUrl = params.get("shortUrl");
-        String longUrl = params.get("longUrl");
-        JSONObject res = new JSONObject();
-        JSONObject status = new JSONObject();
-        Users user = usersService.findById(id).get();
-        ShortenLog shortenLog = shortenLogService.findByShortUrl(shortUrl).get();
+    public JSONObject editUrl(@RequestHeader("Authorization") final String jwt,
+            @RequestBody final Map<String, String> params) throws Exception {
+        final Claims c = JwtUtil.parseJWT(jwt);
+        final long id = Long.parseLong(c.get("id").toString());
+        final String shortUrl = params.get("shortUrl");
+        final String longUrl = params.get("longUrl");
+        final JSONObject res = new JSONObject();
+        final JSONObject status = new JSONObject();
+        final Users user = usersService.findById(id).get();
+        final ShortenLog shortenLog = shortenLogService.findByShortUrl(shortUrl).get();
         if (shortenLog == null || user == null) {
             status.put("status", false);
             res.put("data", status);
             return res;
         }
-        List<Shortener> longUrls = shortenLog.getShortener();
+        final List<Shortener> longUrls = shortenLog.getShortener();
         if (longUrls.isEmpty()) {
             status.put("status", false);
             res.put("data", status);
             return res;
         }
-        Shortener shortener = longUrls.get(0);
+        final Shortener shortener = longUrls.get(0);
         if (longUrl.equals("BANNED") || longUrl.equals("LIFT")) {
-            boolean ban = longUrl.equals("BANNED");
-            boolean shortenerBan = shortener.getLongUrl().equals("BANNED");
+            final boolean ban = longUrl.equals("BANNED");
+            final boolean shortenerBan = shortener.getLongUrl().equals("BANNED");
             if ((user.getRole() > 0 && id != shortenLog.getCreatorId()) || (ban && shortenerBan) || (!ban && !shortenerBan)) {
                 status.put("status", false);
                 res.put("data", status);

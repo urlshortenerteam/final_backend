@@ -68,7 +68,7 @@ public class StatController {
      * It's similar to "/getStat"
      *
      * @param jwt the jwt in requestHeader used for checking the user's type
-     * @return {data:{
+     * @return JSONObject {data:{
      * data:[
      * {
      * shortUrl:String,

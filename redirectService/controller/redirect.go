@@ -26,6 +26,7 @@ func (re *RedirectController) getLong(url string) (longURL string) {
 			longURL = notFound
 		}
 	}
+	
 	return longURL
 }
 
