@@ -74,6 +74,18 @@ services:
     networks:
       - demo
 
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.9.0
+    container_name: kibana
+    hostname: kibana
+    restart: always
+    volumes:
+      - ./kibana.yml:/usr/share/kibana/config/kibana.yml
+    ports:
+      - "5601:5601"
+    networks:
+      - demo
+
   reverse-proxy:
     image: traefik:v2.2
     container_name: reverse-proxy
@@ -81,15 +93,16 @@ services:
     restart: always
     command: --api.insecure=true --providers.docker
     ports:
+      - "81:80"
       - "8080:8080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik.yml:/etc/traefik/traefik.yml
     networks:
       - demo
 
   whoami:
     image: containous/whoami
-    container_name: whoami
     hostname: whoami
     restart: always
     labels:
