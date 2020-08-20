@@ -61,4 +61,4 @@ jobs:
       working-directory: redirectService
       run: go test ./...
       env:
-       TEST_DIR: ../ 
+       TEST_DIR: ../
