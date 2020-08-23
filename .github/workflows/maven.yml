@@ -45,7 +45,7 @@ jobs:
         workdir: ./backend
         # Tool name to use for reviewdog reporter
         tool_name: reviewdog
-  test_go:
+  test_redirect:
     runs-on: ubuntu-latest
     steps:    
     - uses: actions/checkout@v2
@@ -62,3 +62,20 @@ jobs:
       run: go test ./...
       env:
        TEST_DIR: ../
+  test_visitLog:
+    runs-on: ubuntu-latest
+    steps:    
+    - uses: actions/checkout@v2
+    - name: Setup Go environment
+      uses: actions/setup-go@v2.1.2
+    - name: Make envfile
+      uses: SpicyPizza/create-envfile@v1
+      with:
+        envkey_MYSQL_URL: ${{secrets.MYSQL_URL}}
+        file_name: logService/credentials.env
+    - name: Run Go testing
+      working-directory: logService
+      run: go test ./...
+      env:
+       TEST_DIR: ../
+    

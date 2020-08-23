@@ -7,13 +7,19 @@ services:
     hostname: backend
     restart: always
     ports:
-      - "80:8080"
+      - "4000:8080"
+    logging:
+      driver: syslog
+      options:
+        tag: backend
     environment:
       - JVM_OPTS="-Xms128m -Xmx128m"
       - JASYPT_ENCRYPTOR_PASSWORD=SXSYYDS
       - IP2REGION=./ip2region.db
+    labels:
+      - "traefik.http.routers.backend-finalbackend.rule=PathPrefix(`/`)"
     networks:
-      - demo
+      - reevoo
 
   redirect:
     image: reevoo2020/redirect-service:1.0
@@ -22,6 +28,22 @@ services:
     restart: always
     ports:
       - "9092:9090"
+    logging:
+      driver: syslog
+      options:
+        tag: redirect
+    labels:
+      - "traefik.http.routers.redirect-finalbackend.rule=Path(`/{short:[A-Za-z0-9]{6}}`)"
+    networks:
+      - reevoo
+
+  visitLog:
+    image: reevoo2020/visitLog-service:1.0
+    container_name: visitLog
+    hostname: visitLog
+    restart: always
+    ports:
+      - "9094:9092"
     networks:
       - demo
 
@@ -35,7 +57,7 @@ services:
     ports:
       - "9091:9090"
     networks:
-      - demo
+      - reevoo
 
   grafana:
     image: grafana/grafana
@@ -45,7 +67,7 @@ services:
     ports:
       - "3000:3000"
     networks:
-      - demo
+      - reevoo
 
   cadvisor:
     image: gcr.io/google-containers/cadvisor:latest
@@ -62,7 +84,7 @@ services:
     depends_on:
       - redis
     networks:
-      - demo
+      - reevoo
 
   redis:
     image: redis:latest
@@ -72,10 +94,10 @@ services:
     ports:
       - "6379:6379"
     networks:
-      - demo
+      - reevoo
 
   kibana:
-    image: docker.elastic.co/kibana/kibana:7.9.0
+    image: docker.elastic.co/kibana/kibana:7.8.1
     container_name: kibana
     hostname: kibana
     restart: always
@@ -84,7 +106,7 @@ services:
     ports:
       - "5601:5601"
     networks:
-      - demo
+      - reevoo
 
   reverse-proxy:
     image: traefik:v2.2
@@ -93,13 +115,12 @@ services:
     restart: always
     command: --api.insecure=true --providers.docker
     ports:
-      - "81:80"
+      - "80:80"
       - "8080:8080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./traefik.yml:/etc/traefik/traefik.yml
     networks:
-      - demo
+      - reevoo
 
   whoami:
     image: containous/whoami
@@ -108,7 +129,8 @@ services:
     labels:
       - "traefik.http.routers.whoami.rule=Host(`whoami.docker.localhost`)"
     networks:
-      - demo
+      - reevoo
+
 networks:
-  demo:
+  reevoo:
     driver: bridge
