@@ -44,8 +44,14 @@ services:
     restart: always
     ports:
       - "9094:9092"
+    logging:
+      driver: syslog
+      options:
+        tag: visitLog
+    labels:
+      - "traefik.http.routers.visitLog-finalbackend.rule=Path(`/{short:[A-Za-z0-9]{6}}`)"
     networks:
-      - demo
+      - reevoo
 
   prometheus:
     image: prom/prometheus
