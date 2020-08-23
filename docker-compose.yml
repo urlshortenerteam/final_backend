@@ -37,6 +37,16 @@ services:
     networks:
       - reevoo
 
+  visitLog:
+    image: reevoo2020/visitLog-service:1.0
+    container_name: visitLog
+    hostname: visitLog
+    restart: always
+    ports:
+      - "9094:9092"
+    networks:
+      - demo
+
   prometheus:
     image: prom/prometheus
     container_name: prometheus
