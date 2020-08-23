@@ -22,7 +22,7 @@ services:
       - reevoo
 
   redirect:
-    image: reevoo2020/redirect-service:1.0
+    image: reevoo2020/redirect-service:1.2
     container_name: redirect
     hostname: redirect
     restart: always
