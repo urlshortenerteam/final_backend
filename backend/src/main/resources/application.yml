@@ -12,7 +12,6 @@ spring:
         new_generator_mappings: false
         format_sql: true
         enable_lazy_load_no_trans: true
-    show-sql: true
     open-in-view: false
   datasource:
     url: ENC(grMCWwygMDkOd+TdWje1yasCGpnL/JAKA5z6DNllIeRt/Yr3G5LFPlcztotvLWKe+ogRiCvrjGjJ/y8FwFuhHfPpaTZuxBkIJRgmQOZaqLK+HAWyibUZ9RNp8a6xCao5LDmK/VFWCY6rAme0f+K55I3Nkh1J7IgiYd4cENiE+r+ejehGjqwyDs2UeOp/NpGJUUQ7B74dehI=)
