@@ -16,16 +16,16 @@ spring:
     open-in-view: false
   datasource:
     url: ENC(grMCWwygMDkOd+TdWje1yasCGpnL/JAKA5z6DNllIeRt/Yr3G5LFPlcztotvLWKe+ogRiCvrjGjJ/y8FwFuhHfPpaTZuxBkIJRgmQOZaqLK+HAWyibUZ9RNp8a6xCao5LDmK/VFWCY6rAme0f+K55I3Nkh1J7IgiYd4cENiE+r+ejehGjqwyDs2UeOp/NpGJUUQ7B74dehI=)
-    username: ENC(MLP/TP22ctJOa5wmYmXu/Q==)
+    username: admin
     password: ENC(ivdNWO7aivOZyhIlIDGUB/0lYCbyuE7g)
     driver-class-name: com.mysql.cj.jdbc.Driver
   data:
     mongodb:
-      host: ENC(9SY+w3hpo2VmqxI4410LuTS0m5vnSleJ)
+      host: ENC(AP/xA3bZVKzsP9wTKpZHgbz1tf9TGCpu)
       port: 27017
-      authentication-database: ENC(JkI1N2Nle6XeWuhXaKatpg==)
-      database: ENC(tEc46nAdHoXD0gl+xN6khw==)
-      username: ENC(hqkQ6LNXanI/YPRGM91AMg==)
+      authentication-database: url
+      database: url
+      username: url
       password: ENC(OAOND8tNccLS/N13zbCFj/RSwejoI/Hr)
 server:
   port: 8080
@@ -41,3 +41,5 @@ management:
     web:
       exposure:
         include: "*"
+logging:
+  config: classpath:log4j2.xml
