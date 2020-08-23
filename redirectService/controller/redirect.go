@@ -1,10 +1,12 @@
 package controller
 
 import (
+	"net/http"
+	"regexp"
+	"sync"
+
 	isrv "github.com/ao7777/redirectService/interface/service"
 	log "github.com/sirupsen/logrus"
-	"net/http"
-	"sync"
 )
 
 // RedirectController redirect controller structure
@@ -31,10 +33,15 @@ func (re *RedirectController) getLong(url string) (longURL string) {
 }
 
 func (re *RedirectController) serveShort(w http.ResponseWriter, r *http.Request) {
-	r.ParseForm()
+	regPath:=regexp.MustCompile(`[A-Za-z0-9]{6}`)
+	log.Info(r.URL.Path[1:])
+	if regPath.MatchString(r.URL.Path[1:]) == false{
+		http.Redirect(w,r,hostURL+"/static/error.html",http.StatusFound)
+		return 
+	}
 	re.shortService.Init()
 	defer re.shortService.Destr()
-	longURL := re.getLong(r.Form["short"][0])
+	longURL := re.getLong(r.URL.Path[1:])
 	log.WithField("longUrl", longURL).Info("Redirect to distination")
 	http.Redirect(w, r, longURL, http.StatusFound)
 }
@@ -43,7 +50,7 @@ func (re *RedirectController) serveShort(w http.ResponseWriter, r *http.Request)
 func (re *RedirectController) Init(wg *sync.WaitGroup, shortService isrv.IRedirect) *http.Server {
 	srv := &http.Server{Addr: ":9090"}
 	re.shortService = shortService
-	http.HandleFunc("/redirect", re.serveShort) // 设置访问的路由
+	http.HandleFunc("/", re.serveShort) // 设置访问的路由
 	go func() {
 		defer wg.Done() // let main know we are done cleaning up
 
