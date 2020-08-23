@@ -98,12 +98,6 @@ public class UrlControllerTest extends ApplicationTests {
     }
 
     @Test
-    public void getLong() throws Exception {
-        mockMvc.perform(get("/000000").header("Authorization", JwtUtil.sign(1, "ao7777", 0, false)).contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isFound()).andReturn();
-    }
-
-    @Test
     public void editUrl() throws Exception {
         String longUrl = "https://www.baidu.com/";
         Users user1 = new Users();
