@@ -26,12 +26,9 @@ func Test_serveShort(t *testing.T) {
 		mockService.EXPECT().Init(),
 		mockService.EXPECT().ShortToLong("sdIMYI").Return("BANNED"),
 		mockService.EXPECT().Destr(),
-		mockService.EXPECT().Init(),
-		mockService.EXPECT().ShortToLong("$$$$$$").Return("NOTFOUND"),
-		mockService.EXPECT().Destr(),
 	)
 	re := RedirectController{mockService}
-	mux.HandleFunc("/redirect", re.serveShort)
+	mux.HandleFunc("/", re.serveShort)
 	type args struct {
 		shortURL string
 	}
@@ -47,7 +44,7 @@ func Test_serveShort(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			r, _ := http.NewRequest(http.MethodGet, "/redirect?short="+tt.args.shortURL, reader)
+			r, _ := http.NewRequest(http.MethodGet, "/"+tt.args.shortURL, reader)
 			w := httptest.NewRecorder()
 			mux.ServeHTTP(w, r)
 			resp := w.Result()
