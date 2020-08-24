@@ -7,6 +7,7 @@ import (
 	"sync"
 	//"encoding/json"
 	"regexp"
+	"strings"
 )
 //VisitLogController the visitLog controller
 type VisitLogController struct {
@@ -26,7 +27,7 @@ func (v *VisitLogController) Init(wg *sync.WaitGroup, visitLogService isrv.ILogS
 	srv := &http.Server{Addr: ":9092"}
 	v.visitLogService = visitLogService
 	v.visitLogService.InitService()
-	http.HandleFunc("/visitLog", v.serveLog) // 设置访问的路由
+	http.HandleFunc("/redirect", v.serveLog) // 设置访问的路由
 	go func() {
 		defer wg.Done() // let main know we are done cleaning up
 
@@ -58,5 +59,12 @@ func (v *VisitLogController) serveLog(w http.ResponseWriter, r *http.Request) {
     }
 	ip = r.RemoteAddr
 	log.Info(ip)
-	v.visitLogService.Log(r.URL.Path[1:],ip,false)
+	userAgent := r.UserAgent()
+	var device bool
+	if strings.Index(userAgent,"Windows")>-1||strings.Index(userAgent,"Linux")>-1||strings.Index(userAgent,"Mac")>-1 {
+		device = false
+	} else {
+		device = true
+	}
+	v.visitLogService.Log(r.URL.Path[1:],ip,device)
 }

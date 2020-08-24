@@ -161,22 +161,22 @@ func (l *LogDAO) UpdateShorten(ID uint64) (err error){
 	return
 }
 
-//ByShortURL get ShortUrl entity by short
-func (l LogDAO) ByShortURL(shortURL string) (shortenID uint64, shortenerID string, err error) {
+//ByShortURL get data by shortURL
+func (l LogDAO) ByShortURL(shortURL string) (shortenID uint64, owner uint64, shortenerID string, err error) {
 	if l.db == nil {
 		panic("UNINITIALIZED MySQL connection.")
 	}
-	stmt, err := l.db.Prepare("SELECT id, short_url FROM shorten_log WHERE short_url = ?")
+	stmt, err := l.db.Prepare("SELECT id, creator_id FROM shorten_log WHERE short_url = ?")
 	if err != nil {
-		return 0, "", err
+		return 0, 0, "", err
 	}
 	defer stmt.Close()
-	err = stmt.QueryRow(shortURL).Scan(&shortenID)
+	err = stmt.QueryRow(shortURL).Scan(&shortenID,&owner)
 	if err != sql.ErrNoRows && err != nil {
-		return 0, "", err
+		return 0, 0, "", err
 	}
 	if err == sql.ErrNoRows {
-		return 0, "", err
+		return 0, 0, "", err
 	}
 
 	// session, err := mgo.Dial(mongoURL)
@@ -198,5 +198,5 @@ func (l LogDAO) ByShortURL(shortURL string) (shortenID uint64, shortenerID strin
 	// 	"longUrl":  e.LongUrl,
 	// 	"shortUrl": e.Short,
 	// }).Info("Fetched Item successfully.")
-	return shortenID, "", nil
+	return shortenID, owner, "", nil
 }

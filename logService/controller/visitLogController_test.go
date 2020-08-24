@@ -45,9 +45,10 @@ func TestVisitLogController_serveLog(t *testing.T) {
 	}
 	v := VisitLogController{}
 	v.visitLogService=&service.VisitService{}
-	r1,_ := http.NewRequest(http.MethodPost, "/visitLog", strings.NewReader("{\"shortenerId\": \"5f223b84b3f08a6a051c90cc\",\"ip\": \"123.159.111.147\",\"device\": false,\"ownerId\": 1,\"shortenId\": 1}"))
-	r2,_ := http.NewRequest(http.MethodPost, "/visitLog", strings.NewReader("{\"shortenerId\": \"5f223b84b3f08a6a051c90cc\",\"ip\": \"123.159.111.147\",\"device\": false,\"ownerId\": 0,\"shortenId\": 1}"))
-	r3,_ := http.NewRequest(http.MethodPost, "/visitLog", strings.NewReader("{\"shortenerId\": \"5f223b84b3f08a6a051c90cc\",\"ip\": \"123.159.111.147\",\"device\": false,\"ownerId\": 1,\"shortenId\": 0}"))
+	r1,_ := http.NewRequest(http.MethodGet, "/5lJ4Vc", strings.NewReader(`{"short":"5lJ4Vc"}`))
+	// r1,_ := http.NewRequest(http.MethodPost, "/visitLog", strings.NewReader("{\"shortenerId\": \"5f223b84b3f08a6a051c90cc\",\"ip\": \"123.159.111.147\",\"device\": false,\"ownerId\": 1,\"shortenId\": 1}"))
+	// r2,_ := http.NewRequest(http.MethodPost, "/visitLog", strings.NewReader("{\"shortenerId\": \"5f223b84b3f08a6a051c90cc\",\"ip\": \"123.159.111.147\",\"device\": false,\"ownerId\": 0,\"shortenId\": 1}"))
+	// r3,_ := http.NewRequest(http.MethodPost, "/visitLog", strings.NewReader("{\"shortenerId\": \"5f223b84b3f08a6a051c90cc\",\"ip\": \"123.159.111.147\",\"device\": false,\"ownerId\": 1,\"shortenId\": 0}"))
 
 	tests := []struct {
 		name string
@@ -59,19 +60,20 @@ func TestVisitLogController_serveLog(t *testing.T) {
 			&v,
 			args{httptest.NewRecorder(),r1},
 		},
-		{
-			"Wrong ownerID",
-			&v,
-			args{httptest.NewRecorder(),r2},
-		},
-		{
-			"Wrong shortenID",
-			&v,
-			args{httptest.NewRecorder(),r3},
-		},
+		// {
+		// 	"Wrong ownerID",
+		// 	&v,
+		// 	args{httptest.NewRecorder(),r2},
+		// },
+		// {
+		// 	"Wrong shortenID",
+		// 	&v,
+		// 	args{httptest.NewRecorder(),r3},
+		// },
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			tt.v.Init(&sync.WaitGroup{},&service.VisitService{})
 			tt.v.serveLog(tt.args.w, tt.args.r)
 		})
 	}
