@@ -2,12 +2,14 @@ package dao
 
 import (
 	"database/sql"
-	"github.com/ao7777/redirectService/entity"
-	log "github.com/sirupsen/logrus"
 	"os"
-	"github.com/joho/godotenv"
-	// "time"
+	"time"
+	"strconv"
+	"github.com/ao7777/redirectService/entity"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/joho/godotenv"
+	"github.com/patrickmn/go-cache"
+	log "github.com/sirupsen/logrus"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -17,10 +19,13 @@ var (
 	mysqlURL string
 )
 
+const maxCacheSize int = 50
+
 // ShortDAO implementation of DAO, Init before use
 type ShortDAO struct {
 	entity.ShortUrl
-	db *sql.DB
+	db    *sql.DB
+	cache *cache.Cache
 }
 
 // MongoShort structure for MongoDB
@@ -35,8 +40,8 @@ func init() {
 
 	// 输出 stdout 而不是默认的 stderr，也可以是一个文件
 	log.SetOutput(os.Stdout)
-	err:=godotenv.Load(os.Getenv("TEST_DIR")+"credentials.env")
-	if err != nil{
+	err := godotenv.Load(os.Getenv("TEST_DIR") + "credentials.env")
+	if err != nil {
 		log.Fatal(err)
 	}
 	mongoURL = os.Getenv("MONGO_URL")
@@ -51,11 +56,17 @@ func (s *ShortDAO) InitShortDAO() error {
 		return err
 	}
 	log.Info("Successfully connected to MySQL.")
+	// Create a cache with a default expiration time of 5 minutes, and which
+	// purges expired items every 10 minutes
+	s.cache = cache.New(5*time.Minute, 10*time.Minute)
 	return nil
 }
 
 //ByID get a ShortUrl entity by its id
 func (s ShortDAO) ByID(id int) (e entity.ShortUrl, err error) {
+	if x, found := s.cache.Get(strconv.Itoa(id)); found {
+		return x.(entity.ShortUrl), nil
+	}
 	if s.db == nil {
 		panic("UNINITIALIZED.")
 	}
@@ -93,11 +104,17 @@ func (s ShortDAO) ByID(id int) (e entity.ShortUrl, err error) {
 		"longUrl":  e.LongUrl,
 		"shortUrl": e.Short,
 	}).Info("Fetched Item successfully.")
+	if s.cache.ItemCount() <= maxCacheSize {
+		s.cache.Set(strconv.Itoa(id), e, cache.DefaultExpiration)
+	}
 	return e, nil
 }
 
 //ByShortURL get ShortUrl entity by short
 func (s ShortDAO) ByShortURL(shortURL string) (e entity.ShortUrl, err error) {
+		if x, found := s.cache.Get(shortURL); found {
+		return x.(entity.ShortUrl), nil
+	}
 	if s.db == nil {
 		panic("UNINITIALIZED MySQL connection.")
 	}
@@ -134,6 +151,9 @@ func (s ShortDAO) ByShortURL(shortURL string) (e entity.ShortUrl, err error) {
 		"longUrl":  e.LongUrl,
 		"shortUrl": e.Short,
 	}).Info("Fetched Item successfully.")
+		if s.cache.ItemCount() <= maxCacheSize {
+		s.cache.Set(shortURL, e, cache.DefaultExpiration)
+	}
 	return e, nil
 }
 

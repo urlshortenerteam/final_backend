@@ -20,12 +20,8 @@ func Test_serveShort(t *testing.T) {
 	defer mockCtrl.Finish()
 	mockService := mockservice.NewMockIRedirect(mockCtrl)
 	gomock.InOrder(
-		mockService.EXPECT().Init(),
 		mockService.EXPECT().ShortToLong("5lJ4Vc").Return("https://www.baidu.com/"),
-		mockService.EXPECT().Destr(),
-		mockService.EXPECT().Init(),
 		mockService.EXPECT().ShortToLong("sdIMYI").Return("BANNED"),
-		mockService.EXPECT().Destr(),
 	)
 	re := RedirectController{mockService}
 	mux.HandleFunc("/", re.serveShort)
@@ -70,6 +66,10 @@ func TestInit(t *testing.T) {
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
 	mockService := mockservice.NewMockIRedirect(mockCtrl)
+	gomock.InOrder(
+		mockService.EXPECT().Init(),
+		mockService.EXPECT().Destr(),
+	)
 	tests := []struct {
 		name string
 	}{

@@ -39,8 +39,6 @@ func (re *RedirectController) serveShort(w http.ResponseWriter, r *http.Request)
 		http.Redirect(w,r,hostURL+"/static/error.html",http.StatusFound)
 		return 
 	}
-	re.shortService.Init()
-	defer re.shortService.Destr()
 	longURL := re.getLong(r.URL.Path[1:])
 	log.WithField("longUrl", longURL).Info("Redirect to distination")
 	http.Redirect(w, r, longURL, http.StatusFound)
@@ -48,11 +46,13 @@ func (re *RedirectController) serveShort(w http.ResponseWriter, r *http.Request)
 
 // Init Initialize redirect controller
 func (re *RedirectController) Init(wg *sync.WaitGroup, shortService isrv.IRedirect) *http.Server {
-	srv := &http.Server{Addr: ":9090"}
 	re.shortService = shortService
+	re.shortService.Init()
+	srv := &http.Server{Addr: ":9090"}
 	http.HandleFunc("/", re.serveShort) // 设置访问的路由
 	go func() {
 		defer wg.Done() // let main know we are done cleaning up
+		defer re.shortService.Destr()
 
 		// always returns error. ErrServerClosed on graceful close
 		if err := srv.ListenAndServe(); err != http.ErrServerClosed {
