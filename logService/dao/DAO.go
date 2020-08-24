@@ -8,14 +8,23 @@ import (
 	"github.com/violedo/logService/entity"
 	//
     _ "github.com/go-sql-driver/mysql"
+	// "gopkg.in/mgo.v2"
+	// "gopkg.in/mgo.v2/bson"
 )
 
 var mysqlURL string
+var mongoURL string
 
 //LogDAO implementation of DAO
 type LogDAO struct {
 	entity.Visit
 	db *sql.DB
+}
+
+// MongoShort structure for MongoDB
+type MongoShort struct {
+	ShortenID int64  `bson:"shortenId" json:"shortenId"`
+	LongURL   string `bson:"longUrl" json:"longUrl"`
 }
 
 func init() {
@@ -29,6 +38,7 @@ func init() {
 		log.Fatal(err)
 	}
 	mysqlURL = os.Getenv("MYSQL_URL")
+	mongoURL = os.Getenv("MONGO_URL")
 }
 
 //InitDB init database
@@ -149,4 +159,44 @@ func (l *LogDAO) UpdateShorten(ID uint64) (err error){
 		"VisitCount":visitCount+1,
 	}).Info("ShortenLog visitCount updated successfully.")
 	return
+}
+
+//ByShortURL get ShortUrl entity by short
+func (l LogDAO) ByShortURL(shortURL string) (shortenID uint64, shortenerID string, err error) {
+	if l.db == nil {
+		panic("UNINITIALIZED MySQL connection.")
+	}
+	stmt, err := l.db.Prepare("SELECT id, short_url FROM shorten_log WHERE short_url = ?")
+	if err != nil {
+		return 0, "", err
+	}
+	defer stmt.Close()
+	err = stmt.QueryRow(shortURL).Scan(&shortenID)
+	if err != sql.ErrNoRows && err != nil {
+		return 0, "", err
+	}
+	if err == sql.ErrNoRows {
+		return 0, "", err
+	}
+
+	// session, err := mgo.Dial(mongoURL)
+	// if err != nil {
+	// 	return 0, "", err
+	// }
+	// defer session.Close()
+	// c := session.DB("url").C("shortener")
+	// var results []MongoShort
+	// err = c.Find(bson.M{"shortenId": shortenID}).All(&results)
+	// if err != nil {
+	// 	return 0, "", err
+	// }
+	// for _, record := range results {
+	// 	e.LongUrl = append(e.LongUrl, record.LongURL)
+	// }
+	// log.WithFields(log.Fields{
+	// 	"id":       e.ID,
+	// 	"longUrl":  e.LongUrl,
+	// 	"shortUrl": e.Short,
+	// }).Info("Fetched Item successfully.")
+	return shortenID, "", nil
 }

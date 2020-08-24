@@ -28,7 +28,9 @@ func (v *VisitService)Destr(){
 }
 
 //Log insert the visitLog into visitLog and changes data in user and shortenLog
-func (v VisitService)Log(ShortenerID string,IP string,Device bool,owner uint64,shortenID uint64){
+//ShortenerID string,IP string,Device bool,owner uint64,shortenID uint64
+func (v VisitService)Log(shortURL string, IP string, Device bool){
+	shortenID , shortenerID , err :=v.logDAO.ByShortURL(shortURL)
 	entity :=entity.Visit{ShortenerID:ShortenerID,
 							VisitTime:time.Now(),
 							IP:IP,

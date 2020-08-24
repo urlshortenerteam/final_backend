@@ -5,7 +5,8 @@ import (
 	log "github.com/sirupsen/logrus"
 	"net/http"
 	"sync"
-	"encoding/json"
+	//"encoding/json"
+	"regexp"
 )
 //VisitLogController the visitLog controller
 type VisitLogController struct {
@@ -24,6 +25,7 @@ type postBody struct {
 func (v *VisitLogController) Init(wg *sync.WaitGroup, visitLogService isrv.ILogService) *http.Server {
 	srv := &http.Server{Addr: ":9092"}
 	v.visitLogService = visitLogService
+	v.visitLogService.InitService()
 	http.HandleFunc("/visitLog", v.serveLog) // 设置访问的路由
 	go func() {
 		defer wg.Done() // let main know we are done cleaning up
@@ -39,10 +41,22 @@ func (v *VisitLogController) Init(wg *sync.WaitGroup, visitLogService isrv.ILogS
 }
 
 func (v *VisitLogController) serveLog(w http.ResponseWriter, r *http.Request) {
-	decoder := json.NewDecoder(r.Body)
-	var params postBody
-	decoder.Decode(&params)
-	v.visitLogService.InitService()
-	defer v.visitLogService.Destr()
-	v.visitLogService.Log(params.ShortenerID,params.IP,params.Device,params.OwnerID,params.ShortenID)
+	// decoder := json.NewDecoder(r.Body)
+	// var params postBody
+	// decoder.Decode(&params)
+	// v.visitLogService.Log(params.ShortenerID,params.IP,params.Device,params.OwnerID,params.ShortenID)
+	regPath:=regexp.MustCompile(`[A-Za-z0-9]{6}`)
+	log.Info(r.URL.Path[1:])
+	if regPath.MatchString(r.URL.Path[1:]) == false{
+		return 
+	}
+
+	var ip string
+	forwarded := r.Header.Get("X-FORWARDED-FOR")
+    if forwarded != "" {
+        ip = forwarded
+    }
+	ip = r.RemoteAddr
+	log.Info(ip)
+	v.visitLogService.Log(r.URL.Path[1:],ip,false)
 }
