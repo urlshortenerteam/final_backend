@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"regexp"
 	"sync"
-
+	"github.com/confluentinc/confluent-kafka-go/kafka"
 	isrv "github.com/ao7777/redirectService/interface/service"
 	log "github.com/sirupsen/logrus"
 )
@@ -15,6 +15,8 @@ type RedirectController struct {
 }
 
 const hostURL string = "http://rv-s.cn"
+var kafkaConfig kafka.ConfigMap
+
 
 func (re *RedirectController) getLong(url string) (longURL string) {
 	longURL = re.shortService.ShortToLong(url).LongURL
