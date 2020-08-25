@@ -7,9 +7,10 @@ import (
 	"regexp"
 	"sync"
 
+	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/ao7777/redirectService/entity"
 	isrv "github.com/ao7777/redirectService/interface/service"
-	"github.com/confluentinc/confluent-kafka-go/kafka"
+
 	"github.com/joho/godotenv"
 	log "github.com/sirupsen/logrus"
 )
@@ -61,10 +62,10 @@ func (re *RedirectController) serveShort(w http.ResponseWriter, r *http.Request)
 		ShortURL string `json:"shortUrl"`
 		device string
 	}
-	message,_:=json.Marshal(logMessage{longURL,r.Host,r.URL.Path[1:],ua})
+	message,_:=json.Marshal(logMessage{longURL,GetIP(r),r.URL.Path[1:],ua})
 	topic:="visitLog"
 	kMessage:=kafka.Message{
-		TopicPartition: kafka.TopicPartition{Topic: &topic,Partition: kafka.PartitionAny},
+		TopicPartition: kafka.TopicPartition{Topic: &topic,Partition:kafka.PartitionAny},
 		Value: message,
 	}
 	re.producer.Produce(&kMessage,nil)
@@ -112,4 +113,13 @@ func (re *RedirectController) Init(wg *sync.WaitGroup, shortService isrv.IRedire
 
 	// returning reference so caller can call Shutdown()
 	return srv
+}
+
+//GetIP get ip from http request
+func GetIP(r *http.Request) string {
+	forwarded := r.Header.Get("X-FORWARDED-FOR")
+	if forwarded != "" {
+		return forwarded
+	}
+	return r.RemoteAddr
 }

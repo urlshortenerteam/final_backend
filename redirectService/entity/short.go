@@ -9,6 +9,6 @@ type ShortURL struct{
 // MongoShort structure for MongoDB
 type MongoShort struct {
 	ShortenID int64  `bson:"shortenId" json:"shortenId"`
-	LongID string `bson:"_id" json:"longId"`
+	LongID string `json:"longId" bson:"_id,omitempty"`
 	LongURL   string `bson:"longUrl" json:"longUrl"`
 }
