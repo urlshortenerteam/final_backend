@@ -11,6 +11,7 @@ import (
 
 	"github.com/ao7777/redirectService/entity"
 	mockservice "github.com/ao7777/redirectService/interface/service/mocks"
+	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/golang/mock/gomock"
 )
 
@@ -26,7 +27,10 @@ func Test_serveShort(t *testing.T) {
 		mockService.EXPECT().ShortToLong("sdIMYI").Return(entity.MongoShort{ShortenID: -1,LongID:"",LongURL:"BANNED"}),
 		mockService.EXPECT().ShortToLong("abcDEF").Return(entity.MongoShort{ShortenID: -1,LongID:"",LongURL:"NOTFOUND"}),
 	)
-	re := RedirectController{mockService}
+	p,_:=kafka.NewProducer(&kafka.ConfigMap{
+    "socket.timeout.ms":  10,
+    "message.timeout.ms": 10})
+	re := RedirectController{mockService,p}
 	mux.HandleFunc("/", re.serveShort)
 	type args struct {
 		shortURL string
@@ -45,6 +49,7 @@ func Test_serveShort(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			r, _ := http.NewRequest(http.MethodGet, "/"+tt.args.shortURL, reader)
+			r.Header.Set("User-Agent","Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_3; en-us; Silk/1.1.0-80) AppleWebKit/533.16 (KHTML, like Gecko) Version/5.0 Safari/533.16 Silk-Accelerated=true")
 			w := httptest.NewRecorder()
 			mux.ServeHTTP(w, r)
 			resp := w.Result()
