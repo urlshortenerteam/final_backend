@@ -72,6 +72,7 @@ jobs:
       uses: SpicyPizza/create-envfile@v1
       with:
         envkey_MYSQL_URL: ${{secrets.MYSQL_URL}}
+        envkey_MONGO_URL: ${{secrets.MONGO_URL}}
         file_name: logService/credentials.env
     - name: Run Go testing
       working-directory: logService

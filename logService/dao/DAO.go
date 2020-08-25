@@ -1,13 +1,15 @@
 package dao
 
 import (
-    "database/sql"
-	log "github.com/sirupsen/logrus"
+	"database/sql"
 	"os"
+
 	"github.com/joho/godotenv"
+	log "github.com/sirupsen/logrus"
 	"github.com/violedo/logService/entity"
+
 	//
-    _ "github.com/go-sql-driver/mysql"
+	_ "github.com/go-sql-driver/mysql"
 	// "gopkg.in/mgo.v2"
 	// "gopkg.in/mgo.v2/bson"
 )
@@ -33,8 +35,8 @@ func init() {
 
 	// 输出 stdout 而不是默认的 stderr，也可以是一个文件
 	log.SetOutput(os.Stdout)
-	err:=godotenv.Load(os.Getenv("TEST_DIR")+"credentials.env")
-	if err != nil{
+	err := godotenv.Load(os.Getenv("TEST_DIR") + "credentials.env")
+	if err != nil {
 		log.Fatal(err)
 	}
 	mysqlURL = os.Getenv("MYSQL_URL")
@@ -59,25 +61,25 @@ func (l *LogDAO) Destr() {
 }
 
 //InsertLog write visitLog into DB
-func (l *LogDAO) InsertLog(v entity.Visit) (err error){
+func (l *LogDAO) InsertLog(v entity.Visit) (err error) {
 	if l.db == nil {
 		panic("MYSQL UNINITIALIZED!")
 	}
 	log.WithFields(log.Fields{
-		"ShortenerID":v.ShortenerID,
-		"VisitTime":v.VisitTime,
-		"IP":v.IP,
-		"Device":v.Device,
+		"ShortenerID": v.ShortenerID,
+		"VisitTime":   v.VisitTime,
+		"IP":          v.IP,
+		"Device":      v.Device,
 	}).Info("Start inserting visitLog.")
 	//prepary the sql instruction
 	stmt, err := l.db.Prepare("INSERT visit_log SET shortener_id=?,visit_time=?,ip=?,device=?")
-    if err != nil {
+	if err != nil {
 		return
 	}
 	defer stmt.Close()
 	//do the insertion
-	res, err := stmt.Exec(v.ShortenerID,v.VisitTime,v.IP,v.Device)
-    if err != nil {
+	res, err := stmt.Exec(v.ShortenerID, v.VisitTime, v.IP, v.Device)
+	if err != nil {
 		return
 	}
 
@@ -86,22 +88,22 @@ func (l *LogDAO) InsertLog(v entity.Visit) (err error){
 		return
 	}
 	log.WithFields(log.Fields{
-		"ID":id,
-		"ShortenerID":v.ShortenerID,
-		"VisitTime":v.VisitTime,
-		"IP":v.IP,
-		"Device":v.Device,
+		"ID":          id,
+		"ShortenerID": v.ShortenerID,
+		"VisitTime":   v.VisitTime,
+		"IP":          v.IP,
+		"Device":      v.Device,
 	}).Info("VisitLog inserted successfully.")
 	return
 }
 
 //UpdateUser increase the user's visitCount by 1
-func (l *LogDAO) UpdateUser(ID uint64) (err error){
+func (l *LogDAO) UpdateUser(ID uint64) (err error) {
 	if l.db == nil {
 		panic("MYSQL UNINITIALIZED!")
 	}
 	log.WithFields(log.Fields{
-		"ID":ID,
+		"ID": ID,
 	}).Info("Start updating user.")
 	stmt, err := l.db.Prepare("SELECT visit_count FROM users WHERE id = ?")
 	if err != nil {
@@ -117,24 +119,24 @@ func (l *LogDAO) UpdateUser(ID uint64) (err error){
 	if err != nil {
 		return
 	}
-	_,err = stmt.Exec(visitCount+1,ID)
+	_, err = stmt.Exec(visitCount+1, ID)
 	if err != nil {
 		return
 	}
 	log.WithFields(log.Fields{
-		"ID":ID,
-		"VisitCount":visitCount+1,
+		"ID":         ID,
+		"VisitCount": visitCount + 1,
 	}).Info("User visitCount updated successfully.")
 	return
 }
 
 //UpdateShorten increase the shortenLog's visitCount by 1
-func (l *LogDAO) UpdateShorten(ID uint64) (err error){
+func (l *LogDAO) UpdateShorten(ID uint64) (err error) {
 	if l.db == nil {
 		panic("MYSQL UNINITIALIZED!")
 	}
 	log.WithFields(log.Fields{
-		"ID":ID,
+		"ID": ID,
 	}).Info("Start updating shortenLog.")
 	stmt, err := l.db.Prepare("SELECT visit_count FROM shorten_log WHERE id = ?")
 	if err != nil {
@@ -150,13 +152,13 @@ func (l *LogDAO) UpdateShorten(ID uint64) (err error){
 	if err != nil {
 		return
 	}
-	_,err = stmt.Exec(visitCount+1,ID)
+	_, err = stmt.Exec(visitCount+1, ID)
 	if err != nil {
 		return
 	}
 	log.WithFields(log.Fields{
-		"ID":ID,
-		"VisitCount":visitCount+1,
+		"ID":         ID,
+		"VisitCount": visitCount + 1,
 	}).Info("ShortenLog visitCount updated successfully.")
 	return
 }
@@ -171,7 +173,7 @@ func (l LogDAO) ByShortURL(shortURL string) (shortenID uint64, owner uint64, sho
 		return 0, 0, "", err
 	}
 	defer stmt.Close()
-	err = stmt.QueryRow(shortURL).Scan(&shortenID,&owner)
+	err = stmt.QueryRow(shortURL).Scan(&shortenID, &owner)
 	if err != sql.ErrNoRows && err != nil {
 		return 0, 0, "", err
 	}
