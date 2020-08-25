@@ -3,11 +3,13 @@ package controller
 import (
 	"net/http"
 	"net/http/httptest"
-	"reflect"
+
+	// "reflect"
+	"strings"
 	"sync"
 	"testing"
-	"strings"
-	isrv "github.com/violedo/logService/interface/service"
+
+	// isrv "github.com/violedo/logService/interface/service"
 	"github.com/violedo/logService/service"
 )
 
@@ -44,8 +46,8 @@ func TestVisitLogController_serveLog(t *testing.T) {
 		r *http.Request
 	}
 	v := VisitLogController{}
-	v.visitLogService=&service.VisitService{}
-	r1,_ := http.NewRequest(http.MethodGet, "/5lJ4Vc", strings.NewReader(`{"short":"5lJ4Vc"}`))
+	v.visitLogService = &service.VisitService{}
+	r1, _ := http.NewRequest(http.MethodGet, "/5lJ4Vc", strings.NewReader(`{"short":"5lJ4Vc"}`))
 	// r1,_ := http.NewRequest(http.MethodPost, "/visitLog", strings.NewReader("{\"shortenerId\": \"5f223b84b3f08a6a051c90cc\",\"ip\": \"123.159.111.147\",\"device\": false,\"ownerId\": 1,\"shortenId\": 1}"))
 	// r2,_ := http.NewRequest(http.MethodPost, "/visitLog", strings.NewReader("{\"shortenerId\": \"5f223b84b3f08a6a051c90cc\",\"ip\": \"123.159.111.147\",\"device\": false,\"ownerId\": 0,\"shortenId\": 1}"))
 	// r3,_ := http.NewRequest(http.MethodPost, "/visitLog", strings.NewReader("{\"shortenerId\": \"5f223b84b3f08a6a051c90cc\",\"ip\": \"123.159.111.147\",\"device\": false,\"ownerId\": 1,\"shortenId\": 0}"))
@@ -58,7 +60,7 @@ func TestVisitLogController_serveLog(t *testing.T) {
 		{
 			"Successful visit test",
 			&v,
-			args{httptest.NewRecorder(),r1},
+			args{httptest.NewRecorder(), r1},
 		},
 		// {
 		// 	"Wrong ownerID",
@@ -73,7 +75,7 @@ func TestVisitLogController_serveLog(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tt.v.Init(&sync.WaitGroup{},&service.VisitService{})
+			tt.v.Init(&sync.WaitGroup{}, &service.VisitService{})
 			tt.v.serveLog(tt.args.w, tt.args.r)
 		})
 	}
