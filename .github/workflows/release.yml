@@ -2,7 +2,7 @@ name: Release for docker
 
 on:
   release:
-    branches: [ master ]
+    branches: [ first , asyncAndLogs , govioledo]
 
 jobs:
   test:

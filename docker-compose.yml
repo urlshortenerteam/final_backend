@@ -2,7 +2,7 @@ version: '3.2'
 
 services:
   backend:
-    image: reevoo2020/backend
+    image: reevoo2020/backend:latest
     container_name: backend
     hostname: backend
     restart: always
@@ -37,19 +37,19 @@ services:
     networks:
       - reevoo
 
-  visitLog:
-    image: reevoo2020/visitLog-service:1.0
-    container_name: visitLog
-    hostname: visitLog
+  visitlog:
+    image: reevoo2020/visitlog-service:1.0
+    container_name: visitlog
+    hostname: visitlog
     restart: always
     ports:
       - "9094:9092"
     logging:
       driver: syslog
       options:
-        tag: visitLog
+        tag: visitlog
     labels:
-      - "traefik.http.routers.visitLog-finalbackend.rule=Path(`/{short:[A-Za-z0-9]{6}}`)"
+      - "traefik.http.routers.visitlog-finalbackend.rule=Path(`/{short:[A-Za-z0-9]{6}}`)"
     networks:
       - reevoo
 
