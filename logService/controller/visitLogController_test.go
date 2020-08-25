@@ -11,32 +11,32 @@ import (
 	"github.com/violedo/logService/service"
 )
 
-func TestVisitLogController_Init(t *testing.T) {
-	type args struct {
-		wg              *sync.WaitGroup
-		visitLogService isrv.ILogService
-	}
-	tests := []struct {
-		name string
-		v    *VisitLogController
-		args args
-		want *http.Server
-	}{
-		{
-			"Controller Initialization",
-			&VisitLogController{},
-			args{&sync.WaitGroup{},&service.VisitService{}},
-			&http.Server{Addr: ":9092"},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.v.Init(tt.args.wg, tt.args.visitLogService); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("VisitLogController.Init() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
+// func TestVisitLogController_Init(t *testing.T) {
+// 	type args struct {
+// 		wg              *sync.WaitGroup
+// 		visitLogService isrv.ILogService
+// 	}
+// 	tests := []struct {
+// 		name string
+// 		v    *VisitLogController
+// 		args args
+// 		want *http.Server
+// 	}{
+// 		{
+// 			"Controller Initialization",
+// 			&VisitLogController{},
+// 			args{&sync.WaitGroup{},&service.VisitService{}},
+// 			&http.Server{Addr: ":9092"},
+// 		},
+// 	}
+// 	for _, tt := range tests {
+// 		t.Run(tt.name, func(t *testing.T) {
+// 			if got := tt.v.Init(tt.args.wg, tt.args.visitLogService); !reflect.DeepEqual(got, tt.want) {
+// 				t.Errorf("VisitLogController.Init() = %v, want %v", got, tt.want)
+// 			}
+// 		})
+// 	}
+// }
 
 func TestVisitLogController_serveLog(t *testing.T) {
 	type args struct {
