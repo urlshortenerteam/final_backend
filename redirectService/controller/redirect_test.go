@@ -8,6 +8,8 @@ import (
 	"sync"
 	"testing"
 	"time"
+
+	"github.com/ao7777/redirectService/entity"
 	mockservice "github.com/ao7777/redirectService/interface/service/mocks"
 	"github.com/golang/mock/gomock"
 )
@@ -20,8 +22,9 @@ func Test_serveShort(t *testing.T) {
 	defer mockCtrl.Finish()
 	mockService := mockservice.NewMockIRedirect(mockCtrl)
 	gomock.InOrder(
-		mockService.EXPECT().ShortToLong("5lJ4Vc").Return("https://www.baidu.com/"),
-		mockService.EXPECT().ShortToLong("sdIMYI").Return("BANNED"),
+		mockService.EXPECT().ShortToLong("5lJ4Vc").Return(entity.MongoShort{ShortenID: 1,LongID:"",LongURL:"https://www.baidu.com/"}),
+		mockService.EXPECT().ShortToLong("sdIMYI").Return(entity.MongoShort{ShortenID: -1,LongID:"",LongURL:"BANNED"}),
+		mockService.EXPECT().ShortToLong("abcDEF").Return(entity.MongoShort{ShortenID: -1,LongID:"",LongURL:"NOTFOUND"}),
 	)
 	re := RedirectController{mockService}
 	mux.HandleFunc("/", re.serveShort)
@@ -36,7 +39,8 @@ func Test_serveShort(t *testing.T) {
 	}{
 		{"Normal", args{"5lJ4Vc"}, "https://www.baidu.com/", http.StatusFound},
 		{"Banned", args{"sdIMYI"}, hostURL + "/static/banned.html", http.StatusFound},
-		{"NoneExisting", args{"$$$$$$"}, hostURL + "/static/error.html", http.StatusFound},
+		{"NoneExisting", args{"abcDEF"}, hostURL + "/static/error.html", http.StatusFound},
+		{"Invalid", args{"$$$$$$"}, hostURL + "/static/error.html", http.StatusFound},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

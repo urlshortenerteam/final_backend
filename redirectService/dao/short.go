@@ -6,7 +6,7 @@ import (
 	"time"
 	"strconv"
 	"github.com/ao7777/redirectService/entity"
-	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/go-sql-driver/mysql" //init mysql
 	"github.com/joho/godotenv"
 	"github.com/patrickmn/go-cache"
 	log "github.com/sirupsen/logrus"
@@ -23,16 +23,11 @@ const maxCacheSize int = 50
 
 // ShortDAO implementation of DAO, Init before use
 type ShortDAO struct {
-	entity.ShortUrl
+	entity.ShortURL
 	db    *sql.DB
 	cache *cache.Cache
 }
 
-// MongoShort structure for MongoDB
-type MongoShort struct {
-	ShortenID int64  `bson:"shortenId" json:"shortenId"`
-	LongURL   string `bson:"longUrl" json:"longUrl"`
-}
 
 func init() {
 	// 日志格式化为 JSON 而不是默认的 ASCII
@@ -63,9 +58,9 @@ func (s *ShortDAO) InitShortDAO() error {
 }
 
 //ByID get a ShortUrl entity by its id
-func (s ShortDAO) ByID(id int) (e entity.ShortUrl, err error) {
+func (s ShortDAO) ByID(id int) (e entity.ShortURL, err error) {
 	if x, found := s.cache.Get(strconv.Itoa(id)); found {
-		return x.(entity.ShortUrl), nil
+		return x.(entity.ShortURL), nil
 	}
 	if s.db == nil {
 		panic("UNINITIALIZED.")
@@ -88,7 +83,7 @@ func (s ShortDAO) ByID(id int) (e entity.ShortUrl, err error) {
 	}
 	defer session.Close()
 	c := session.DB("url").C("shortener")
-	var results []MongoShort
+	var results []entity.MongoShort
 	log.WithFields(log.Fields{
 		"id": e.ID,
 	}).Info("Start querying MongoDB.")
@@ -97,11 +92,11 @@ func (s ShortDAO) ByID(id int) (e entity.ShortUrl, err error) {
 		return e, err
 	}
 	for _, record := range results {
-		e.LongUrl = append(e.LongUrl, record.LongURL)
+		e.LongURLs = append(e.LongURLs, record)
 	}
 	log.WithFields(log.Fields{
 		"id":       e.ID,
-		"longUrl":  e.LongUrl,
+		"longUrl":  e.LongURLs,
 		"shortUrl": e.Short,
 	}).Info("Fetched Item successfully.")
 	if s.cache.ItemCount() <= maxCacheSize {
@@ -111,9 +106,9 @@ func (s ShortDAO) ByID(id int) (e entity.ShortUrl, err error) {
 }
 
 //ByShortURL get ShortUrl entity by short
-func (s ShortDAO) ByShortURL(shortURL string) (e entity.ShortUrl, err error) {
+func (s ShortDAO) ByShortURL(shortURL string) (e entity.ShortURL, err error) {
 		if x, found := s.cache.Get(shortURL); found {
-		return x.(entity.ShortUrl), nil
+		return x.(entity.ShortURL), nil
 	}
 	if s.db == nil {
 		panic("UNINITIALIZED MySQL connection.")
@@ -128,7 +123,7 @@ func (s ShortDAO) ByShortURL(shortURL string) (e entity.ShortUrl, err error) {
 		return e, err
 	}
 	if err == sql.ErrNoRows {
-		e.LongUrl = append(e.LongUrl, "NOTFOUND")
+		e.LongURLs = append(e.LongURLs, entity.MongoShort{ShortenID:-1,LongID: "",LongURL: "NOTFOUND"})
 		return e, err
 	}
 
@@ -138,17 +133,17 @@ func (s ShortDAO) ByShortURL(shortURL string) (e entity.ShortUrl, err error) {
 	}
 	defer session.Close()
 	c := session.DB("url").C("shortener")
-	var results []MongoShort
+	var results []entity.MongoShort
 	err = c.Find(bson.M{"shortenId": e.ID}).All(&results)
 	if err != nil {
 		return e, err
 	}
 	for _, record := range results {
-		e.LongUrl = append(e.LongUrl, record.LongURL)
+		e.LongURLs = append(e.LongURLs, record)
 	}
 	log.WithFields(log.Fields{
 		"id":       e.ID,
-		"longUrl":  e.LongUrl,
+		"longUrl":  e.LongURLs,
 		"shortUrl": e.Short,
 	}).Info("Fetched Item successfully.")
 		if s.cache.ItemCount() <= maxCacheSize {

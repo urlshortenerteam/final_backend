@@ -34,10 +34,10 @@ func (m *MockIShortUrl) EXPECT() *MockIShortUrlMockRecorder {
 }
 
 // ByID mocks base method
-func (m *MockIShortUrl) ByID(arg0 int) (entity.ShortUrl, error) {
+func (m *MockIShortUrl) ByID(arg0 int) (entity.ShortURL, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "ByID", arg0)
-        ret0, _ := ret[0].(entity.ShortUrl)
+        ret0, _ := ret[0].(entity.ShortURL)
         ret1, _ := ret[1].(error)
         return ret0, ret1
 }
@@ -49,10 +49,10 @@ func (mr *MockIShortUrlMockRecorder) ByID(arg0 interface{}) *gomock.Call {
 }
 
 // ByShortURL mocks base method
-func (m *MockIShortUrl) ByShortURL(arg0 string) (entity.ShortUrl, error) {
+func (m *MockIShortUrl) ByShortURL(arg0 string) (entity.ShortURL, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "ByShortURL", arg0)
-        ret0, _ := ret[0].(entity.ShortUrl)
+        ret0, _ := ret[0].(entity.ShortURL)
         ret1, _ := ret[1].(error)
         return ret0, ret1
 }

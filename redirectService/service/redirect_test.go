@@ -16,14 +16,24 @@ func TestRedirect_ShortToLong(t *testing.T) {
 		shortURL string
 	}
 	var re Redirect
+	mongo1,mongo2,mongo3:=[]entity.MongoShort{
+		{ShortenID:0,LongID: "",LongURL: "https://www.baidu.com/"},
+		{ShortenID:1,LongID: "",LongURL: "BANNED"},
+		{ShortenID:2,LongID: "",LongURL: "LIFT"},
+	},[]entity.MongoShort{
+		{ShortenID:0,LongID: "",LongURL: "https://www.baidu.com/"},
+		{ShortenID:1,LongID: "",LongURL: "BANNED"},
+	},[]entity.MongoShort{
+		{ShortenID:0,LongID: "",LongURL: "https://www.baidu.com/"},
+	}
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
 	mockDAO := mock_dao.NewMockIShortUrl(mockCtrl)
 	gomock.InOrder(
 		mockDAO.EXPECT().InitShortDAO(),
-		mockDAO.EXPECT().ByShortURL("5lJ4Vc").Return(entity.ShortUrl{1, "5lJ4Vc", []string{"https://www.baidu.com/", "BANNED", "LIFT"}}, nil),
-		mockDAO.EXPECT().ByShortURL("sdIMYI").Return(entity.ShortUrl{2, "sdIMYI", []string{"https://www.baidu.com/", "BANNED"}}, nil),
-		mockDAO.EXPECT().ByShortURL("$$$$$$").Return(entity.ShortUrl{1, "5lJ4Vc", []string{"https://www.baidu.com/"}}, sql.ErrNoRows),
+		mockDAO.EXPECT().ByShortURL("5lJ4Vc").Return(entity.ShortURL{ID:1, Short: "5lJ4Vc",LongURLs:  mongo1}, nil),
+		mockDAO.EXPECT().ByShortURL("sdIMYI").Return(entity.ShortURL{ID:2, Short: "sdIMYI",LongURLs:  mongo2}, nil),
+		mockDAO.EXPECT().ByShortURL("$$$$$$").Return(entity.ShortURL{ID:1, Short: "5lJ4Vc",LongURLs:  mongo3}, sql.ErrNoRows),
 		mockDAO.EXPECT().Destr(),
 	)
 	re.Init(mockDAO)
@@ -40,7 +50,7 @@ func TestRedirect_ShortToLong(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if gotLongURL := tt.r.ShortToLong(tt.args.shortURL); gotLongURL != tt.wantLongURL {
+			if gotLongURL := tt.r.ShortToLong(tt.args.shortURL); gotLongURL.LongURL != tt.wantLongURL {
 				t.Errorf("Redirect.ShortToLong() = %v, want %v", gotLongURL, tt.wantLongURL)
 			}
 		})

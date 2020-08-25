@@ -63,7 +63,7 @@ func TestByShortURL(t *testing.T) {
 		t.Error("Incorrect entity queried.")
 	}
 	e, err = shortDAO.ByShortURL("$$$$$$")
-	if err != sql.ErrNoRows || e.LongUrl[0] != "NOTFOUND" {
+	if err != sql.ErrNoRows || e.LongURLs[0].LongURL != "NOTFOUND" {
 		t.Error("Incorrect entity queried.")
 	}
 }

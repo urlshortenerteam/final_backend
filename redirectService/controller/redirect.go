@@ -17,7 +17,7 @@ type RedirectController struct {
 const hostURL string = "http://rv-s.cn"
 
 func (re *RedirectController) getLong(url string) (longURL string) {
-	longURL = re.shortService.ShortToLong(url)
+	longURL = re.shortService.ShortToLong(url).LongURL
 	distURL, ban, notFound := longURL, hostURL+"/static/banned.html", hostURL+"/static/error.html"
 	if longURL != "BANNED" && longURL != "NOTFOUND" {
 		longURL = distURL

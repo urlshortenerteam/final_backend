@@ -4,8 +4,8 @@ import(
 )
 
 type IShortUrl interface{
-	ByID(id int) (e entity.ShortUrl,err error)
+	ByID(id int) (e entity.ShortURL,err error)
 	InitShortDAO() error
 	Destr()
-	ByShortURL(shortUrl string) (e entity.ShortUrl, err error)
+	ByShortURL(shortUrl string) (e entity.ShortURL, err error)
 }
