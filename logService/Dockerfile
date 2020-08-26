@@ -1,4 +1,4 @@
-FROM hub-mirror.c.163.com/library/golang:1.15 AS builder
+FROM docker.mirrors.ustc.edu.cn/library/golang:1.15 AS builder
 
 # 为我们的镜像设置必要的环境变量
 ENV GO111MODULE=on \
