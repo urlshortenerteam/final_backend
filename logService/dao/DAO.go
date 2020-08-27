@@ -163,6 +163,27 @@ func (l *LogDAO) UpdateShorten(ID uint64) (err error) {
 	return
 }
 
+//ByShortenID get data by shortenID
+func (l LogDAO) ByShortenID(shortenID uint64) (owner uint64, err error){
+	if l.db == nil {
+		panic("UNINITIALIZED MySQL connection.")
+	}
+	stmt, err := l.db.Prepare("SELECT creator_id FROM shorten_log WHERE id = ?")
+	if err != nil {
+		return 0, err
+	}
+	defer stmt.Close()
+	err = stmt.QueryRow(shortenID).Scan(&owner)
+	if err != sql.ErrNoRows && err != nil {
+		return 0, err
+	}
+	if err == sql.ErrNoRows {
+		return 0, err
+	}
+
+	return owner, nil
+}
+
 //ByShortURL get data by shortURL
 func (l LogDAO) ByShortURL(shortURL string) (shortenID uint64, owner uint64, shortenerID string, err error) {
 	if l.db == nil {

@@ -1,73 +1,130 @@
 package controller
 
 import (
-	"net/http"
-	"sync"
+	// "net/http"
+	// "sync"
 
 	log "github.com/sirupsen/logrus"
 	isrv "github.com/violedo/logService/interface/service"
-
-	//"encoding/json"
-	"regexp"
+	"github.com/confluentinc/confluent-kafka-go/kafka"
+	"encoding/json"
+	"github.com/joho/godotenv"
+	"os"
+	"os/signal"
+	"syscall"
+	// "regexp"
 	"strings"
 )
 
 //VisitLogController the visitLog controller
 type VisitLogController struct {
 	visitLogService isrv.ILogService
+	consumer *kafka.Consumer
 }
 
-type postBody struct {
-	Device      bool   `json:"device"`
-	OwnerID     uint64 `json:"ownerId"`
-	ShortenID   uint64 `json:"shortenId"`
-	IP          string `json:"ip"`
-	ShortenerID string `json:"shortenerId"`
+// type postBody struct {
+// 	Device      bool   `json:"device"`
+// 	OwnerID     uint64 `json:"ownerId"`
+// 	ShortenID   uint64 `json:"shortenId"`
+// 	IP          string `json:"ip"`
+// 	ShortenerID string `json:"shortenerId"`
+// }
+
+func init() {
+	if err := godotenv.Load(os.Getenv("TEST_DIR") + "credentials.env"); err != nil {
+		log.Fatal(err)
+	}
 }
 
 //Init initialization of the controller
-func (v *VisitLogController) Init(wg *sync.WaitGroup, visitLogService isrv.ILogService) *http.Server {
-	srv := &http.Server{Addr: ":9092"}
+func (v *VisitLogController) Init(visitLogService isrv.ILogService) {
+	// srv := &http.Server{Addr: ":9092"}
 	v.visitLogService = visitLogService
 	v.visitLogService.InitService()
-	http.HandleFunc("/visitLog", v.serveLog) // 设置访问的路由
-	go func() {
-		defer wg.Done() // let main know we are done cleaning up
 
-		// always returns error. ErrServerClosed on graceful close
-		if err := srv.ListenAndServe(); err != http.ErrServerClosed {
-			// unexpected error. port in use?
-			log.Fatalf("ListenAndServe(): %v", err)
-		}
-	}()
-	// returning reference so caller can call Shutdown()
-	return srv
+	var err error
+	v.consumer,err = kafka.NewConsumer(&kafka.ConfigMap{
+		"bootstrap.servers": os.Getenv("BOOTSTRAP_SERVERS"),
+		"group.id":          os.Getenv("KAFKA_GROUP"),
+		"auto.offset.reset": "earliest"})
+	if err != nil {
+		log.Fatal(err)
+	}
+	topic :=[]string{os.Getenv("KAFKA_TOPIC")}
+	err = v.consumer.SubscribeTopics(topic, nil)
+
 }
 
-func (v *VisitLogController) serveLog(w http.ResponseWriter, r *http.Request) {
+//ServeLog gets message from kafka and handle it
+func (v *VisitLogController) ServeLog() {
 	// decoder := json.NewDecoder(r.Body)
 	// var params postBody
 	// decoder.Decode(&params)
 	// v.visitLogService.Log(params.ShortenerID,params.IP,params.Device,params.OwnerID,params.ShortenID)
-	regPath := regexp.MustCompile(`[A-Za-z0-9]{6}`)
-	log.Info(r.URL.Path[1:])
-	if regPath.MatchString(r.URL.Path[1:]) == false {
-		return
+
+	// regPath := regexp.MustCompile(`[A-Za-z0-9]{6}`)
+	// log.Info(r.URL.Path[1:])
+	// if regPath.MatchString(r.URL.Path[1:]) == false {
+	// 	return
+	// }
+
+	type logMessage struct{
+		ShortenID uint64 `json:"shortenId`
+		LongID string `json:"longId"`
+		LongURL string `json:"longUrl"`
+		IP string `json:"ip"`
+		ShortURL string `json:"shortUrl"`
+		UserAgent string `json:"User-Agent"`
+	}
+	var message logMessage
+	sigchan := make(chan os.Signal, 1)
+	signal.Notify(sigchan, syscall.SIGINT, syscall.SIGTERM)
+	run := true
+	for run == true {
+		select {
+		case sig := <-sigchan:
+			log.Info("Caught signal %v: terminating\n", sig)
+			run = false
+		default:
+			ev := v.consumer.Poll(100)
+			if ev == nil {
+				continue
+			}
+
+			switch e := ev.(type) {
+			case *kafka.Message:
+				log.Info("%% Message on %s:\n%s\n",
+					e.TopicPartition, string(e.Value))
+				json.Unmarshal(e.Value,&message)
+				var device bool
+				if strings.Index(message.UserAgent, "Windows") > -1 || strings.Index(message.UserAgent, "Linux") > -1 || strings.Index(message.UserAgent, "Mac") > -1 {
+					device = false
+				} else {
+					device = true
+				}
+				v.visitLogService.Log(message.ShortenID,message.LongID, message.IP, device)
+			case kafka.Error:
+				// Errors should generally be considered
+				// informational, the client will try to
+				// automatically recover.
+				// But in this example we choose to terminate
+				// the application if all brokers are down.
+				log.Info("%% Error: %v: %v\n", e.Code(), e)
+				if e.Code() == kafka.ErrAllBrokersDown {
+					run = false
+				}
+			default:
+				log.Info("Ignored %v\n", e)
+			}
+		}
 	}
 
-	var ip string
-	forwarded := r.Header.Get("X-FORWARDED-FOR")
-	if forwarded != "" {
-		ip = forwarded
-	}
-	ip = r.RemoteAddr
-	log.Info(ip)
-	userAgent := r.UserAgent()
-	var device bool
-	if strings.Index(userAgent, "Windows") > -1 || strings.Index(userAgent, "Linux") > -1 || strings.Index(userAgent, "Mac") > -1 {
-		device = false
-	} else {
-		device = true
-	}
-	v.visitLogService.Log(r.URL.Path[1:], ip, device)
+	log.Info("Close consumer\n")
+	v.consumer.Close()
+
+}
+
+//Destr destroys controller
+func (v *VisitLogController) Destr(){
+	v.visitLogService.Destr()
 }
