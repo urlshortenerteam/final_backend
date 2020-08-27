@@ -180,7 +180,8 @@ public class StatController {
     public JSONObject getReal(@RequestHeader("Authorization") String jwt) throws Exception {
         Claims c = JwtUtil.parseJWT(jwt);
         long id = Long.parseLong(c.get("id").toString());
-        List<VisitLog> visitLogList = visitLogService.findAllOrderByVisitTime().get();
+        List<VisitLog> visitLogList = visitLogService.findTop5ByVisitTime().get();
+        System.out.println(visitLogList);
         JSONArray logs = new JSONArray();
         for (VisitLog visitLog : visitLogList) {
             Shortener shortener = shortenerService.findById(visitLog.getShortenerId()).get();
@@ -195,7 +196,6 @@ public class StatController {
             tmp.put("source", "Browser");
             tmp.put("time", simpleDateFormat.format(visitLog.getVisitTime()));
             logs.add(tmp);
-            if (logs.size() >= 5) break;
         }
         JSONObject res = new JSONObject();
         JSONObject data = new JSONObject();

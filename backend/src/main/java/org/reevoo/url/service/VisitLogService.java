@@ -6,5 +6,5 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public interface VisitLogService {
-    CompletableFuture<List<VisitLog>> findAllOrderByVisitTime();
+    CompletableFuture<List<VisitLog>> findTop5ByVisitTime();
 }

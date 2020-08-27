@@ -18,8 +18,8 @@ public class VisitLogDaoImpl implements VisitLogDao {
     private VisitLogRepository visitLogRepository;
 
     @Override
-    public List<VisitLog> findAllOrderByVisitTime() {
-        return visitLogRepository.findAllOrderByVisitTime();
+    public List<VisitLog> findTop5ByVisitTime() {
+        return visitLogRepository.findTop5ByOrderByVisitTimeDesc();
     }
 
     @Override

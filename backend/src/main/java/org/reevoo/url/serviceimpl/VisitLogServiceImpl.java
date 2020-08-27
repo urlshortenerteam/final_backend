@@ -17,7 +17,7 @@ public class VisitLogServiceImpl implements VisitLogService {
 
     @Override
     @Async
-    public CompletableFuture<List<VisitLog>> findAllOrderByVisitTime() {
-        return CompletableFuture.completedFuture(visitLogDao.findAllOrderByVisitTime());
+    public CompletableFuture<List<VisitLog>> findTop5ByVisitTime() {
+        return CompletableFuture.completedFuture(visitLogDao.findTop5ByVisitTime());
     }
 }
