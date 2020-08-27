@@ -73,6 +73,9 @@ jobs:
       with:
         envkey_MYSQL_URL: ${{secrets.MYSQL_URL}}
         envkey_MONGO_URL: ${{secrets.MONGO_URL}}
+        envkey_BOOTSTRAP_SERVERS=localhost:9092
+        envkey_KAFKA_GROUP=mygroup
+        envkey_KAFKA_TOPIC=visitLog
         file_name: logService/credentials.env
     - name: Run Go testing
       working-directory: logService
