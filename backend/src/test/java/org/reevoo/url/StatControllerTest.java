@@ -271,7 +271,8 @@ public class StatControllerTest extends ApplicationTests {
         List<VisitLog> visitLogList = new ArrayList<>();
         visitLog.setVisitTime(new Date());
         for (int i = 0; i < 6; i++) visitLogList.add(visitLog);
-        when(visitLogRepository.findAllOrderByVisitTime()).thenReturn(visitLogList);
+        Pageable pageable = PageRequest.of(0, 10);
+        when(visitLogRepository.findOrderByVisitTimeDesc(pageable)).thenReturn(visitLogList);
         Shortener shortener = new Shortener();
         shortener.setShortenId(1);
         shortener.setLongUrl("https://www.baidu.com/");
