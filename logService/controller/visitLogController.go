@@ -83,7 +83,9 @@ func (v *VisitLogController) ServeLog() {
 	for run == true {
 		select {
 		case sig := <-sigchan:
-			log.Info("Caught signal %v: terminating\n", sig)
+			log.WithFields(log.Fields{
+				"Signal": sig,
+			}).Info("Caught signal terminating.")
 			run = false
 		default:
 			ev := v.consumer.Poll(100)
@@ -93,8 +95,10 @@ func (v *VisitLogController) ServeLog() {
 
 			switch e := ev.(type) {
 			case *kafka.Message:
-				log.Info("%% Message on %s:\n%s\n",
-					e.TopicPartition, string(e.Value))
+				log.WithFields(log.Fields{
+					"topicPartition": e.TopicPartition,
+					"messageValue":string(e.Value),
+				}).Info("Kafka Message.")
 				json.Unmarshal(e.Value,&message)
 				var device bool
 				if strings.Index(message.UserAgent, "Windows") > -1 || strings.Index(message.UserAgent, "Linux") > -1 || strings.Index(message.UserAgent, "Mac") > -1 {
@@ -109,12 +113,18 @@ func (v *VisitLogController) ServeLog() {
 				// automatically recover.
 				// But in this example we choose to terminate
 				// the application if all brokers are down.
+				log.WithFields(log.Fields{
+					"code": e.Code(),
+					"error": e,
+				}).Info("Kafka Error.")
 				log.Info("%% Error: %v: %v\n", e.Code(), e)
 				if e.Code() == kafka.ErrAllBrokersDown {
 					run = false
 				}
 			default:
-				log.Info("Ignored %v\n", e)
+				log.WithFields(log.Fields{
+					"type": e,
+				}).Info("Kafka Ignored.")
 			}
 		}
 	}
