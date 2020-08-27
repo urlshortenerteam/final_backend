@@ -4,6 +4,7 @@ import org.reevoo.url.dao.VisitLogDao;
 import org.reevoo.url.entity.VisitLog;
 import org.reevoo.url.repository.VisitLogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,8 +19,8 @@ public class VisitLogDaoImpl implements VisitLogDao {
     private VisitLogRepository visitLogRepository;
 
     @Override
-    public List<VisitLog> findTop5ByVisitTime() {
-        return visitLogRepository.findTop5ByOrderByVisitTimeDesc();
+    public List<VisitLog> findOrderByVisitTime(Pageable pageable) {
+        return visitLogRepository.findOrderByVisitTimeDesc(pageable);
     }
 
     @Override
