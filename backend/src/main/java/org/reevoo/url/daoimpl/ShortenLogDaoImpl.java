@@ -77,12 +77,11 @@ public class ShortenLogDaoImpl implements ShortenLogDao {
         shortenLog.setCreateTime(new Date());
         shortenLog.setVisitCount(0);
         while (true) {
-            try {
-                shortenLog.setShortUrl(long2short(longUrls.get((int) (Math.random() * longUrls.size()))));
+            String shortUrl = long2short(longUrls.get((int) (Math.random() * longUrls.size())));
+            if (shortenLogRepository.findByShortUrl(shortUrl) == null) {
+                shortenLog.setShortUrl(shortUrl);
                 shortenLogRepository.save(shortenLog);
                 break;
-            } catch (ConstraintViolationException e) {
-                e.printStackTrace();
             }
         }
         for (String longUrl : longUrls) {
@@ -103,12 +102,11 @@ public class ShortenLogDaoImpl implements ShortenLogDao {
             shortenLog.setCreateTime(new Date());
             shortenLog.setVisitCount(0);
             while (true) {
-                try {
-                    shortenLog.setShortUrl(long2short(longUrl));
+                String shortUrl = long2short(longUrl);
+                if (shortenLogRepository.findByShortUrl(shortUrl) == null) {
+                    shortenLog.setShortUrl(shortUrl);
                     shortenLogRepository.save(shortenLog);
                     break;
-                } catch (ConstraintViolationException e) {
-                    e.printStackTrace();
                 }
             }
             shortUrls.add(shortenLog.getShortUrl());
