@@ -117,7 +117,6 @@ func (v *VisitLogController) ServeLog() {
 					"code": e.Code(),
 					"error": e,
 				}).Info("Kafka Error.")
-				log.Info("%% Error: %v: %v\n", e.Code(), e)
 				if e.Code() == kafka.ErrAllBrokersDown {
 					run = false
 				}
