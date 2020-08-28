@@ -26,4 +26,4 @@ COPY --from=builder /build/log_Service /
 # 需要运行的命令
 ENTRYPOINT ["/log_Service"]
 
-EXPOSE 9090
+EXPOSE 9092
