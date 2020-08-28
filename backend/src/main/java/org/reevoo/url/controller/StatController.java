@@ -182,8 +182,8 @@ public class StatController {
         long id = Long.parseLong(c.get("id").toString());
 
         JSONArray logs = new JSONArray();
-        int pageCount=0, pageSize=10;
-        while (logs.size()<5){
+        int pageCount = 0, pageSize = 10;
+        while (logs.size() < 5) {
             Pageable pageable = PageRequest.of(pageCount, pageSize);
             List<VisitLog> visitLogList = visitLogService.findOrderByVisitTimePageable(pageable).get();
             for (VisitLog visitLog : visitLogList) {
@@ -196,11 +196,10 @@ public class StatController {
                 tmp.put("shortUrl", shortenLog.getShortUrl());
                 tmp.put("long", shortener.getLongUrl());
                 tmp.put("ip", visitLog.getIp());
-                tmp.put("source", "Browser");
+                tmp.put("source", visitLog.getDevice() ? "移动端" : "PC端");
                 tmp.put("time", simpleDateFormat.format(visitLog.getVisitTime()));
                 logs.add(tmp);
-                if (logs.size()>4)
-                    break;
+                if (logs.size() > 4) break;
             }
             ++pageCount;
         }

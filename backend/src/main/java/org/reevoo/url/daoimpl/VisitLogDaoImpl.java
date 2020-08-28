@@ -19,12 +19,12 @@ public class VisitLogDaoImpl implements VisitLogDao {
     private VisitLogRepository visitLogRepository;
 
     @Override
-    public List<VisitLog> findOrderByVisitTime(Pageable pageable) {
-        return visitLogRepository.findOrderByVisitTimeDesc(pageable);
+    public List<VisitLog> findByShortenerId(String shortenerId) {
+        return visitLogRepository.findByShortenerId(shortenerId);
     }
 
     @Override
-    public List<VisitLog> findByShortenerId(String shortenerId) {
-        return visitLogRepository.findByShortenerId(shortenerId);
+    public List<VisitLog> findOrderByVisitTime(Pageable pageable) {
+        return visitLogRepository.findOrderByVisitTimeDesc(pageable);
     }
 }

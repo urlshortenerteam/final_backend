@@ -270,6 +270,7 @@ public class StatControllerTest extends ApplicationTests {
         visitLog.setShortenerId("000000000000000000000000");
         List<VisitLog> visitLogList = new ArrayList<>();
         visitLog.setVisitTime(new Date());
+        visitLog.setDevice(false);
         for (int i = 0; i < 6; i++) visitLogList.add(visitLog);
         Pageable pageable = PageRequest.of(0, 10);
         when(visitLogRepository.findOrderByVisitTimeDesc(pageable)).thenReturn(visitLogList);
