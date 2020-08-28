@@ -22,7 +22,6 @@ FROM scratch
 
 # 从builder镜像中把/dist/log_Service 拷贝到当前目录
 COPY --from=builder /build/log_Service /
-COPY credentials.env .
 
 # 需要运行的命令
 ENTRYPOINT ["/log_Service"]

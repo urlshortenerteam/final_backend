@@ -4,6 +4,7 @@ import org.reevoo.url.service.VisitLogService;
 import org.reevoo.url.dao.VisitLogDao;
 import org.reevoo.url.entity.VisitLog;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +18,7 @@ public class VisitLogServiceImpl implements VisitLogService {
 
     @Override
     @Async
-    public CompletableFuture<List<VisitLog>> findAllOrderByVisitTime() {
-        return CompletableFuture.completedFuture(visitLogDao.findAllOrderByVisitTime());
+    public CompletableFuture<List<VisitLog>> findOrderByVisitTimePageable(Pageable pageable) {
+        return CompletableFuture.completedFuture(visitLogDao.findOrderByVisitTime(pageable));
     }
 }
