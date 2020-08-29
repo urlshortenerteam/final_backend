@@ -23,13 +23,10 @@ services:
 
   redirect:
     image: reevoo2020/redirect-service:1.5.3
-    container_name: redirect
     hostname: redirect
     restart: always
     volumes:
       - ./credentials.env:/credentials.env
-    ports:
-      - "9093:9090"
     logging:
       driver: syslog
       options:

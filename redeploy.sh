@@ -4,4 +4,4 @@ docker rmi -f $(docker images -q)
 docker system prune -f
 docker volume rm $(docker volume ls -qf dangling=true)
 docker network rm $(docker network ls -q)
-docker-compose up -d --scale whoami=2
+docker-compose up -d --scale redirect=3
