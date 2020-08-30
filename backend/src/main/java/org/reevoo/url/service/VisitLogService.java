@@ -7,5 +7,5 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public interface VisitLogService {
-    CompletableFuture<List<VisitLog>> findOrderByVisitTimePageable(Pageable pageable);
+    CompletableFuture<List<VisitLog>> findTop5ByShortenerIdOrderByVisitTimeDesc(List<String> shorteners);
 }

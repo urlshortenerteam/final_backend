@@ -266,21 +266,35 @@ public class StatControllerTest extends ApplicationTests {
 
     @Test
     public void getReal() throws Exception {
-        VisitLog visitLog = new VisitLog();
-        visitLog.setShortenerId("000000000000000000000000");
-        List<VisitLog> visitLogList = new ArrayList<>();
-        visitLog.setVisitTime(new Date());
-        visitLog.setDevice(false);
-        for (int i = 0; i < 6; i++) visitLogList.add(visitLog);
-        Pageable pageable = PageRequest.of(0, 10);
-        when(visitLogRepository.findOrderByVisitTimeDesc(pageable)).thenReturn(visitLogList);
+
         Shortener shortener = new Shortener();
         shortener.setShortenId(1);
         shortener.setLongUrl("https://www.baidu.com/");
-        when(shortenerRepository.findById("000000000000000000000000")).thenReturn(Optional.of(shortener));
+        shortener.setId("ShortenerId");
+        when(shortenerRepository.findById("ShortenerId")).thenReturn(Optional.of(shortener));
         ShortenLog shortenLog = new ShortenLog();
         shortenLog.setCreatorId(1);
+        shortenLog.setId(1);
         when(shortenLogRepository.findById((long) 1)).thenReturn(Optional.of(shortenLog));
+
+        VisitLog visitLog = new VisitLog();
+        visitLog.setShortenerId("ShortenerId");
+        List<VisitLog> visitLogList = new ArrayList<>();
+        visitLog.setVisitTime(new Date());
+        for (int i = 0; i < 5; i++) visitLogList.add(visitLog);
+        List<String> strings=new ArrayList<>();
+        strings.add("ShortenerId");
+        when(visitLogRepository.findTop5ByShortenerIdInOrderByVisitTimeDesc(strings)).thenReturn(visitLogList);
+
+        List<Shortener> shorteners = new ArrayList<>();
+        shorteners.add(shortener);
+        List<Long> shortenId = new ArrayList<>();
+        shortenId.add((long) 1);
+        when(shortenerRepository.findByShortenIdIn(shortenId)).thenReturn(shorteners);
+
+        List<ShortenLog> shortenLogs = new ArrayList<>();
+        shortenLogs.add(shortenLog);
+        when(shortenLogRepository.findByCreatorId((long) 1)).thenReturn(shortenLogs);
 
         String res = mockMvc.perform(get("/getReal").header("Authorization", JwtUtil.sign(1, "ao7777", 0, false)).contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();

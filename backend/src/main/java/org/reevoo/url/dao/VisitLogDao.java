@@ -9,5 +9,5 @@ import java.util.List;
 public interface VisitLogDao {
     List<VisitLog> findByShortenerId(String shortenerId);
 
-    List<VisitLog> findOrderByVisitTime(Pageable pageable);
+    List<VisitLog> findTop5ByShortenerIdOrderByVisitTimeDesc(List<String> shortenerId);
 }
