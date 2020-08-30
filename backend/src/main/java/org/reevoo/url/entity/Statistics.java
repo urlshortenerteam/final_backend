@@ -91,8 +91,6 @@ public class Statistics {
     public void addAreaDistr(String ip) throws Exception {
         boolean isIpAddress = Util.isIpAddress(ip);
         if (!isIpAddress) return;
-//        long ipLong = Util.ip2long(ip);
-//        String strIp = Util.long2ip(ipLong);
         DbConfig config = new DbConfig();
         String dbfile = System.getenv("IP2REGION");
         dbfile = java.net.URLDecoder.decode(dbfile, "utf-8");

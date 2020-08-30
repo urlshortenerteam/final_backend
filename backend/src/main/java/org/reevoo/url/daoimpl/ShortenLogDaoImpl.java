@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 
-import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -182,19 +181,17 @@ public class ShortenLogDaoImpl implements ShortenLogDao {
     }
 
     @Override
+    public List<Shortener> getUserShorteners(long id) {
+        List<ShortenLog> shortenLogList = shortenLogRepository.findByCreatorId(id);
+        List<Long> shortenLogID = new ArrayList<>();
+        for (ShortenLog s : shortenLogList) shortenLogID.add(s.getId());
+        return shortenerRepository.findByShortenIdIn(shortenLogID);
+    }
+
+    @Override
     public long visitSum() {
         Long res = shortenLogRepository.visitSum();
         if (res == null) return 0;
         return res;
-    }
-
-    @Override
-    public List<Shortener> getUserShorteners(long id){
-        List<ShortenLog> shortenLogList = shortenLogRepository.findByCreatorId(id);
-        List<Long> shortenLogID=new ArrayList<>();
-        for (ShortenLog s:shortenLogList){
-            shortenLogID.add(s.getId());
-        }
-        return shortenerRepository.findByShortenIdIn(shortenLogID);
     }
 }
