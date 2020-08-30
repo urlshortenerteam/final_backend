@@ -187,4 +187,14 @@ public class ShortenLogDaoImpl implements ShortenLogDao {
         if (res == null) return 0;
         return res;
     }
+
+    @Override
+    public List<Shortener> getUserShorteners(long id){
+        List<ShortenLog> shortenLogList = shortenLogRepository.findByCreatorId(id);
+        List<Long> shortenLogID=new ArrayList<>();
+        for (ShortenLog s:shortenLogList){
+            shortenLogID.add(s.getId());
+        }
+        return shortenerRepository.findByShortenIdIn(shortenLogID);
+    }
 }
