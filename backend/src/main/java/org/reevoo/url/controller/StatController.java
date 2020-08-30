@@ -182,7 +182,7 @@ public class StatController {
         long id = Long.parseLong(c.get("id").toString());
 
         JSONArray logs = new JSONArray();
-        List<String> shorteners=statService.getUserShorteners(id).get();
+        List<String> shorteners = statService.getUserShorteners(id).get();
         List<VisitLog> visitLogList = visitLogService.findTop5ByShortenerIdOrderByVisitTimeDesc(shorteners).get();
 
         for (VisitLog visitLog : visitLogList) {

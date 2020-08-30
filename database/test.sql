@@ -1,15 +1,12 @@
 /*
 Navicat MySQL Data Transfer
-
 Source Server         : reevoo
 Source Server Version : 80020
 Source Host           : reevoo-test-beta.crvfzsr4389e.us-east-1.rds.amazonaws.com:3306
 Source Database       : test
-
 Target Server Type    : MYSQL
 Target Server Version : 80020
 File Encoding         : 65001
-
 Date: 2020-08-10 10:09:49
 */
 

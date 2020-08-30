@@ -182,10 +182,10 @@ public class StatServiceImpl implements StatService {
 
     @Override
     @Async
-    public CompletableFuture<List<String>> getUserShorteners(long id){
+    public CompletableFuture<List<String>> getUserShorteners(long id) {
         List<Shortener> shorteners = shortenLogDao.getUserShorteners(id);
-        List<String> ans=new ArrayList<>();
-        for (Shortener s:shorteners){
+        List<String> ans = new ArrayList<>();
+        for (Shortener s : shorteners) {
             if (s.getLongUrl().equals("BANNED"))
                 continue;
             ans.add(s.getId());
