@@ -1,16 +1,13 @@
 /*
 Navicat MySQL Data Transfer
-
 Source Server         : reevoo
 Source Server Version : 80020
 Source Host           : reevoo-test-beta.crvfzsr4389e.us-east-1.rds.amazonaws.com:3306
 Source Database       : test
-
 Target Server Type    : MYSQL
 Target Server Version : 80020
 File Encoding         : 65001
-
-Date: 2020-08-30 16:05:05
+Date: 2020-08-10 10:09:49
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -70,8 +67,5 @@ CREATE TABLE `visit_log` (
   `visit_time` datetime NOT NULL,
   `ip` varchar(15) NOT NULL,
   `device` tinyint NOT NULL,
-  `creator_id` bigint NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `creator_id` (`creator_id`),
-  CONSTRAINT `visit_log_ibfk_1` FOREIGN KEY (`creator_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
