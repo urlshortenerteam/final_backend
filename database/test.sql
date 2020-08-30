@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 80020
 File Encoding         : 65001
 
-Date: 2020-08-10 10:09:49
+Date: 2020-08-30 16:05:05
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -70,5 +70,8 @@ CREATE TABLE `visit_log` (
   `visit_time` datetime NOT NULL,
   `ip` varchar(15) NOT NULL,
   `device` tinyint NOT NULL,
-  PRIMARY KEY (`id`)
+  `creator_id` bigint NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `creator_id` (`creator_id`),
+  CONSTRAINT `visit_log_ibfk_1` FOREIGN KEY (`creator_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
