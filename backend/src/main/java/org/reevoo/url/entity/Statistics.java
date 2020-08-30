@@ -91,8 +91,6 @@ public class Statistics {
     public void addAreaDistr(String ip) throws Exception {
         boolean isIpAddress = Util.isIpAddress(ip);
         if (!isIpAddress) return;
-//        long ipLong = Util.ip2long(ip);
-//        String strIp = Util.long2ip(ipLong);
         DbConfig config = new DbConfig();
         String dbfile = System.getenv("IP2REGION");
         dbfile = java.net.URLDecoder.decode(dbfile, "utf-8");
@@ -103,7 +101,7 @@ public class Statistics {
             case "云南":
                 ++areaDistr[0].value;
                 break;
-            case "黑龙江":
+            case "黑龙":
                 ++areaDistr[1].value;
                 break;
             case "贵州":
@@ -130,7 +128,7 @@ public class Statistics {
             case "海南":
                 ++areaDistr[9].value;
                 break;
-            case "内蒙古":
+            case "内蒙":
                 ++areaDistr[10].value;
                 break;
             case "天津":

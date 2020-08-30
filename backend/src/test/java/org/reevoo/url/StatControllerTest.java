@@ -266,7 +266,6 @@ public class StatControllerTest extends ApplicationTests {
 
     @Test
     public void getReal() throws Exception {
-
         Shortener shortener = new Shortener();
         shortener.setShortenId(1);
         shortener.setLongUrl("https://www.baidu.com/");
@@ -284,7 +283,7 @@ public class StatControllerTest extends ApplicationTests {
         visitLog.setDevice(false);
         visitLog.setIp("0.0.0.0");
         for (int i = 0; i < 5; i++) visitLogList.add(visitLog);
-        List<String> strings=new ArrayList<>();
+        List<String> strings = new ArrayList<>();
         strings.add("ShortenerId");
         when(visitLogRepository.findTop5ByShortenerIdInOrderByVisitTimeDesc(strings)).thenReturn(visitLogList);
 
@@ -296,7 +295,7 @@ public class StatControllerTest extends ApplicationTests {
 
         List<ShortenLog> shortenLogs = new ArrayList<>();
         shortenLogs.add(shortenLog);
-        when(shortenLogRepository.findByCreatorId((long) 1)).thenReturn(shortenLogs);
+        when(shortenLogRepository.findByCreatorId(1)).thenReturn(shortenLogs);
 
         String res = mockMvc.perform(get("/getReal").header("Authorization", JwtUtil.sign(1, "ao7777", 0, false)).contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
