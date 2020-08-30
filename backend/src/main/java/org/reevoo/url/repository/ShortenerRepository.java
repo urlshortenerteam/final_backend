@@ -11,4 +11,6 @@ import java.util.List;
 public interface ShortenerRepository extends MongoRepository<Shortener, String> {
     @Query(value = "{'shortenId':?0}")
     List<Shortener> findByShortenId(long shortenId);
+
+    List<Shortener> findByShortenIdIn(List<Long> shortenId);
 }

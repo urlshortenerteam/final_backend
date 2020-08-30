@@ -22,4 +22,6 @@ public interface StatService {
     CompletableFuture<JSONObject> getStatPageable(long id, Pageable pageable);
 
     CompletableFuture<List<Users>> getUserStat();
+
+    CompletableFuture<List<String>> getUserShorteners(long id);
 }

@@ -18,7 +18,7 @@ public class VisitLogServiceImpl implements VisitLogService {
 
     @Override
     @Async
-    public CompletableFuture<List<VisitLog>> findOrderByVisitTimePageable(Pageable pageable) {
-        return CompletableFuture.completedFuture(visitLogDao.findOrderByVisitTime(pageable));
+    public CompletableFuture<List<VisitLog>> findTop5ByShortenerIdOrderByVisitTimeDesc(List<String> shorteners) {
+        return CompletableFuture.completedFuture(visitLogDao.findTop5ByShortenerIdOrderByVisitTimeDesc(shorteners));
     }
 }

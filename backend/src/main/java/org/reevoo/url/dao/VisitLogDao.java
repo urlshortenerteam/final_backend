@@ -9,4 +9,6 @@ public interface VisitLogDao {
     List<VisitLog> findOrderByVisitTime(Pageable pageable);
 
     List<VisitLog> findByShortenerId(String shortenerId);
+
+    List<VisitLog> findTop5ByShortenerIdOrderByVisitTimeDesc(List<String> shortenerId);
 }

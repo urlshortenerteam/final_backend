@@ -182,27 +182,20 @@ public class StatController {
         long id = Long.parseLong(c.get("id").toString());
 
         JSONArray logs = new JSONArray();
-        int pageCount=0, pageSize=10;
-        while (logs.size()<5){
-            Pageable pageable = PageRequest.of(pageCount, pageSize);
-            List<VisitLog> visitLogList = visitLogService.findOrderByVisitTimePageable(pageable).get();
-            for (VisitLog visitLog : visitLogList) {
-                Shortener shortener = shortenerService.findById(visitLog.getShortenerId()).get();
-                if (shortener == null || shortener.getLongUrl().equals("BANNED")) continue;
-                ShortenLog shortenLog = shortenLogService.findById(shortener.getShortenId()).get();
-                if (shortenLog == null || shortenLog.getCreatorId() != id) continue;
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-DD HH:mm:ss");
-                JSONObject tmp = new JSONObject();
-                tmp.put("shortUrl", shortenLog.getShortUrl());
-                tmp.put("long", shortener.getLongUrl());
-                tmp.put("ip", visitLog.getIp());
-                tmp.put("source", "Browser");
-                tmp.put("time", simpleDateFormat.format(visitLog.getVisitTime()));
-                logs.add(tmp);
-                if (logs.size()>4)
-                    break;
-            }
-            ++pageCount;
+        List<String> shorteners=statService.getUserShorteners(id).get();
+        List<VisitLog> visitLogList = visitLogService.findTop5ByShortenerIdOrderByVisitTimeDesc(shorteners).get();
+
+        for (VisitLog visitLog : visitLogList) {
+            Shortener shortener = shortenerService.findById(visitLog.getShortenerId()).get();
+            ShortenLog shortenLog = shortenLogService.findById(shortener.getShortenId()).get();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-DD HH:mm:ss");
+            JSONObject tmp = new JSONObject();
+            tmp.put("shortUrl", shortenLog.getShortUrl());
+            tmp.put("long", shortener.getLongUrl());
+            tmp.put("ip", visitLog.getIp());
+            tmp.put("source", "Browser");
+            tmp.put("time", simpleDateFormat.format(visitLog.getVisitTime()));
+            logs.add(tmp);
         }
 
         JSONObject res = new JSONObject();
