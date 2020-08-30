@@ -19,6 +19,4 @@ public interface VisitLogRepository extends JpaRepository<VisitLog, Long> {
 
     List<VisitLog> findTop5ByShortenerIdInOrderByVisitTimeDesc(List<String> shortenerId);
 
-    @Query("select v from VisitLog v where v.shortenerId=:shortenerId")
-    List<VisitLog> findByShortenerId(@Param("shortenerId") String shortenerId);
 }
