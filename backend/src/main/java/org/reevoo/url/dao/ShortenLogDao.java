@@ -1,6 +1,7 @@
 package org.reevoo.url.dao;
 
 import org.reevoo.url.entity.ShortenLog;
+import org.reevoo.url.entity.Shortener;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -28,6 +29,8 @@ public interface ShortenLogDao {
     ShortenLog findTopOneOrderByVisitCount();
 
     List<ShortenLog> findTopTenOrderByVisitCount();
+
+    List<Shortener> getUserShorteners(long id);
 
     long visitSum();
 }

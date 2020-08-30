@@ -24,7 +24,7 @@ public class VisitLogDaoImpl implements VisitLogDao {
     }
 
     @Override
-    public List<VisitLog> findOrderByVisitTime(Pageable pageable) {
-        return visitLogRepository.findOrderByVisitTimeDesc(pageable);
+    public List<VisitLog> findTop5ByShortenerIdOrderByVisitTimeDesc(List<String> shortenerId){
+        return visitLogRepository.findTop5ByShortenerIdInOrderByVisitTimeDesc(shortenerId);
     }
 }

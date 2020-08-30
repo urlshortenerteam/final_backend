@@ -103,7 +103,7 @@ public class Statistics {
             case "云南":
                 ++areaDistr[0].value;
                 break;
-            case "黑龙江":
+            case "黑龙":
                 ++areaDistr[1].value;
                 break;
             case "贵州":
@@ -130,7 +130,7 @@ public class Statistics {
             case "海南":
                 ++areaDistr[9].value;
                 break;
-            case "内蒙古":
+            case "内蒙":
                 ++areaDistr[10].value;
                 break;
             case "天津":
