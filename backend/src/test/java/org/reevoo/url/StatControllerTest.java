@@ -281,6 +281,8 @@ public class StatControllerTest extends ApplicationTests {
         visitLog.setShortenerId("ShortenerId");
         List<VisitLog> visitLogList = new ArrayList<>();
         visitLog.setVisitTime(new Date());
+        visitLog.setDevice(false);
+        visitLog.setIp("0.0.0.0");
         for (int i = 0; i < 5; i++) visitLogList.add(visitLog);
         List<String> strings=new ArrayList<>();
         strings.add("ShortenerId");
