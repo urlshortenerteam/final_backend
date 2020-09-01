@@ -37,7 +37,7 @@ services:
       - reevoo
 
   visitlog:
-    image: reevoo2020/visitlog-service:2.3
+    image: reevoo2020/visitlog-service:2.4
     container_name: visitlog
     hostname: visitlog
     restart: always
