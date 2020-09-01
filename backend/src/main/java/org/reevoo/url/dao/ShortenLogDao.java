@@ -30,7 +30,9 @@ public interface ShortenLogDao {
 
     List<ShortenLog> findTopTenOrderByVisitCount();
 
-    List<Shortener> getUserShorteners(long id);
+    List<Shortener> getUserShorteners(List<Long> shortenLogID);
+
+    List<ShortenLog> getUserShortenLogs(long id);
 
     long visitSum();
 }

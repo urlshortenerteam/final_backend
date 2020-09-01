@@ -1,6 +1,8 @@
 package org.reevoo.url.service;
 
 import com.alibaba.fastjson.JSONObject;
+import org.reevoo.url.entity.ShortenLog;
+import org.reevoo.url.entity.Shortener;
 import org.reevoo.url.entity.Statistics;
 import org.reevoo.url.entity.Users;
 import org.springframework.data.domain.Pageable;
@@ -23,5 +25,7 @@ public interface StatService {
 
     CompletableFuture<List<Users>> getUserStat();
 
-    CompletableFuture<List<String>> getUserShorteners(long id);
+    CompletableFuture<List<Shortener>> getUserShorteners(List<Long> shortenLogID);
+
+    CompletableFuture<List<ShortenLog>> getUserShortenLogs(long id);
 }
