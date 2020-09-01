@@ -126,7 +126,8 @@ public class UsersController {
             res.put("data", status);
             return res;
         }
-        usersService.changeRole(banId, ban ? 2 : 1);
+        banUser.setRole(ban ? 2 : 1);
+        usersService.changeUser(banUser);
         status.put("status", true);
         res.put("data", status);
         return res;

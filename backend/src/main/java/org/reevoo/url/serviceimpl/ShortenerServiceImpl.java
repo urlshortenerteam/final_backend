@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.util.concurrent.CompletableFuture;
-
 @Service
 public class ShortenerServiceImpl implements ShortenerService {
     @Autowired
@@ -24,11 +22,5 @@ public class ShortenerServiceImpl implements ShortenerService {
     @Async
     public void changeShortener(Shortener shortener) {
         shortenerDao.changeShortener(shortener);
-    }
-
-    @Override
-    @Async
-    public CompletableFuture<Shortener> findById(String id) {
-        return CompletableFuture.completedFuture(shortenerDao.findById(id));
     }
 }

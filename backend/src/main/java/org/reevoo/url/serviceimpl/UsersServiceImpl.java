@@ -21,8 +21,8 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     @Async
-    public void changeRole(long id, int role) {
-        usersDao.changeRole(id, role);
+    public void changeUser(Users users) {
+        usersDao.changeUser(users);
     }
 
     @Override

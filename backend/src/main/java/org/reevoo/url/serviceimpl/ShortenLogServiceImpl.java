@@ -29,12 +29,6 @@ public class ShortenLogServiceImpl implements ShortenLogService {
 
     @Override
     @Async
-    public CompletableFuture<ShortenLog> findById(long id) {
-        return CompletableFuture.completedFuture(shortenLogDao.findById(id));
-    }
-
-    @Override
-    @Async
     public CompletableFuture<ShortenLog> findByShortUrl(String shortUrl) {
         return CompletableFuture.completedFuture(shortenLogDao.findByShortUrl(shortUrl));
     }

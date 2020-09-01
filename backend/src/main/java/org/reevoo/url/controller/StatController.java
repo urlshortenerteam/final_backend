@@ -195,17 +195,17 @@ public class StatController {
 
         List<VisitLog> visitLogList = visitLogService.findTop5ByShortenerIdOrderByVisitTimeDesc(shortenStrings).get();
 
-        List<String> longUrls=new ArrayList<>();
-        List<String> shortUrls=new ArrayList<>();
+        List<String> longUrls = new ArrayList<>();
+        List<String> shortUrls = new ArrayList<>();
         for (VisitLog visitLog : visitLogList) {
             String shortenerIDOfVisitLog = visitLog.getShortenerId();
             for (Shortener s : shorteners) {
                 if (s.getId().equals(shortenerIDOfVisitLog)) {
-                    longUrls.add(longUrls.size(),s.getLongUrl());
+                    longUrls.add(longUrls.size(), s.getLongUrl());
                     long shortenLogId = s.getShortenId();
                     for (ShortenLog shortenLog : shortenLogs) {
                         if (shortenLog.getId() == shortenLogId) {
-                            shortUrls.add(shortUrls.size(),shortenLog.getShortUrl());
+                            shortUrls.add(shortUrls.size(), shortenLog.getShortUrl());
                             break;
                         }
                     }
@@ -214,7 +214,7 @@ public class StatController {
             }
         }
 
-        int index=0;
+        int index = 0;
         for (VisitLog visitLog : visitLogList) {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-DD HH:mm:ss");
             JSONObject tmp = new JSONObject();

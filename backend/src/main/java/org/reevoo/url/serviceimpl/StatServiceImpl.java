@@ -58,8 +58,7 @@ public class StatServiceImpl implements StatService {
         res.put("shortUrlCount", shortenLogDao.count());
         res.put("visitCountTotal", shortenLogDao.visitSum());
         ShortenLog shortenLog = shortenLogDao.findTopOneOrderByVisitCount();
-        if (shortenLog != null)
-            res.put("shortUrl", shortenLog.getShortUrl());
+        if (shortenLog != null) res.put("shortUrl", shortenLog.getShortUrl());
         return CompletableFuture.completedFuture(res);
     }
 
