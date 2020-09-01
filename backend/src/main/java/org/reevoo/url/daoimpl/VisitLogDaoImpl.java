@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Transactional
+
 @Repository
 @Service
 public class VisitLogDaoImpl implements VisitLogDao {
