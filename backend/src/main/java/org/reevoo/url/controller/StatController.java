@@ -185,28 +185,23 @@ public class StatController {
         JSONArray logs = new JSONArray();
 
         List<ShortenLog> shortenLogs = statService.getUserShortenLogs(id).get();
-        List<Long> shortenLogID=new ArrayList<>();
-        for (ShortenLog s:shortenLogs){
-            shortenLogID.add(s.getId());
-        }
+        List<Long> shortenLogID = new ArrayList<>();
+        for (ShortenLog s : shortenLogs) shortenLogID.add(s.getId());
 
-        List<Shortener> shorteners=statService.getUserShorteners(shortenLogID).get();
-        List<String> shortenStrings=new ArrayList<>();
-        for (Shortener s:shorteners){
-            if (s.getLongUrl().equals("BANNED"))
-                continue;
-            shortenStrings.add(s.getId());
-        }
+        List<Shortener> shorteners = statService.getUserShorteners(shortenLogID).get();
+        List<String> shortenStrings = new ArrayList<>();
+        for (Shortener s : shorteners)
+            if (!s.getLongUrl().equals("BANNED")) shortenStrings.add(s.getId());
 
         List<VisitLog> visitLogList = visitLogService.findTop5ByShortenerIdOrderByVisitTimeDesc(shortenStrings).get();
         for (VisitLog visitLog : visitLogList) {
-            String shortenerIDOfVisitLog=visitLog.getShortenerId();
-            for (Shortener s:shorteners){
-                if (s.getId().equals(shortenerIDOfVisitLog)){
+            String shortenerIDOfVisitLog = visitLog.getShortenerId();
+            for (Shortener s : shorteners) {
+                if (s.getId().equals(shortenerIDOfVisitLog)) {
                     visitLog.setLongURL(s.getLongUrl());
-                    long shortenLogId=s.getShortenId();
-                    for (ShortenLog shortenLog:shortenLogs){
-                        if (shortenLog.getId()==shortenLogId){
+                    long shortenLogId = s.getShortenId();
+                    for (ShortenLog shortenLog : shortenLogs) {
+                        if (shortenLog.getId() == shortenLogId) {
                             visitLog.setShortURL(shortenLog.getShortUrl());
                             break;
                         }
