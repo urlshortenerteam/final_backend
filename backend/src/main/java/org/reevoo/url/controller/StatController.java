@@ -194,15 +194,18 @@ public class StatController {
             if (!s.getLongUrl().equals("BANNED")) shortenStrings.add(s.getId());
 
         List<VisitLog> visitLogList = visitLogService.findTop5ByShortenerIdOrderByVisitTimeDesc(shortenStrings).get();
+
+        List<String> longUrls = new ArrayList<>();
+        List<String> shortUrls = new ArrayList<>();
         for (VisitLog visitLog : visitLogList) {
             String shortenerIDOfVisitLog = visitLog.getShortenerId();
             for (Shortener s : shorteners) {
                 if (s.getId().equals(shortenerIDOfVisitLog)) {
-                    visitLog.setLongURL(s.getLongUrl());
+                    longUrls.add(longUrls.size(), s.getLongUrl());
                     long shortenLogId = s.getShortenId();
                     for (ShortenLog shortenLog : shortenLogs) {
                         if (shortenLog.getId() == shortenLogId) {
-                            visitLog.setShortURL(shortenLog.getShortUrl());
+                            shortUrls.add(shortUrls.size(), shortenLog.getShortUrl());
                             break;
                         }
                     }
@@ -211,12 +214,12 @@ public class StatController {
             }
         }
 
-
+        int index = 0;
         for (VisitLog visitLog : visitLogList) {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-DD HH:mm:ss");
             JSONObject tmp = new JSONObject();
-            tmp.put("shortUrl", visitLog.getShortURL());
-            tmp.put("long", visitLog.getLongURL());
+            tmp.put("shortUrl", shortUrls.get(index));
+            tmp.put("long", longUrls.get(index++));
             tmp.put("ip", visitLog.getIp());
             tmp.put("source", visitLog.getDevice() ? "移动端" : "PC端");
             tmp.put("time", simpleDateFormat.format(visitLog.getVisitTime()));

@@ -5,7 +5,7 @@ import org.reevoo.url.entity.Users;
 import java.util.concurrent.CompletableFuture;
 
 public interface UsersService {
-    void changeRole(long id, int role);
+    void changeUser(Users users);
 
     CompletableFuture<Users> checkUser(String name, String password);
 

@@ -147,11 +147,6 @@ public class ShortenLogDaoImpl implements ShortenLogDao {
     }
 
     @Override
-    public ShortenLog findById(long id) {
-        return shortenLogRepository.findById(id).orElse(null);
-    }
-
-    @Override
     public ShortenLog findByShortUrl(String shortUrl) {
         ShortenLog shortenLog = shortenLogRepository.findByShortUrl(shortUrl);
         if (shortenLog == null) return null;

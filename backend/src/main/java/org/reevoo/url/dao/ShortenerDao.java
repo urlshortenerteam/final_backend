@@ -6,6 +6,4 @@ public interface ShortenerDao {
     void addShortener(long editorId, long shortenId, String longUrl);
 
     void changeShortener(Shortener shortener);
-
-    Shortener findById(String id);
 }

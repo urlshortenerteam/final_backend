@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Transactional
 @Repository
@@ -23,13 +22,8 @@ public class UsersDaoImpl implements UsersDao {
     private UsersRepository usersRepository;
 
     @Override
-    public void changeRole(long id, int role) {
-        Optional<Users> usersOptional = usersRepository.findById(id);
-        if (usersOptional.isPresent()) {
-            Users users = usersOptional.get();
-            users.setRole(role);
-            usersRepository.save(users);
-        }
+    public void changeUser(Users users) {
+        usersRepository.save(users);
     }
 
     @Override

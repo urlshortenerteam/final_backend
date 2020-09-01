@@ -10,8 +10,6 @@ public interface ShortenLogService {
 
     CompletableFuture<List<String>> addShortenLog(long creatorId, List<String> longUrls);
 
-    CompletableFuture<ShortenLog> findById(long id);
-
     CompletableFuture<ShortenLog> findByShortUrl(String shortUrl);
 
     CompletableFuture<List<ShortenLog>> findTopTenOrderByVisitCount();
