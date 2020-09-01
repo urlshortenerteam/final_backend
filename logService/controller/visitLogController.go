@@ -95,20 +95,21 @@ func (v *VisitLogController) ServeLog() {
 
 			switch e := ev.(type) {
 			case *kafka.Message:
-				go func() {
-					log.WithFields(log.Fields{
-						"topicPartition": e.TopicPartition,
-						"messageValue":string(e.Value),
-					}).Info("Kafka Message.")
-					json.Unmarshal(e.Value,&message)
+				log.WithFields(log.Fields{
+					"topicPartition": e.TopicPartition,
+					"messageValue":string(e.Value),
+				}).Info("Kafka Message.")
+				json.Unmarshal(e.Value,&message)
+				if (message.LongID!=""){
 					var device bool
 					if strings.Index(message.UserAgent, "Windows") > -1 || strings.Index(message.UserAgent, "Linux") > -1 || strings.Index(message.UserAgent, "Mac") > -1 {
 						device = false
 					} else {
 						device = true
 					}
-					v.visitLogService.Log(message.ShortenID,message.LongID, message.IP, device)
-				}()
+					v.visitLogService.Log(message.ShortenID,message.LongID, message.IP, device)	
+				}
+				
 
 			case kafka.Error:
 				// Errors should generally be considered
