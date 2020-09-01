@@ -182,14 +182,14 @@ public class StatServiceImpl implements StatService {
 
     @Override
     @Async
-    public CompletableFuture<List<Shortener>> getUserShorteners(List<Long> shortenLogID){
+    public CompletableFuture<List<Shortener>> getUserShorteners(List<Long> shortenLogID) {
         return CompletableFuture.completedFuture(shortenLogDao.getUserShorteners(shortenLogID));
     }
 
     @Override
     @Async
-    public CompletableFuture<List<ShortenLog>> getUserShortenLogs(long id){
-        return  CompletableFuture.completedFuture(shortenLogDao.getUserShortenLogs(id));
+    public CompletableFuture<List<ShortenLog>> getUserShortenLogs(long id) {
+        return CompletableFuture.completedFuture(shortenLogDao.getUserShortenLogs(id));
     }
 
     @Override

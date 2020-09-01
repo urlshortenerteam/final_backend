@@ -181,12 +181,12 @@ public class ShortenLogDaoImpl implements ShortenLogDao {
     }
 
     @Override
-    public List<Shortener> getUserShorteners(List<Long> shortenLogID){
+    public List<Shortener> getUserShorteners(List<Long> shortenLogID) {
         return shortenerRepository.findByShortenIdIn(shortenLogID);
     }
 
     @Override
-    public List<ShortenLog> getUserShortenLogs(long id){
+    public List<ShortenLog> getUserShortenLogs(long id) {
         return shortenLogRepository.findByCreatorId(id);
     }
 
