@@ -79,4 +79,3 @@ jobs:
       run: go test ./...
       env:
        TEST_DIR: ../
-    
