@@ -65,13 +65,13 @@ public class VisitLog implements Serializable {
         this.device = device;
     }
 
-    private String shortURL;
-    @Transient
+    private transient String shortURL;
+
     public void setShortURL(String shortURL){this.shortURL=shortURL;}
     public String getShortURL(){return shortURL;}
 
-    private String longURL;
-    @Transient
+    private transient String longURL;
+
     public void setLongURL(String longURL){this.longURL=longURL;}
     public String getLongURL(){return longURL;}
 
