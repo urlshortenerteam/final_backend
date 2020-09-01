@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -182,16 +183,40 @@ public class StatController {
         long id = Long.parseLong(c.get("id").toString());
 
         JSONArray logs = new JSONArray();
-        List<String> shorteners = statService.getUserShorteners(id).get();
-        List<VisitLog> visitLogList = visitLogService.findTop5ByShortenerIdOrderByVisitTimeDesc(shorteners).get();
+
+        List<ShortenLog> shortenLogs = statService.getUserShortenLogs(id).get();
+        List<Long> shortenLogID = new ArrayList<>();
+        for (ShortenLog s : shortenLogs) shortenLogID.add(s.getId());
+
+        List<Shortener> shorteners = statService.getUserShorteners(shortenLogID).get();
+        List<String> shortenStrings = new ArrayList<>();
+        for (Shortener s : shorteners)
+            if (!s.getLongUrl().equals("BANNED")) shortenStrings.add(s.getId());
+
+        List<VisitLog> visitLogList = visitLogService.findTop5ByShortenerIdOrderByVisitTimeDesc(shortenStrings).get();
+        for (VisitLog visitLog : visitLogList) {
+            String shortenerIDOfVisitLog = visitLog.getShortenerId();
+            for (Shortener s : shorteners) {
+                if (s.getId().equals(shortenerIDOfVisitLog)) {
+                    visitLog.setLongURL(s.getLongUrl());
+                    long shortenLogId = s.getShortenId();
+                    for (ShortenLog shortenLog : shortenLogs) {
+                        if (shortenLog.getId() == shortenLogId) {
+                            visitLog.setShortURL(shortenLog.getShortUrl());
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+
 
         for (VisitLog visitLog : visitLogList) {
-            Shortener shortener = shortenerService.findById(visitLog.getShortenerId()).get();
-            ShortenLog shortenLog = shortenLogService.findById(shortener.getShortenId()).get();
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-DD HH:mm:ss");
             JSONObject tmp = new JSONObject();
-            tmp.put("shortUrl", shortenLog.getShortUrl());
-            tmp.put("long", shortener.getLongUrl());
+            tmp.put("shortUrl", visitLog.getShortURL());
+            tmp.put("long", visitLog.getLongURL());
             tmp.put("ip", visitLog.getIp());
             tmp.put("source", visitLog.getDevice() ? "移动端" : "PC端");
             tmp.put("time", simpleDateFormat.format(visitLog.getVisitTime()));
