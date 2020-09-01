@@ -69,7 +69,7 @@ func (v *VisitLogController) ServeLog() {
 	// }
 
 	type logMessage struct{
-		ShortenID uint64 `json:"shortenId`
+		ShortenID int64 `json:"shortenId`
 		LongID string `json:"longId"`
 		LongURL string `json:"longUrl"`
 		IP string `json:"ip"`
@@ -100,7 +100,7 @@ func (v *VisitLogController) ServeLog() {
 					"messageValue":string(e.Value),
 				}).Info("Kafka Message.")
 				json.Unmarshal(e.Value,&message)
-				if (message.LongID!=""){
+				if (message.ShortenID!=-1){
 					var device bool
 					if strings.Index(message.UserAgent, "Windows") > -1 || strings.Index(message.UserAgent, "Linux") > -1 || strings.Index(message.UserAgent, "Mac") > -1 {
 						device = false

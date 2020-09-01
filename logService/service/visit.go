@@ -30,7 +30,7 @@ func (v *VisitService) Destr() {
 
 //Log insert the visitLog into visitLog and changes data in user and shortenLog
 //ShortenerID string,IP string,Device bool,owner uint64,shortenID uint64
-func (v VisitService) Log(shortenID uint64, longID string, IP string, Device bool) {
+func (v VisitService) Log(shortenID int64, longID string, IP string, Device bool) {
 	owner, err := v.logDAO.ByShortenID(shortenID)
 	if err != nil {
 		log.Info(err.Error())

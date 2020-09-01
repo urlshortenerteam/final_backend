@@ -4,5 +4,5 @@ import "github.com/violedo/logService/interface/dao"
 type ILogService interface{
 	InitService(logDAO ...dao.DAO)
 	Destr()
-	Log(shortenID uint64, longID string, IP string, Device bool)
+	Log(shortenID int64, longID string, IP string, Device bool)
 }

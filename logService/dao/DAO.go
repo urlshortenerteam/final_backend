@@ -131,7 +131,7 @@ func (l *LogDAO) UpdateUser(ID uint64) (err error) {
 }
 
 //UpdateShorten increase the shortenLog's visitCount by 1
-func (l *LogDAO) UpdateShorten(ID uint64) (err error) {
+func (l *LogDAO) UpdateShorten(ID int64) (err error) {
 	if l.db == nil {
 		panic("MYSQL UNINITIALIZED!")
 	}
@@ -164,7 +164,7 @@ func (l *LogDAO) UpdateShorten(ID uint64) (err error) {
 }
 
 //ByShortenID get data by shortenID
-func (l LogDAO) ByShortenID(shortenID uint64) (owner uint64, err error){
+func (l LogDAO) ByShortenID(shortenID int64) (owner uint64, err error){
 	if l.db == nil {
 		panic("UNINITIALIZED MySQL connection.")
 	}
