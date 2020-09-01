@@ -38,9 +38,4 @@ public class ShortenerDaoImpl implements ShortenerDao {
     public void changeShortener(Shortener shortener) {
         shortenerRepository.save(shortener);
     }
-
-    @Override
-    public Shortener findById(String id) {
-        return shortenerRepository.findById(id).orElse(null);
-    }
 }

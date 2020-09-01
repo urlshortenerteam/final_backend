@@ -20,8 +20,6 @@ public interface ShortenLogDao {
 
     Page<ShortenLog> findByCreatorIdPageable(long creatorId, Pageable pageable);
 
-    ShortenLog findById(long id);
-
     ShortenLog findByShortUrl(String shortUrl);
 
     Page<ShortenLog> findPage(Pageable pageable);
