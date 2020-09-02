@@ -29,7 +29,7 @@ func TestVisitLogController_Init(t *testing.T) {
 	}
 }
 
-func TestVisitLogController_Destr(t *testing.T) {
+func TestVisitLgController_Destr(t *testing.T) {
 	tests := []struct {
 		name string
 		v    *VisitLogController

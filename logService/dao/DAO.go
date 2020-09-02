@@ -184,42 +184,42 @@ func (l LogDAO) ByShortenID(shortenID int64) (owner uint64, err error){
 	return owner, nil
 }
 
-//ByShortURL get data by shortURL
-func (l LogDAO) ByShortURL(shortURL string) (shortenID uint64, owner uint64, shortenerID string, err error) {
-	if l.db == nil {
-		panic("UNINITIALIZED MySQL connection.")
-	}
-	stmt, err := l.db.Prepare("SELECT id, creator_id FROM shorten_log WHERE short_url = ?")
-	if err != nil {
-		return 0, 0, "", err
-	}
-	defer stmt.Close()
-	err = stmt.QueryRow(shortURL).Scan(&shortenID, &owner)
-	if err != sql.ErrNoRows && err != nil {
-		return 0, 0, "", err
-	}
-	if err == sql.ErrNoRows {
-		return 0, 0, "", err
-	}
+// //ByShortURL get data by shortURL
+// func (l LogDAO) ByShortURL(shortURL string) (shortenID uint64, owner uint64, shortenerID string, err error) {
+// 	if l.db == nil {
+// 		panic("UNINITIALIZED MySQL connection.")
+// 	}
+// 	stmt, err := l.db.Prepare("SELECT id, creator_id FROM shorten_log WHERE short_url = ?")
+// 	if err != nil {
+// 		return 0, 0, "", err
+// 	}
+// 	defer stmt.Close()
+// 	err = stmt.QueryRow(shortURL).Scan(&shortenID, &owner)
+// 	if err != sql.ErrNoRows && err != nil {
+// 		return 0, 0, "", err
+// 	}
+// 	if err == sql.ErrNoRows {
+// 		return 0, 0, "", err
+// 	}
 
-	// session, err := mgo.Dial(mongoURL)
-	// if err != nil {
-	// 	return 0, "", err
-	// }
-	// defer session.Close()
-	// c := session.DB("url").C("shortener")
-	// var results []MongoShort
-	// err = c.Find(bson.M{"shortenId": shortenID}).All(&results)
-	// if err != nil {
-	// 	return 0, "", err
-	// }
-	// for _, record := range results {
-	// 	e.LongUrl = append(e.LongUrl, record.LongURL)
-	// }
-	// log.WithFields(log.Fields{
-	// 	"id":       e.ID,
-	// 	"longUrl":  e.LongUrl,
-	// 	"shortUrl": e.Short,
-	// }).Info("Fetched Item successfully.")
-	return shortenID, owner, "", nil
-}
+// 	// session, err := mgo.Dial(mongoURL)
+// 	// if err != nil {
+// 	// 	return 0, "", err
+// 	// }
+// 	// defer session.Close()
+// 	// c := session.DB("url").C("shortener")
+// 	// var results []MongoShort
+// 	// err = c.Find(bson.M{"shortenId": shortenID}).All(&results)
+// 	// if err != nil {
+// 	// 	return 0, "", err
+// 	// }
+// 	// for _, record := range results {
+// 	// 	e.LongUrl = append(e.LongUrl, record.LongURL)
+// 	// }
+// 	// log.WithFields(log.Fields{
+// 	// 	"id":       e.ID,
+// 	// 	"longUrl":  e.LongUrl,
+// 	// 	"shortUrl": e.Short,
+// 	// }).Info("Fetched Item successfully.")
+// 	return shortenID, owner, "", nil
+// }

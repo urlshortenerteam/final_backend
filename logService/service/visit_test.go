@@ -5,10 +5,9 @@ import (
 
 	idao "github.com/violedo/logService/interface/dao"
 )
-
 func TestVisitService_Log(t *testing.T) {
 	type args struct {
-		shortenID uint64
+		shortenID int64
 		longID    string
 		IP        string
 		Device    bool
