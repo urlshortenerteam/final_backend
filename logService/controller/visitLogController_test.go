@@ -4,10 +4,17 @@ import (
 	"testing"
 
 	isrv "github.com/violedo/logService/interface/service"
-	"github.com/violedo/logService/service"
+	mockservice "github.com/violedo/logService/interface/service/mocks"
+	"github.com/golang/mock/gomock"
 )
 
 func TestVisitLogController_Init(t *testing.T) {
+	mockCtrl := gomock.NewController(t)
+	defer mockCtrl.Finish()
+	mockService := mockservice.NewMockILogService(mockCtrl)
+	gomock.InOrder(
+		mockService.EXPECT().InitService(),
+	)
 	type args struct {
 		visitLogService isrv.ILogService
 	}
@@ -19,7 +26,7 @@ func TestVisitLogController_Init(t *testing.T) {
 		{
 			"Init test",
 			&VisitLogController{},
-			args{&service.VisitService{}},
+			args{mockService},
 		},
 	}
 	for _, tt := range tests {
@@ -30,6 +37,13 @@ func TestVisitLogController_Init(t *testing.T) {
 }
 
 func TestVisitLgController_Destr(t *testing.T) {
+	mockCtrl := gomock.NewController(t)
+	defer mockCtrl.Finish()
+	mockService := mockservice.NewMockILogService(mockCtrl)
+	gomock.InOrder(
+		mockService.EXPECT().InitService(),
+		mockService.EXPECT().Destr(),
+	)
 	tests := []struct {
 		name string
 		v    *VisitLogController
@@ -41,7 +55,7 @@ func TestVisitLgController_Destr(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tt.v.Init(&service.VisitService{})
+			tt.v.Init(mockService)
 			tt.v.Destr()
 		})
 	}
