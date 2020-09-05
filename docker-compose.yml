@@ -144,12 +144,18 @@ services:
     networks:
       - reevoo
 
-  reverse-proxy:
+  traefik:
     image: traefik:v2.2
-    container_name: reverse-proxy
-    hostname: reverse-proxy
+    container_name: traefik
+    hostname: traefik
     restart: always
-    command: --api.insecure=true --providers.docker
+    command:
+      - --api.insecure=true
+      - --providers.docker
+      - --accesslog
+      - --accesslog.fields.names.StartUTC=drop
+      - --metrics.prometheus
+      - --tracing.elastic
     ports:
       - "80:80"
       - "8080:8080"
@@ -158,7 +164,9 @@ services:
     logging:
       driver: syslog
       options:
-        tag: reverse-proxy
+        tag: traefik
+    environment:
+      - TZ=US/Alaska
     networks:
       - reevoo
 
