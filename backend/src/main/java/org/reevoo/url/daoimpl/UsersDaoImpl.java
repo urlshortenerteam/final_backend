@@ -45,7 +45,7 @@ public class UsersDaoImpl implements UsersDao {
 
     @Override
     public List<Users> findAllUserStat() {
-        List<Users> users = usersRepository.findAllUserStat();
+        List<Users> users = usersRepository.findAll();
         List<Users> res = new ArrayList<>();
         for (Users user : users) {
             Users tmp = new Users();
