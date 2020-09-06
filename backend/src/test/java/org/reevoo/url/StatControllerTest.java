@@ -244,7 +244,7 @@ public class StatControllerTest extends ApplicationTests {
         tmp.setRole(0);
         tmp.setVisitCount(1);
         usersList.add(tmp);
-        when(usersRepository.findAllUserStat()).thenReturn(usersList);
+        when(usersRepository.findAll()).thenReturn(usersList);
 
         String res = mockMvc.perform(get("/getUserStat").contentType(MediaType.APPLICATION_JSON_VALUE).header("Authorization", JwtUtil.sign(2, "ao7777", 1, false)))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
