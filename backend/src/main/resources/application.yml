@@ -20,7 +20,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   data:
     mongodb:
-      host: ENC(AP/xA3bZVKzsP9wTKpZHgbz1tf9TGCpu)
+      host: ENC(cnkz7W3XDrVa5sGy8S2cYGCGIUVWDOzT)
       port: 27017
       authentication-database: url
       database: url
